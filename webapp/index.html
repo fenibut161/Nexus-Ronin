@@ -2,13 +2,21 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=3.0, user-scalable=yes, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
 <title>Nexus Ronin</title>
 <style>
+/* ---- Сброс и база ---- */
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{width:100%;height:100%;background:#000;overflow:hidden;font-family:Arial,sans-serif;color:#fff}
+html,body{
+  width:100%;height:100%;
+  background:#000;
+  overflow:hidden;
+  font-family:Arial,sans-serif;
+  color:#fff;
+  touch-action:pan-x pan-y; /* разрешаем жесты */
+}
 
-/* Экран загрузки (splash) */
+/* ---- Экран загрузки (splash) ---- */
 #splash {
   position:fixed;inset:0;z-index:10;
   background:#02040a;
@@ -35,7 +43,6 @@ html,body{width:100%;height:100%;background:#000;overflow:hidden;font-family:Ari
 .scan{position:absolute;left:0;right:0;top:0;height:100px;background:linear-gradient(180deg,transparent,rgba(34,231,255,.09),transparent);animation:scan 4s linear infinite;mix-blend-mode:screen}
 @keyframes scan{0%{transform:translateY(-130px)}100%{transform:translateY(780px)}}
 
-/* Логотип и панель прогресса — внутри #splash */
 .splash-content {
   position:relative;z-index:5;
   display:flex;flex-direction:column;
@@ -64,10 +71,10 @@ html,body{width:100%;height:100%;background:#000;overflow:hidden;font-family:Ari
 .version{margin-top:12px;text-align:center;color:#6d8793;font-size:10px;letter-spacing:.12em;text-transform:uppercase}
 @media(max-width:420px){.emblem{width:82px;height:82px}.title{font-size:38px}.buttons{grid-template-columns:1fr}.splash-content{padding-top:30px}}
 
-/* Контейнер игры (полноэкранная картинка с прокруткой) */
+/* ---- Игровой контейнер (прокручиваемая база) ---- */
 #game-container {
   position:fixed;inset:0;z-index:5;
-  display:none; /* изначально скрыт */
+  display:none;
   background:#000;
   overflow:auto;
   -webkit-overflow-scrolling:touch;
@@ -75,16 +82,42 @@ html,body{width:100%;height:100%;background:#000;overflow:hidden;font-family:Ari
 }
 #game-container img {
   display:block;
-  width:100%; /* можно изменить на авто, чтобы изображение было в натуральном размере */
+  width:auto;           /* натуральный размер, чтобы была прокрутка */
   height:auto;
-  min-height:100vh;
-  object-fit:contain; /* или cover — зависит от дизайна */
+  max-width:none;
+  max-height:none;
+  min-height:100vh;     /* чтобы контент был выше экрана */
+  object-fit:fill;
 }
-/* Если хотите, чтобы картинка была в натуральном размере, раскомментируйте: */
-/* #game-container img { width:auto; height:auto; max-width:none; max-height:none; } */
+
+/* ---- Сообщение о повороте (если не landscape) ---- */
+#rotate-msg {
+  display:none;
+  position:fixed;inset:0;z-index:20;
+  background:rgba(0,0,0,0.9);
+  color:#fff;
+  font-size:24px;
+  text-align:center;
+  padding:40px;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+}
+#rotate-msg .icon { font-size:60px; margin-bottom:20px; }
+/* Показываем сообщение, если ориентация портретная и игра активна */
+@media (orientation: portrait) and (max-width: 768px) {
+  #rotate-msg { display:flex; }
+}
 </style>
 </head>
 <body>
+
+<!-- Сообщение о повороте -->
+<div id="rotate-msg">
+  <div class="icon">📱</div>
+  <div>Поверните телефон горизонтально</div>
+  <div style="font-size:14px;margin-top:10px;color:#999;">Для игры требуется ландшафтный режим</div>
+</div>
 
 <!-- ЭКРАН ЗАГРУЗКИ (splash) -->
 <div id="splash">
@@ -125,16 +158,33 @@ html,body{width:100%;height:100%;background:#000;overflow:hidden;font-family:Ari
 </audio>
 
 <script>
-// ---- 1. Telegram WebApp ----
+// ---- 1. Инициализация Telegram WebApp (Fullscreen + Swipes + Landscape) ----
 function initTelegram() {
   if (window.Telegram && window.Telegram.WebApp) {
-    window.Telegram.WebApp.ready();
-    window.Telegram.WebApp.expand();
-    console.log('Telegram expanded');
+    const webApp = window.Telegram.WebApp;
+    webApp.ready();
+
+    // --- Включаем полноэкранный режим ---
+    if (webApp.requestFullscreen) {
+      webApp.requestFullscreen().catch(e => {
+        console.warn('Fullscreen failed, trying expand:', e);
+        webApp.expand(); // запасной вариант
+      });
+    } else {
+      webApp.expand();
+    }
+
+    // --- Разрешаем вертикальные свайпы (для прокрутки) ---
+    if (webApp.enableVerticalSwipes) {
+      webApp.enableVerticalSwipes();
+    }
+
+    console.log('Telegram WebApp initialized');
     return true;
   }
   return false;
 }
+
 initTelegram();
 setTimeout(initTelegram, 300);
 setTimeout(initTelegram, 1000);
@@ -164,23 +214,29 @@ const music = document.getElementById('bgMusic');
 if (music) {
   music.volume = 0.3;
   music.load();
-  music.addEventListener('error', function(e) {
-    console.warn('Ошибка загрузки музыки:', e);
-  });
 }
 
-// ---- 4. Переход в игру ----
+// ---- 4. Переход в игру (блокировка ориентации + fullscreen) ----
 const startBtn = document.getElementById('startBtn');
 const splash = document.getElementById('splash');
 const gameContainer = document.getElementById('game-container');
 
 function enterGame() {
-  // Расширяем на весь экран ещё раз
+  // --- Ещё раз запрашиваем полноэкранный режим ---
   if (window.Telegram && window.Telegram.WebApp) {
-    window.Telegram.WebApp.expand();
+    const webApp = window.Telegram.WebApp;
+    if (webApp.requestFullscreen) {
+      webApp.requestFullscreen().catch(() => webApp.expand());
+    } else {
+      webApp.expand();
+    }
   }
-  if (document.documentElement.requestFullscreen) {
-    document.documentElement.requestFullscreen().catch(() => {});
+
+  // --- Блокируем ориентацию на горизонталь (альбомную) ---
+  if (screen.orientation && screen.orientation.lock) {
+    screen.orientation.lock('landscape').catch(err => {
+      console.warn('Orientation lock failed:', err);
+    });
   }
 
   // Скрываем splash
@@ -201,7 +257,8 @@ function enterGame() {
 
 startBtn.addEventListener('click', enterGame);
 
-// Если пользователь кликнул по игровому контейнеру — ничего не делаем
+// ---- 5. Дополнительно: если пользователь повернул в портрет, показываем сообщение ----
+// Сообщение уже обрабатывается через CSS-медиазапрос
 </script>
 </body>
 </html>
