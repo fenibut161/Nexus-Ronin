@@ -2,56 +2,138 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Nexus Ronin — Splash</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=3.0, user-scalable=yes, viewport-fit=cover">
+<title>Nexus Ronin</title>
 <style>
-/* (стили остаются без изменений, они уже были рабочими) */
-*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#02040a;color:#eafdff;font-family:Arial,Helvetica,sans-serif;overflow:hidden}.screen{position:relative;width:100vw;height:100vh;max-width:520px;margin:0 auto;background:#02040a;overflow:hidden}.bg{position:absolute;inset:0;background:url('./assets/images/backgrounds/main_menu_bg.jpg') center/cover no-repeat;transform:scale(1.03);animation:bgMove 9s ease-in-out infinite alternate}@keyframes bgMove{from{transform:scale(1.03) translateY(0)}to{transform:scale(1.08) translateY(-12px)}}.shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(2,4,10,.42),rgba(2,4,10,.12) 36%,rgba(2,4,10,.42) 66%,rgba(2,4,10,.94) 100%),radial-gradient(circle at 50% 20%,rgba(34,231,255,.18),transparent 32%),radial-gradient(circle at 50% 80%,rgba(255,39,211,.16),transparent 36%)}.neon-grid{position:absolute;inset:0;opacity:.26;background-image:linear-gradient(rgba(34,231,255,.12) 1px,transparent 1px),linear-gradient(90deg,rgba(255,39,211,.08) 1px,transparent 1px);background-size:38px 38px;mask-image:linear-gradient(180deg,transparent,#000 18%,#000 88%,transparent)}.rain{position:absolute;inset:-20%;opacity:.14;background:repeating-linear-gradient(105deg,transparent 0 12px,rgba(255,255,255,.18) 13px,transparent 15px);animation:rain 1s linear infinite}@keyframes rain{to{transform:translateY(48px)}}.scan{position:absolute;left:0;right:0;top:0;height:100px;background:linear-gradient(180deg,transparent,rgba(34,231,255,.09),transparent);animation:scan 4s linear infinite;mix-blend-mode:screen}@keyframes scan{0%{transform:translateY(-130px)}100%{transform:translateY(780px)}}.top{position:absolute;z-index:5;left:22px;right:22px;top:calc(38px + env(safe-area-inset-top,0px));text-align:center;transition:opacity .6s ease}.top.hidden{opacity:0;pointer-events:none}.emblem{width:96px;height:96px;margin:0 auto 16px;position:relative;border:2px solid #22e7ff;background:linear-gradient(135deg,rgba(34,231,255,.16),rgba(255,39,211,.20));box-shadow:0 0 30px rgba(34,231,255,.48),inset 0 0 24px rgba(255,39,211,.18);clip-path:polygon(18px 0,100% 0,100% calc(100% - 18px),calc(100% - 18px) 100%,0 100%,0 18px)}.emblem:before{content:"NR";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#ffd36a;font-size:32px;font-weight:950;letter-spacing:.08em;text-shadow:0 0 14px rgba(255,211,106,.9)}.emblem:after{content:"";position:absolute;left:16px;right:16px;bottom:17px;height:3px;background:#ff315d;box-shadow:0 0 14px #ff315d}.label{font-size:10px;font-weight:950;letter-spacing:.22em;color:#22e7ff;text-transform:uppercase;text-shadow:0 0 12px rgba(34,231,255,.9)}.title{margin-top:8px;font-size:46px;line-height:.88;font-weight:950;letter-spacing:.08em;text-transform:uppercase;text-shadow:0 0 18px rgba(34,231,255,.82),0 0 26px rgba(255,39,211,.44)}.title span{color:#ffd36a;text-shadow:0 0 16px rgba(255,211,106,.85)}.bottom{position:absolute;z-index:6;left:18px;right:18px;bottom:calc(24px + env(safe-area-inset-bottom,0px));transition:transform .6s cubic-bezier(.4,0,.2,1),opacity .5s ease}.bottom.hidden{transform:translateY(120%);opacity:0;pointer-events:none}.panel{position:relative;border:1px solid rgba(34,231,255,.45);background:rgba(3,8,16,.80);padding:16px 14px 14px;box-shadow:0 0 28px rgba(34,231,255,.18),inset 0 0 18px rgba(255,39,211,.08);clip-path:polygon(15px 0,100% 0,100% calc(100% - 15px),calc(100% - 15px) 100%,0 100%,0 15px);backdrop-filter:blur(10px)}.panel:before{content:"";position:absolute;inset:0;padding:1px;background:linear-gradient(135deg,#22e7ff,transparent 25%,#ffd36a 52%,transparent 74%,#ff27d3);clip-path:polygon(15px 0,100% 0,100% calc(100% - 15px),calc(100% - 15px) 100%,0 100%,0 15px);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}.status{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px;text-transform:uppercase;font-size:12px;font-weight:950;letter-spacing:.13em}.status b{color:#ffd36a;min-width:44px;text-align:right}.bar{height:14px;border:1px solid rgba(34,231,255,.42);background:rgba(0,0,0,.64);overflow:hidden;position:relative}.bar:after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0 12px,rgba(255,255,255,.12) 13px,transparent 14px);opacity:.55}.fill{height:100%;width:0%;background:linear-gradient(90deg,#22e7ff,#ff27d3,#ffd36a);box-shadow:0 0 18px rgba(34,231,255,.72);transition:width .18s ease}.hint{margin-top:10px;text-align:center;color:#9bb4bf;font-size:11px;letter-spacing:.06em}.buttons{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}.btn{height:48px;border:1px solid rgba(34,231,255,.45);background:rgba(34,231,255,.08);color:#eafdff;font-weight:950;text-transform:uppercase;letter-spacing:.08em;clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px);cursor:pointer;transition:background .2s,transform .1s;touch-action:manipulation}.btn:active{transform:scale(.96)}.btn.main{border-color:rgba(255,211,106,.72);background:linear-gradient(90deg,#ffd36a,#ff9b36);color:#07111b}.btn.main:active{background:linear-gradient(90deg,#ffc44a,#ff8a20)}.version{margin-top:12px;text-align:center;color:#6d8793;font-size:10px;letter-spacing:.12em;text-transform:uppercase}
-@media(max-width:420px){.emblem{width:82px;height:82px}.title{font-size:38px}.buttons{grid-template-columns:1fr}.top{top:calc(30px + env(safe-area-inset-top,0px))}}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;background:#000;overflow:hidden;font-family:Arial,sans-serif;color:#fff}
+
+/* Экран загрузки (splash) */
+#splash {
+  position:fixed;inset:0;z-index:10;
+  background:#02040a;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  transition:opacity 0.8s ease;
+}
+#splash.hidden { opacity:0; pointer-events:none; }
+
+.bg {
+  position:absolute;inset:0;
+  background:url('./assets/images/backgrounds/main_menu_bg.jpg') center/cover no-repeat;
+  transform:scale(1.03);
+  animation:bgMove 9s ease-in-out infinite alternate;
+}
+@keyframes bgMove{
+  from{transform:scale(1.03) translateY(0)}
+  to{transform:scale(1.08) translateY(-12px)}
+}
+.shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(2,4,10,.42),rgba(2,4,10,.12) 36%,rgba(2,4,10,.42) 66%,rgba(2,4,10,.94) 100%),radial-gradient(circle at 50% 20%,rgba(34,231,255,.18),transparent 32%),radial-gradient(circle at 50% 80%,rgba(255,39,211,.16),transparent 36%)}
+.neon-grid{position:absolute;inset:0;opacity:.26;background-image:linear-gradient(rgba(34,231,255,.12) 1px,transparent 1px),linear-gradient(90deg,rgba(255,39,211,.08) 1px,transparent 1px);background-size:38px 38px;mask-image:linear-gradient(180deg,transparent,#000 18%,#000 88%,transparent)}
+.rain{position:absolute;inset:-20%;opacity:.14;background:repeating-linear-gradient(105deg,transparent 0 12px,rgba(255,255,255,.18) 13px,transparent 15px);animation:rain 1s linear infinite}
+@keyframes rain{to{transform:translateY(48px)}}
+.scan{position:absolute;left:0;right:0;top:0;height:100px;background:linear-gradient(180deg,transparent,rgba(34,231,255,.09),transparent);animation:scan 4s linear infinite;mix-blend-mode:screen}
+@keyframes scan{0%{transform:translateY(-130px)}100%{transform:translateY(780px)}}
+
+/* Логотип и панель прогресса — внутри #splash */
+.splash-content {
+  position:relative;z-index:5;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:space-between;
+  height:100vh;width:100%;padding:60px 20px 40px;
+}
+.top{text-align:center}
+.emblem{width:96px;height:96px;margin:0 auto 16px;border:2px solid #22e7ff;background:linear-gradient(135deg,rgba(34,231,255,.16),rgba(255,39,211,.20));box-shadow:0 0 30px rgba(34,231,255,.48),inset 0 0 24px rgba(255,39,211,.18);clip-path:polygon(18px 0,100% 0,100% calc(100% - 18px),calc(100% - 18px) 100%,0 100%,0 18px);display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:950;color:#ffd36a;text-shadow:0 0 14px rgba(255,211,106,.9)}
+.emblem:after{content:"";position:absolute;bottom:17px;left:16px;right:16px;height:3px;background:#ff315d;box-shadow:0 0 14px #ff315d}
+.label{font-size:10px;font-weight:950;letter-spacing:.22em;color:#22e7ff;text-transform:uppercase;text-shadow:0 0 12px rgba(34,231,255,.9)}
+.title{font-size:46px;font-weight:950;letter-spacing:.08em;text-transform:uppercase;text-shadow:0 0 18px rgba(34,231,255,.82),0 0 26px rgba(255,39,211,.44);line-height:.88;margin-top:8px}
+.title span{color:#ffd36a;text-shadow:0 0 16px rgba(255,211,106,.85)}
+
+.bottom{width:100%;max-width:400px;margin:0 auto}
+.panel{background:rgba(3,8,16,.80);border:1px solid rgba(34,231,255,.45);padding:16px;backdrop-filter:blur(10px);clip-path:polygon(15px 0,100% 0,100% calc(100% - 15px),calc(100% - 15px) 100%,0 100%,0 15px)}
+.status{display:flex;justify-content:space-between;font-size:12px;font-weight:950;text-transform:uppercase;letter-spacing:.13em;margin-bottom:9px}
+.status b{color:#ffd36a}
+.bar{height:14px;border:1px solid rgba(34,231,255,.42);background:rgba(0,0,0,.64);overflow:hidden;position:relative}
+.bar:after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0 12px,rgba(255,255,255,.12) 13px,transparent 14px);opacity:.55}
+.fill{height:100%;width:0%;background:linear-gradient(90deg,#22e7ff,#ff27d3,#ffd36a);box-shadow:0 0 18px rgba(34,231,255,.72);transition:width .18s ease}
+.hint{text-align:center;color:#9bb4bf;font-size:11px;margin-top:10px;letter-spacing:.06em}
+.buttons{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.btn{height:48px;border:1px solid rgba(34,231,255,.45);background:rgba(34,231,255,.08);color:#eafdff;font-weight:950;text-transform:uppercase;letter-spacing:.08em;clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px);cursor:pointer}
+.btn.main{border-color:rgba(255,211,106,.72);background:linear-gradient(90deg,#ffd36a,#ff9b36);color:#07111b}
+.btn:active{transform:scale(.96)}
+.version{margin-top:12px;text-align:center;color:#6d8793;font-size:10px;letter-spacing:.12em;text-transform:uppercase}
+@media(max-width:420px){.emblem{width:82px;height:82px}.title{font-size:38px}.buttons{grid-template-columns:1fr}.splash-content{padding-top:30px}}
+
+/* Контейнер игры (полноэкранная картинка с прокруткой) */
+#game-container {
+  position:fixed;inset:0;z-index:5;
+  display:none; /* изначально скрыт */
+  background:#000;
+  overflow:auto;
+  -webkit-overflow-scrolling:touch;
+  touch-action:pan-x pan-y;
+}
+#game-container img {
+  display:block;
+  width:100%; /* можно изменить на авто, чтобы изображение было в натуральном размере */
+  height:auto;
+  min-height:100vh;
+  object-fit:contain; /* или cover — зависит от дизайна */
+}
+/* Если хотите, чтобы картинка была в натуральном размере, раскомментируйте: */
+/* #game-container img { width:auto; height:auto; max-width:none; max-height:none; } */
 </style>
 </head>
 <body>
-<main class="screen" id="mainScreen">
+
+<!-- ЭКРАН ЗАГРУЗКИ (splash) -->
+<div id="splash">
   <div class="bg"></div>
   <div class="shade"></div>
   <div class="neon-grid"></div>
   <div class="rain"></div>
   <div class="scan"></div>
-  <section class="top" id="topSection">
-    <div class="emblem"></div>
-    <div class="label">Legendary Cyberpunk RPG</div>
-    <div class="title">NEXUS<br><span>RONIN</span></div>
-  </section>
-  <section class="bottom" id="bottomPanel">
-    <div class="panel">
-      <div class="status"><span>Синхронизация</span><b id="percent">0%</b></div>
-      <div class="bar"><div class="fill" id="fill"></div></div>
-      <div class="hint" id="hint">Инициализация NR-модулей</div>
-      <div class="buttons">
-        <button class="btn main" id="startBtn">Начать</button>
-        <button class="btn">Настройки</button>
-      </div>
-      <div class="version">Prototype build 0.1</div>
+  <div class="splash-content">
+    <div class="top">
+      <div class="emblem">NR</div>
+      <div class="label">Legendary Cyberpunk RPG</div>
+      <div class="title">NEXUS<br><span>RONIN</span></div>
     </div>
-  </section>
-</main>
+    <div class="bottom">
+      <div class="panel">
+        <div class="status"><span>Синхронизация</span><b id="percent">0%</b></div>
+        <div class="bar"><div class="fill" id="fill"></div></div>
+        <div class="hint" id="hint">Инициализация NR-модулей</div>
+        <div class="buttons">
+          <button class="btn main" id="startBtn">Начать</button>
+          <button class="btn">Настройки</button>
+        </div>
+        <div class="version">Prototype build 0.1</div>
+      </div>
+    </div>
+  </div>
+</div>
 
+<!-- ИГРОВОЙ КОНТЕЙНЕР (прокручиваемая база) -->
+<div id="game-container">
+  <img src="./assets/images/backgrounds/main_menu_bg.jpg" alt="Game Base" draggable="false">
+</div>
+
+<!-- АУДИО -->
 <audio id="bgMusic" loop preload="auto">
   <source src="./assets/audio/music/neon_soul.mp3" type="audio/mpeg">
 </audio>
 
 <script>
-// ---- 1. Инициализация Telegram WebApp ----
+// ---- 1. Telegram WebApp ----
 function initTelegram() {
   if (window.Telegram && window.Telegram.WebApp) {
     window.Telegram.WebApp.ready();
     window.Telegram.WebApp.expand();
-    console.log('Telegram WebApp expanded');
+    console.log('Telegram expanded');
     return true;
-  } else {
-    console.log('Not in Telegram WebApp');
-    return false;
   }
+  return false;
 }
 initTelegram();
 setTimeout(initTelegram, 300);
@@ -77,45 +159,49 @@ function tick(){
 }
 setTimeout(tick, 350);
 
-// ---- 3. Музыка и переход ----
+// ---- 3. Музыка ----
 const music = document.getElementById('bgMusic');
-const startBtn = document.getElementById('startBtn');
-const topSection = document.getElementById('topSection');
-const bottomPanel = document.getElementById('bottomPanel');
-
 if (music) {
   music.volume = 0.3;
   music.load();
-  console.log('Аудио элемент найден, путь: ./assets/audio/music/neon_soul.mp3');
   music.addEventListener('error', function(e) {
-    console.error('Ошибка загрузки музыки:', e);
-    alert('Не удалось загрузить музыку. Проверьте путь к файлу.');
-  });
-  music.addEventListener('canplaythrough', function() {
-    console.log('Музыка готова');
+    console.warn('Ошибка загрузки музыки:', e);
   });
 }
 
+// ---- 4. Переход в игру ----
+const startBtn = document.getElementById('startBtn');
+const splash = document.getElementById('splash');
+const gameContainer = document.getElementById('game-container');
+
 function enterGame() {
-  console.log('Переход в игру');
+  // Расширяем на весь экран ещё раз
   if (window.Telegram && window.Telegram.WebApp) {
     window.Telegram.WebApp.expand();
   }
   if (document.documentElement.requestFullscreen) {
     document.documentElement.requestFullscreen().catch(() => {});
   }
-  topSection.classList.add('hidden');
-  bottomPanel.classList.add('hidden');
+
+  // Скрываем splash
+  splash.classList.add('hidden');
+  // Показываем игровой контейнер
+  gameContainer.style.display = 'block';
+
+  // Запускаем музыку
   if (music) {
-    music.play().then(() => console.log('Музыка играет'))
-           .catch(err => console.warn('Ошибка воспроизведения:', err));
+    music.play().catch(() => {});
   }
-  startBtn.textContent = 'В игре';
+
+  // Блокируем кнопку
   startBtn.disabled = true;
+  startBtn.textContent = 'В игре';
   startBtn.style.opacity = '0.5';
 }
 
 startBtn.addEventListener('click', enterGame);
+
+// Если пользователь кликнул по игровому контейнеру — ничего не делаем
 </script>
 </body>
 </html>
