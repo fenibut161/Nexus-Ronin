@@ -6,28 +6,23 @@
 <title>Nexus Ronin — Splash</title>
 <style>
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#02040a;color:#eafdff;font-family:Arial,Helvetica,sans-serif;overflow:hidden}.screen{position:relative;width:100vw;height:100vh;max-width:520px;margin:0 auto;background:#02040a;overflow:hidden}.bg{position:absolute;inset:0;background:url('./assets/images/backgrounds/main_menu_bg.jpg') center/cover no-repeat;transform:scale(1.03);animation:bgMove 9s ease-in-out infinite alternate}@keyframes bgMove{from{transform:scale(1.03) translateY(0)}to{transform:scale(1.08) translateY(-12px)}}.shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(2,4,10,.42),rgba(2,4,10,.12) 36%,rgba(2,4,10,.42) 66%,rgba(2,4,10,.94) 100%),radial-gradient(circle at 50% 20%,rgba(34,231,255,.18),transparent 32%),radial-gradient(circle at 50% 80%,rgba(255,39,211,.16),transparent 36%)}.neon-grid{position:absolute;inset:0;opacity:.26;background-image:linear-gradient(rgba(34,231,255,.12) 1px,transparent 1px),linear-gradient(90deg,rgba(255,39,211,.08) 1px,transparent 1px);background-size:38px 38px;mask-image:linear-gradient(180deg,transparent,#000 18%,#000 88%,transparent)}.rain{position:absolute;inset:-20%;opacity:.14;background:repeating-linear-gradient(105deg,transparent 0 12px,rgba(255,255,255,.18) 13px,transparent 15px);animation:rain 1s linear infinite}@keyframes rain{to{transform:translateY(48px)}}.scan{position:absolute;left:0;right:0;top:0;height:100px;background:linear-gradient(180deg,transparent,rgba(34,231,255,.09),transparent);animation:scan 4s linear infinite;mix-blend-mode:screen}@keyframes scan{0%{transform:translateY(-130px)}100%{transform:translateY(780px)}}.top{position:absolute;z-index:5;left:22px;right:22px;top:calc(38px + env(safe-area-inset-top,0px));text-align:center;transition:opacity .6s ease}.top.hidden{opacity:0;pointer-events:none}.emblem{width:96px;height:96px;margin:0 auto 16px;position:relative;border:2px solid #22e7ff;background:linear-gradient(135deg,rgba(34,231,255,.16),rgba(255,39,211,.20));box-shadow:0 0 30px rgba(34,231,255,.48),inset 0 0 24px rgba(255,39,211,.18);clip-path:polygon(18px 0,100% 0,100% calc(100% - 18px),calc(100% - 18px) 100%,0 100%,0 18px)}.emblem:before{content:"NR";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#ffd36a;font-size:32px;font-weight:950;letter-spacing:.08em;text-shadow:0 0 14px rgba(255,211,106,.9)}.emblem:after{content:"";position:absolute;left:16px;right:16px;bottom:17px;height:3px;background:#ff315d;box-shadow:0 0 14px #ff315d}.label{font-size:10px;font-weight:950;letter-spacing:.22em;color:#22e7ff;text-transform:uppercase;text-shadow:0 0 12px rgba(34,231,255,.9)}.title{margin-top:8px;font-size:46px;line-height:.88;font-weight:950;letter-spacing:.08em;text-transform:uppercase;text-shadow:0 0 18px rgba(34,231,255,.82),0 0 26px rgba(255,39,211,.44)}.title span{color:#ffd36a;text-shadow:0 0 16px rgba(255,211,106,.85)}.bottom{position:absolute;z-index:6;left:18px;right:18px;bottom:calc(24px + env(safe-area-inset-bottom,0px));transition:transform .6s cubic-bezier(.4,0,.2,1),opacity .5s ease}.bottom.hidden{transform:translateY(120%);opacity:0;pointer-events:none}.panel{position:relative;border:1px solid rgba(34,231,255,.45);background:rgba(3,8,16,.80);padding:16px 14px 14px;box-shadow:0 0 28px rgba(34,231,255,.18),inset 0 0 18px rgba(255,39,211,.08);clip-path:polygon(15px 0,100% 0,100% calc(100% - 15px),calc(100% - 15px) 100%,0 100%,0 15px);backdrop-filter:blur(10px)}.panel:before{content:"";position:absolute;inset:0;padding:1px;background:linear-gradient(135deg,#22e7ff,transparent 25%,#ffd36a 52%,transparent 74%,#ff27d3);clip-path:polygon(15px 0,100% 0,100% calc(100% - 15px),calc(100% - 15px) 100%,0 100%,0 15px);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}.status{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px;text-transform:uppercase;font-size:12px;font-weight:950;letter-spacing:.13em}.status b{color:#ffd36a;min-width:44px;text-align:right}.bar{height:14px;border:1px solid rgba(34,231,255,.42);background:rgba(0,0,0,.64);overflow:hidden;position:relative}.bar:after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0 12px,rgba(255,255,255,.12) 13px,transparent 14px);opacity:.55}.fill{height:100%;width:0%;background:linear-gradient(90deg,#22e7ff,#ff27d3,#ffd36a);box-shadow:0 0 18px rgba(34,231,255,.72);transition:width .18s ease}.hint{margin-top:10px;text-align:center;color:#9bb4bf;font-size:11px;letter-spacing:.06em}.buttons{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}.btn{height:48px;border:1px solid rgba(34,231,255,.45);background:rgba(34,231,255,.08);color:#eafdff;font-weight:950;text-transform:uppercase;letter-spacing:.08em;clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px);cursor:pointer;transition:background .2s,transform .1s;touch-action:manipulation}.btn:active{transform:scale(.96)}.btn.main{border-color:rgba(255,211,106,.72);background:linear-gradient(90deg,#ffd36a,#ff9b36);color:#07111b}.btn.main:active{background:linear-gradient(90deg,#ffc44a,#ff8a20)}.version{margin-top:12px;text-align:center;color:#6d8793;font-size:10px;letter-spacing:.12em;text-transform:uppercase}
-
 @media(max-width:420px){.emblem{width:82px;height:82px}.title{font-size:38px}.buttons{grid-template-columns:1fr}.top{top:calc(30px + env(safe-area-inset-top,0px))}}
 </style>
 </head>
 <body>
-<main class="screen">
-  <!-- Фон с картинкой меню (остаётся всегда) -->
+<main class="screen" id="mainScreen">
   <div class="bg"></div>
-  <!-- Эффекты (можно оставить для атмосферы) -->
   <div class="shade"></div>
   <div class="neon-grid"></div>
   <div class="rain"></div>
   <div class="scan"></div>
 
-  <!-- Верхний логотип (скрывается при переходе в игру) -->
   <section class="top" id="topSection">
     <div class="emblem"></div>
     <div class="label">Legendary Cyberpunk RPG</div>
     <div class="title">NEXUS<br><span>RONIN</span></div>
   </section>
 
-  <!-- Нижняя панель с прогресс-баром (скрывается при переходе) -->
   <section class="bottom" id="bottomPanel">
     <div class="panel">
       <div class="status"><span>Синхронизация</span><b id="percent">0%</b></div>
@@ -42,13 +37,31 @@
   </section>
 </main>
 
-<!-- Аудио -->
 <audio id="bgMusic" loop preload="auto">
-  <source src="./assets/audio/music/Neon%20Soul.mp3" type="audio/mpeg">
+  <source src="./assets/audio/music/Neon_Soul.mp3" type="audio/mpeg">
 </audio>
 
 <script>
-// ---- Прогресс-бар ----
+// ---- 1. Инициализация Telegram WebApp ----
+function initTelegram() {
+  if (window.Telegram && window.Telegram.WebApp) {
+    window.Telegram.WebApp.ready();
+    window.Telegram.WebApp.expand();
+    console.log('Telegram WebApp expanded');
+    return true;
+  } else {
+    console.log('Not in Telegram WebApp (or script not loaded)');
+    return false;
+  }
+}
+// Первая попытка
+initTelegram();
+// Повтор через 300 мс (если скрипт ещё грузился)
+setTimeout(initTelegram, 300);
+// Повтор через 1 с (на всякий случай)
+setTimeout(initTelegram, 1000);
+
+// ---- 2. Прогресс-бар ----
 var percent = 0;
 var fill = document.getElementById('fill');
 var label = document.getElementById('percent');
@@ -70,51 +83,73 @@ function tick(){
 }
 setTimeout(tick, 350);
 
-// ---- Музыка и переход в игру ----
+// ---- 3. Музыка и переход в игру ----
 const music = document.getElementById('bgMusic');
 const startBtn = document.getElementById('startBtn');
 const topSection = document.getElementById('topSection');
 const bottomPanel = document.getElementById('bottomPanel');
 
+if (music) {
+  music.volume = 0.3;
+  music.load();
+  console.log('Аудио элемент найден');
+  music.addEventListener('error', function(e) {
+    console.error('Ошибка загрузки музыки:', e);
+    // Выведем путь, чтобы проверить
+    console.log('Проверьте путь: ./assets/audio/music/Neon_Soul.mp3');
+  });
+  music.addEventListener('canplaythrough', function() {
+    console.log('Музыка готова к воспроизведению');
+  });
+} else {
+  console.warn('Аудио элемент не найден');
+}
+
 function enterGame() {
-  // 1. Растягиваем на весь экран (для Telegram)
+  console.log('Переход в игру');
+
+  // Ещё раз растягиваем экран
   if (window.Telegram && window.Telegram.WebApp) {
     window.Telegram.WebApp.expand();
   }
-  // 2. Пробуем полноэкранный режим в браузере (может не сработать в iframe)
+  // Полноэкранный режим в браузере (если не в Telegram)
   if (document.documentElement.requestFullscreen) {
-    document.documentElement.requestFullscreen().catch(() => {});
-  }
-
-  // 3. Скрываем верхний логотип и нижнюю панель
-  topSection.classList.add('hidden');
-  bottomPanel.classList.add('hidden');
-
-  // 4. Включаем музыку (громкость 30%)
-  if (music) {
-    music.volume = 0.3;
-    music.play().catch(() => {
-      // если блокируется автозапуск, пробуем ещё раз по клику (уже кликнули)
-      // но так как мы уже внутри обработчика клика, можно попробовать повторно
-      setTimeout(() => music.play().catch(() => {}), 100);
+    document.documentElement.requestFullscreen().catch(err => {
+      console.warn('Fullscreen не разрешён:', err);
     });
   }
 
-  // 5. Меняем кнопку (чтобы не нажали повторно)
+  // Скрываем логотип и панель
+  topSection.classList.add('hidden');
+  bottomPanel.classList.add('hidden');
+
+  // Включаем музыку
+  if (music) {
+    music.play().then(() => {
+      console.log('Музыка играет');
+    }).catch(err => {
+      console.warn('Не удалось запустить музыку:', err);
+      // Повторная попытка через короткий интервал
+      setTimeout(() => {
+        music.play().catch(() => {});
+      }, 300);
+    });
+  }
+
+  // Блокируем кнопку
   startBtn.textContent = 'В игре';
   startBtn.disabled = true;
   startBtn.style.opacity = '0.5';
 }
 
-// Обработчик нажатия "Начать"
 startBtn.addEventListener('click', enterGame);
 
-// Если музыка уже играет (автозапуск), всё равно по клику войдём в игру
-// Автозапуск попробуем, но если не получится - включится по клику
-if (music) {
-  music.volume = 0.3;
-  music.play().catch(() => {});
-}
+// Для отладки: при клике на любое место выводим статус Telegram WebApp
+document.addEventListener('click', function() {
+  if (window.Telegram && window.Telegram.WebApp) {
+    console.log('Telegram WebApp доступен, isExpanded:', window.Telegram.WebApp.isExpanded);
+  }
+});
 </script>
 </body>
 </html>
