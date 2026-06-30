@@ -39,6 +39,7 @@ app.post('/webhook', async (req, res) => {
   try {
     const update = req.body; // это объект с данными о сообщении/колбэке
     console.log('Received update:', update);
+    console.log('Webhook received at', new Date().toISOString());
 
     // Здесь вы будете обрабатывать входящие сообщения.
     // Например, простой эхо-бот:
