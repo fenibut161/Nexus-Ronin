@@ -279,3 +279,21 @@ startBtn.addEventListener('click', enterGame);
 </script>
 </body>
 </html>
+<!-- Подключаем скрипт Telegram -->
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script>
+  // Ждём загрузку страницы
+  document.addEventListener('DOMContentLoaded', function() {
+    // Проверяем, запущено ли внутри Telegram
+    if (window.Telegram && window.Telegram.WebApp) {
+      const tg = window.Telegram.WebApp;
+      tg.ready(); // обязательно!
+      
+      // Запрос полноэкранного режима (как через меню "Full Screen")
+      tg.requestFullscreen().catch(() => {
+        // Если не получилось — ничего страшного, игра работает
+        console.log('Fullscreen не доступен');
+      });
+    }
+  });
+</script>
