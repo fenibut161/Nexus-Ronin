@@ -1,209 +1,151 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
-<title>Nexus Ronin</title>
-<style>
-/* ---- Сброс ---- */
-*{box-sizing:border-box;margin:0;padding:0}
-html,body{
-  width:100%;height:100%;
-  background:#000;
-  overflow:hidden;
-  font-family:Arial,sans-serif;
-  color:#fff;
-  touch-action:pan-x pan-y;
-}
-
-/* ---- Splash (загрузка) ---- */
-#splash {
-  position:fixed;inset:0;z-index:10;
-  background:#02040a;
-  display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-  transition:opacity 0.8s ease;
-}
-#splash.hidden { opacity:0; pointer-events:none; }
-
-.bg {
-  position:absolute;inset:0;
-  background:url('./assets/images/backgrounds/main_menu_bg.jpg') center/cover no-repeat;
-  transform:scale(1.03);
-  animation:bgMove 9s ease-in-out infinite alternate;
-}
-@keyframes bgMove{
-  from{transform:scale(1.03) translateY(0)}
-  to{transform:scale(1.08) translateY(-12px)}
-}
-.shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(2,4,10,.42),rgba(2,4,10,.12) 36%,rgba(2,4,10,.42) 66%,rgba(2,4,10,.94) 100%),radial-gradient(circle at 50% 20%,rgba(34,231,255,.18),transparent 32%),radial-gradient(circle at 50% 80%,rgba(255,39,211,.16),transparent 36%)}
-.neon-grid{position:absolute;inset:0;opacity:.26;background-image:linear-gradient(rgba(34,231,255,.12) 1px,transparent 1px),linear-gradient(90deg,rgba(255,39,211,.08) 1px,transparent 1px);background-size:38px 38px;mask-image:linear-gradient(180deg,transparent,#000 18%,#000 88%,transparent)}
-.rain{position:absolute;inset:-20%;opacity:.14;background:repeating-linear-gradient(105deg,transparent 0 12px,rgba(255,255,255,.18) 13px,transparent 15px);animation:rain 1s linear infinite}
-@keyframes rain{to{transform:translateY(48px)}}
-.scan{position:absolute;left:0;right:0;top:0;height:100px;background:linear-gradient(180deg,transparent,rgba(34,231,255,.09),transparent);animation:scan 4s linear infinite;mix-blend-mode:screen}
-@keyframes scan{0%{transform:translateY(-130px)}100%{transform:translateY(780px)}}
-
-.splash-content {
-  position:relative;z-index:5;
-  display:flex;flex-direction:column;
-  align-items:center;justify-content:space-between;
-  height:100vh;width:100%;padding:60px 20px 40px;
-}
-.top{text-align:center}
-.emblem{width:96px;height:96px;margin:0 auto 16px;border:2px solid #22e7ff;background:linear-gradient(135deg,rgba(34,231,255,.16),rgba(255,39,211,.20));box-shadow:0 0 30px rgba(34,231,255,.48),inset 0 0 24px rgba(255,39,211,.18);clip-path:polygon(18px 0,100% 0,100% calc(100% - 18px),calc(100% - 18px) 100%,0 100%,0 18px);display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:950;color:#ffd36a;text-shadow:0 0 14px rgba(255,211,106,.9)}
-.emblem:after{content:"";position:absolute;bottom:17px;left:16px;right:16px;height:3px;background:#ff315d;box-shadow:0 0 14px #ff315d}
-.label{font-size:10px;font-weight:950;letter-spacing:.22em;color:#22e7ff;text-transform:uppercase;text-shadow:0 0 12px rgba(34,231,255,.9)}
-.title{font-size:46px;font-weight:950;letter-spacing:.08em;text-transform:uppercase;text-shadow:0 0 18px rgba(34,231,255,.82),0 0 26px rgba(255,39,211,.44);line-height:.88;margin-top:8px}
-.title span{color:#ffd36a;text-shadow:0 0 16px rgba(255,211,106,.85)}
-
-.bottom{width:100%;max-width:400px;margin:0 auto}
-.panel{background:rgba(3,8,16,.80);border:1px solid rgba(34,231,255,.45);padding:16px;backdrop-filter:blur(10px);clip-path:polygon(15px 0,100% 0,100% calc(100% - 15px),calc(100% - 15px) 100%,0 100%,0 15px)}
-.status{display:flex;justify-content:space-between;font-size:12px;font-weight:950;text-transform:uppercase;letter-spacing:.13em;margin-bottom:9px}
-.status b{color:#ffd36a}
-.bar{height:14px;border:1px solid rgba(34,231,255,.42);background:rgba(0,0,0,.64);overflow:hidden;position:relative}
-.bar:after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0 12px,rgba(255,255,255,.12) 13px,transparent 14px);opacity:.55}
-.fill{height:100%;width:0%;background:linear-gradient(90deg,#22e7ff,#ff27d3,#ffd36a);box-shadow:0 0 18px rgba(34,231,255,.72);transition:width .18s ease}
-.hint{text-align:center;color:#9bb4bf;font-size:11px;margin-top:10px;letter-spacing:.06em}
-.buttons{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
-.btn{height:48px;border:1px solid rgba(34,231,255,.45);background:rgba(34,231,255,.08);color:#eafdff;font-weight:950;text-transform:uppercase;letter-spacing:.08em;clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px);cursor:pointer;touch-action:manipulation}
-.btn.main{border-color:rgba(255,211,106,.72);background:linear-gradient(90deg,#ffd36a,#ff9b36);color:#07111b}
-.btn:active{transform:scale(.96)}
-.version{margin-top:12px;text-align:center;color:#6d8793;font-size:10px;letter-spacing:.12em;text-transform:uppercase}
-@media(max-width:420px){.emblem{width:82px;height:82px}.title{font-size:38px}.buttons{grid-template-columns:1fr}.splash-content{padding-top:30px}}
-
-/* ---- Игровой контейнер ---- */
-#game-container {
-  position:fixed;inset:0;z-index:5;
-  display:none;
-  background:#000;
-  overflow:auto;
-  -webkit-overflow-scrolling:touch;
-  touch-action:pan-x pan-y;
-}
-#game-container img {
-  display:block;
-  width:auto;
-  height:auto;
-  max-width:none;
-  max-height:none;
-  min-height:100vh;
-  object-fit:fill;
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Nexus Ronin — Fullscreen Test</title>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      background: #0a0a1a;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
+    #splash {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      transition: opacity 0.4s;
+    }
+    #splash.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+    #game {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      font-size: 24px;
+    }
+    #game.active {
+      display: flex;
+    }
+    .btn {
+      padding: 16px 40px;
+      font-size: 20px;
+      background: #ffd36a;
+      color: #0a0a1a;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: transform 0.1s;
+    }
+    .btn:active { transform: scale(0.95); }
+    #status {
+      color: #aaa;
+      font-size: 14px;
+      margin-top: 10px;
+      text-align: center;
+    }
+    .highlight { color: #22e7ff; }
+  </style>
 </head>
 <body>
 
-<!-- Splash -->
 <div id="splash">
-  <div class="bg"></div>
-  <div class="shade"></div>
-  <div class="neon-grid"></div>
-  <div class="rain"></div>
-  <div class="scan"></div>
-  <div class="splash-content">
-    <div class="top">
-      <div class="emblem">NR</div>
-      <div class="label">Legendary Cyberpunk RPG</div>
-      <div class="title">NEXUS<br><span>RONIN</span></div>
-    </div>
-    <div class="bottom">
-      <div class="panel">
-        <div class="status"><span>Синхронизация</span><b id="percent">0%</b></div>
-        <div class="bar"><div class="fill" id="fill"></div></div>
-        <div class="hint" id="hint">Инициализация NR-модулей</div>
-        <div class="buttons">
-          <button class="btn main" id="startBtn">Начать</button>
-          <button class="btn">Настройки</button>
-        </div>
-        <div class="version">Prototype build 0.1</div>
-      </div>
-    </div>
-  </div>
+  <h1 style="font-size: 48px;">NEXUS <span style="color:#ffd36a;">RONIN</span></h1>
+  <button class="btn" id="startBtn">Начать</button>
+  <div id="status">Нажмите кнопку для входа</div>
 </div>
 
-<!-- Игровой контейнер -->
-<div id="game-container">
-  <img src="./assets/images/backgrounds/main_menu_bg.jpg" alt="Game Base" draggable="false">
+<div id="game">
+  <div>🎮 <span class="highlight">ИГРА ЗАПУЩЕНА</span></div>
+  <div style="font-size: 16px; color:#aaa;">Полноэкранный режим должен быть активен</div>
+  <button class="btn" id="exitBtn" style="background:#666; color:#fff;">Выйти</button>
 </div>
 
-<!-- Аудио -->
-<audio id="bgMusic" loop preload="auto">
-  <source src="./assets/audio/music/neon_soul.mp3" type="audio/mpeg">
-</audio>
-
-<!-- ====== СКРИПТ ====== -->
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script>
-// ---- 1. Telegram WebApp (инициализация) ----
-function initTelegram() {
-  if (window.Telegram && window.Telegram.WebApp) {
-    const webApp = window.Telegram.WebApp;
-    webApp.ready();
-    // Расширяем окно (на случай, если fullscreen не сработает)
-    webApp.expand();
-    // Включаем вертикальные свайпы (опционально)
-    if (webApp.enableVerticalSwipes) {
-      webApp.enableVerticalSwipes();
+  let tg = null;
+  const splash = document.getElementById('splash');
+  const game = document.getElementById('game');
+  const statusDiv = document.getElementById('status');
+  const startBtn = document.getElementById('startBtn');
+  const exitBtn = document.getElementById('exitBtn');
+
+  // Инициализация Telegram WebApp
+  function initTelegram() {
+    if (window.Telegram && window.Telegram.WebApp) {
+      tg = window.Telegram.WebApp;
+      tg.ready();
+      tg.expand();  // сразу растягиваем
+      console.log('Telegram WebApp инициализирован');
+      statusDiv.innerHTML = '✅ Telegram WebApp готов';
+      return true;
+    } else {
+      statusDiv.innerHTML = '⚠️ Запущено вне Telegram (или WebApp не загружен)';
+      return false;
     }
-    console.log('Telegram WebApp инициализирован');
-    return true;
   }
-  return false;
-}
-document.addEventListener('DOMContentLoaded', initTelegram);
+  initTelegram();
 
-// ---- 2. Прогресс-бар ----
-var percent = 0;
-var fill = document.getElementById('fill');
-var label = document.getElementById('percent');
-var hint = document.getElementById('hint');
-var hints = ['Инициализация NR-модулей','Подключение к Нексусу','Загрузка чемпионов','Синхронизация боя','Готово'];
-function tick(){
-  var step = Math.floor(Math.random()*4)+1;
-  percent = Math.min(100, percent + step);
-  fill.style.width = percent + '%';
-  label.textContent = percent + '%';
-  if(percent < 25) hint.textContent = hints[0];
-  else if(percent < 50) hint.textContent = hints[1];
-  else if(percent < 75) hint.textContent = hints[2];
-  else if(percent < 100) hint.textContent = hints[3];
-  else hint.textContent = hints[4];
-  if(percent < 100) setTimeout(tick, 90 + Math.random()*160);
-}
-setTimeout(tick, 350);
-
-// ---- 3. Музыка ----
-const music = document.getElementById('bgMusic');
-if (music) {
-  music.volume = 0.3;
-  music.load();
-}
-
-// ---- 4. Переход в игру ----
-const startBtn = document.getElementById('startBtn');
-const splash = document.getElementById('splash');
-const gameContainer = document.getElementById('game-container');
-
-function showGame() {
-  splash.classList.add('hidden');
-  gameContainer.style.display = 'block';
-  if (music) music.play().catch(() => {});
-  startBtn.textContent = 'В игре';
-  startBtn.disabled = true;
-  startBtn.style.opacity = '0.5';
-}
-
-startBtn.addEventListener('click', function() {
-  // Запрос полноэкранного режима (обязательно в ответ на клик)
-  if (window.Telegram && window.Telegram.WebApp) {
-    const webApp = window.Telegram.WebApp;
-    webApp.requestFullscreen().catch((err) => {
-      console.warn('Fullscreen не доступен:', err);
-    });
+  // Функция перехода в игру
+  function enterGame() {
+    splash.classList.add('hidden');
+    game.classList.add('active');
+    // Попробуем запустить fullscreen (если ещё не включен)
+    if (tg && tg.requestFullscreen) {
+      tg.requestFullscreen().catch(() => {
+        // Если не вышло, просто используем expand
+        tg.expand();
+      });
+    }
+    statusDiv.innerHTML = '🔥 Игра активна';
   }
-  // Переход в игру
-  showGame();
-});
+
+  // Обработчик кнопки "Начать"
+  startBtn.addEventListener('click', function() {
+    statusDiv.innerHTML = '⏳ Запрос полного экрана...';
+
+    // Сначала запрашиваем fullscreen, потом переходим
+    if (tg && tg.requestFullscreen) {
+      tg.requestFullscreen()
+        .then(() => {
+          statusDiv.innerHTML = '✅ Fullscreen включён';
+          enterGame();
+        })
+        .catch((err) => {
+          console.warn('Fullscreen не удался:', err);
+          statusDiv.innerHTML = '⚠️ Fullscreen недоступен, используем expand';
+          tg.expand();
+          enterGame();
+        });
+    } else {
+      // Если requestFullscreen нет, просто expand и переходим
+      if (tg) tg.expand();
+      enterGame();
+    }
+  });
+
+  // Выход (для теста)
+  exitBtn.addEventListener('click', function() {
+    splash.classList.remove('hidden');
+    game.classList.remove('active');
+    statusDiv.innerHTML = 'Вы вышли из игры';
+    if (tg && tg.exitFullscreen) {
+      tg.exitFullscreen().catch(() => {});
+    }
+  });
 </script>
 </body>
 </html>
