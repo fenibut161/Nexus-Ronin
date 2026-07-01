@@ -6,9 +6,8 @@
   <title>NEXUS RONIN — Loading Screen</title>
   <style>
     :root {
-      /* Для экрана загрузки без ресурсов верхний отступ делаем минимальным, чтобы поднять логотип на 1 см выше */
-      --safe-top: max(12px, var(--tg-content-safe-area-inset-top, 12px));
-      --safe-bottom: max(12px, var(--tg-content-safe-area-inset-bottom, 12px));
+      var(--safe-top: max(24px, var(--tg-content-safe-area-inset-top, 24px)));
+      var(--safe-bottom: max(16px, var(--tg-content-safe-area-inset-bottom, 16px)));
       --cyan: #00f0ff;
       --pink: #ff007b;
       --gold: #ffd36a;
@@ -57,7 +56,7 @@
       transform: scale(1.08);
     }
 
-    /* ПЛАВАЮЩИЕ НЕОНОВЫЕ СФЕРЫ И СВЕЧЕНИЕ (Анимация фона) */
+    /* ПЛАВАЮЩИЕ НЕОНОВЫЕ СФЕРЫ И СВЕЧЕНИЕ */
     .neon-glow-layer {
       position: absolute;
       inset: 0;
@@ -109,17 +108,16 @@
       100% { transform: translate(-25px, 30px) scale(0.95); opacity: 0.45; }
     }
 
-    /* Виньетка для идеальной читаемости текста */
     .loading-overlay {
       position: absolute;
       inset: 0;
       z-index: 3;
       background: linear-gradient(
         to bottom,
-        rgba(6,9,19,0.75) 0%,
-        rgba(6,9,19,0.25) 35%,
-        rgba(6,9,19,0.7) 70%,
-        rgba(6,9,19,0.96) 100%
+        rgba(5,9,20,0.75) 0%,
+        rgba(5,9,20,0.2) 35%,
+        rgba(5,9,20,0.75) 70%,
+        rgba(5,9,20,0.96) 100%
       );
     }
 
@@ -132,12 +130,14 @@
       flex-direction: column;
       justify-content: space-between;
       align-items: center;
-      padding: var(--safe-top) 16px var(--safe-bottom) 16px;
+      padding: max(24px, var(--tg-content-safe-area-inset-top, 24px)) 16px max(16px, var(--tg-content-safe-area-inset-bottom, 16px)) 16px;
     }
 
-    /* 1. Логотип NEXUS RONIN (ПОДНЯТ ВЫШЕ НА ~1 СМ / 35px) */
+    /* =========================================================
+       1. ЛОГОТИП (СВЕРХУ) И ОТЦЕНТРОВАННОЕ НАЗВАНИЕ
+       ========================================================= */
     .header-logo-container {
-      margin-top: 5px;
+      margin-top: 18px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -146,38 +146,76 @@
     }
 
     .nr-badge {
-      background: linear-gradient(135deg, rgba(0, 240, 255, 0.3), rgba(180, 0, 255, 0.4));
+      background: linear-gradient(135deg, rgba(0, 240, 255, 0.25), rgba(180, 0, 255, 0.35));
       border: 1px solid var(--cyan);
-      padding: 4px 14px;
+      color: var(--gold);
       font-size: 20px;
       font-weight: 900;
-      color: var(--gold);
-      letter-spacing: 2px;
+      letter-spacing: 3px;
+      padding: 5px 16px;
       clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
-      box-shadow: 0 0 18px rgba(0, 240, 255, 0.5);
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
       margin-bottom: 6px;
+      text-transform: uppercase;
+      display: inline-block;
     }
 
     .game-subtitle {
-      font-size: 10px;
-      letter-spacing: 3px;
+      font-size: 11px;
+      letter-spacing: 4px;
       color: var(--cyan);
-      font-weight: 700;
-      margin-bottom: 2px;
-      text-shadow: 0 0 8px var(--cyan);
+      font-weight: 800;
+      text-shadow: 0 0 10px var(--cyan);
+      text-transform: uppercase;
+    }
+
+    /* Отцентрованный блок заголовка NEXUS RONIN между шапкой и лором */
+    .title-center-box {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
     }
 
     .game-title {
-      font-size: 34px;
+      font-size: 46px; /* Увеличено для максимальной выразительности */
       font-weight: 900;
-      line-height: 0.92;
-      letter-spacing: 1px;
-      text-shadow: 0 2px 15px rgba(0, 0, 0, 0.9);
+      line-height: 0.9;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
-    .game-title .nexus { color: #ffffff; }
-    .game-title .ronin { color: var(--gold); text-shadow: 0 0 15px rgba(255, 211, 106, 0.7); }
 
-    /* 2. Блок подсказок по лору (ИДЕАЛЬНО ОТЦЕНТРОВАН В СЕРЕДИНЕ) */
+    .game-title .nexus {
+      color: #ffffff;
+      text-shadow: 
+        1px 1px 0px var(--pink),
+        -1px -1px 0px var(--cyan),
+        0 0 18px rgba(255, 255, 255, 0.6);
+      animation: cpGlitch 5s infinite;
+    }
+
+    .game-title .ronin {
+      color: var(--gold);
+      text-shadow: 
+        2px 1px 0px var(--pink),
+        -1px -1px 0px var(--cyan),
+        0 0 25px rgba(255, 211, 106, 0.65);
+      animation: cpGlitch 5s infinite 0.2s;
+    }
+
+    @keyframes cpGlitch {
+      0%, 90%, 100% { transform: translate(0, 0) skewX(0deg); }
+      91% { transform: translate(-3px, 1px) skewX(3deg); }
+      93% { transform: translate(3px, -1px) skewX(-3deg); }
+      95% { transform: translate(-1px, 2px) scale(1.02); }
+      97% { transform: translate(2px, -1px); }
+    }
+
+    /* 2. Блок подсказок по лору */
     .lore-center-wrapper {
       flex: 1;
       display: flex;
@@ -190,38 +228,38 @@
 
     .lore-slide-box {
       width: 100%;
-      padding: 14px 18px;
-      background: rgba(6, 12, 24, 0.82);
+      padding: 15px 18px;
+      background: rgba(5, 9, 20, 0.85);
       border-left: 3px solid var(--cyan);
-      border-right: 3px solid var(--pink);
+      border-right: 3px solid var(--cp-yellow);
       border-radius: 10px;
       text-align: center;
-      backdrop-filter: blur(10px);
-      box-shadow: 0 0 25px rgba(0, 240, 255, 0.15), 0 8px 25px rgba(0,0,0,0.8);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 0 25px rgba(0, 240, 255, 0.15), 0 8px 25px rgba(0,0,0,0.85);
       border-top: 1px solid rgba(255, 255, 255, 0.08);
       border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     }
     .lore-title {
-      font-size: 11.5px;
+      font-size: 12px;
       color: var(--gold);
       letter-spacing: 2px;
-      font-weight: 800;
+      font-weight: 900;
       margin-bottom: 6px;
       text-transform: uppercase;
-      text-shadow: 0 0 8px rgba(255, 211, 106, 0.4);
+      text-shadow: 0 0 10px rgba(255, 211, 106, 0.5);
     }
     .lore-text {
-      font-size: 13px;
+      font-size: 13.5px;
       color: #e2e8f0;
       line-height: 1.4;
-      min-height: 36px;
+      min-height: 38px;
       display: flex;
       align-items: center;
       justify-content: center;
       transition: opacity 0.4s ease;
     }
 
-    /* 3. Нижняя панель синхронизации (Компактная, чтобы не обрезалась) */
+    /* 3. Нижняя панель синхронизации */
     .loading-bottom-box {
       width: 100%;
       max-width: 400px;
@@ -229,7 +267,7 @@
     }
 
     .cyber-box {
-      background: rgba(6, 12, 24, 0.94);
+      background: rgba(5, 9, 20, 0.95);
       border: 1px solid rgba(0, 240, 255, 0.45);
       padding: 16px 18px;
       position: relative;
@@ -259,8 +297,8 @@
     .progress-fill {
       width: 0%;
       height: 100%;
-      background: linear-gradient(90deg, #00f0ff 0%, #ff007b 50%, #ffd36a 100%);
-      box-shadow: 0 0 12px rgba(255, 0, 123, 0.8);
+      background: linear-gradient(90deg, #00f0ff 0%, #ff0055 50%, #FCEE0A 100%);
+      box-shadow: 0 0 12px rgba(255, 0, 85, 0.8);
       transition: width 0.25s ease;
     }
 
@@ -298,17 +336,18 @@
     }
 
     .btn-primary:not(:disabled) {
-      background: linear-gradient(90deg, #ffe082 0%, #ffd36a 50%, #ffaf00 100%);
-      color: #060913;
+      background: linear-gradient(90deg, rgba(0, 240, 255, 0.25), rgba(157, 0, 255, 0.3));
+      color: #ffffff;
+      border: 1px solid var(--cyan);
       margin-bottom: 8px;
-      box-shadow: 0 0 20px rgba(255, 211, 106, 0.6);
-      animation: pulseBtn 1.8s infinite;
+      box-shadow: 0 0 20px rgba(0, 240, 255, 0.5);
+      animation: pulseBtnCyan 1.8s infinite;
     }
 
-    @keyframes pulseBtn {
-      0% { box-shadow: 0 0 15px rgba(255, 211, 106, 0.5); }
-      50% { box-shadow: 0 0 28px rgba(255, 211, 106, 0.9); }
-      100% { box-shadow: 0 0 15px rgba(255, 211, 106, 0.5); }
+    @keyframes pulseBtnCyan {
+      0% { box-shadow: 0 0 12px rgba(0, 240, 255, 0.4); }
+      50% { box-shadow: 0 0 25px rgba(0, 240, 255, 0.85); }
+      100% { box-shadow: 0 0 12px rgba(0, 240, 255, 0.4); }
     }
 
     .btn-primary { margin-bottom: 8px; }
@@ -334,25 +373,25 @@
 </head>
 <body>
 
-<!-- 1. Контейнер для 6 сменяющихся картинок фона -->
 <div id="bgSliderContainer"></div>
 
-<!-- 2. Плавающая неоновая анимация свечения (сферы и градиенты) -->
 <div class="neon-glow-layer">
   <div class="neon-orb orb-cyan"></div>
   <div class="neon-orb orb-pink"></div>
   <div class="neon-orb orb-gold"></div>
 </div>
 
-<!-- 3. Затемняющая виньетка -->
 <div class="loading-overlay"></div>
 
-<!-- 4. Основной экран загрузки -->
 <div id="loadingScreen">
-  <!-- Логотип NEXUS RONIN -->
+  <!-- Логотип сверху: плашка NR и подзаголовок -->
   <div class="header-logo-container">
     <div class="nr-badge">NR</div>
     <div class="game-subtitle">LEGENDARY CYBERPUNK RPG</div>
+  </div>
+
+  <!-- Отцентрованное название NEXUS RONIN между шапкой и лором -->
+  <div class="title-center-box">
     <div class="game-title">
       <div class="nexus">NEXUS</div>
       <div class="ronin">RONIN</div>
@@ -367,7 +406,6 @@
     </div>
   </div>
 
-  <!-- Панель синхронизации -->
   <div class="loading-bottom-box">
     <div class="cyber-box">
       <div class="sync-header">
@@ -379,7 +417,6 @@
       </div>
       <div class="sync-status" id="syncStatusText">Загрузка нейроядер...</div>
 
-      <!-- КНОПКА НАЧАТЬ (ЗАБЛОКИРОВАНА ДО 100%) -->
       <button class="cyber-btn btn-primary" id="startBtn" disabled>🔒 СИНХРОНИЗАЦИЯ...</button>
       <button class="cyber-btn btn-secondary" id="settingsBtn">НАСТРОЙКИ</button>
     </div>
@@ -387,39 +424,34 @@
   </div>
 </div>
 
-<!-- Официальный скрипт Telegram -->
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script>
   const tg = window.Telegram?.WebApp;
 
-  // =========================================================================
-  // НАСТРОЙКИ ФОНОВЫХ ИЗОБРАЖЕНИЙ (ТЕПЕРЬ ПО УМОЛЧАНИЮ .JPG)
-  // Автоматический загрузчик проверяет .jpg, .jpeg, .png, а также пути относительно папок!
-  // =========================================================================
   const BACKGROUND_SLIDES = [
     {
       url: 'webapp/assets/images/backgrounds/1.jpg',
-      fallback: 'radial-gradient(circle at 50% 30%, rgba(180, 0, 255, 0.45) 0%, transparent 70%), linear-gradient(to bottom, #060913, #180c2e)'
+      fallback: 'radial-gradient(circle at 50% 30%, rgba(180, 0, 255, 0.45) 0%, transparent 70%), linear-gradient(to bottom, #050914, #180c2e)'
     },
     {
       url: 'webapp/assets/images/backgrounds/2.jpg',
-      fallback: 'radial-gradient(circle at 70% 60%, rgba(0, 240, 255, 0.35) 0%, transparent 70%), linear-gradient(to bottom, #060913, #0a1f2e)'
+      fallback: 'radial-gradient(circle at 70% 60%, rgba(0, 240, 255, 0.35) 0%, transparent 70%), linear-gradient(to bottom, #050914, #0a1f2e)'
     },
     {
       url: 'webapp/assets/images/backgrounds/3.jpg',
-      fallback: 'radial-gradient(circle at 30% 50%, rgba(255, 0, 123, 0.35) 0%, transparent 70%), linear-gradient(to bottom, #060913, #240a1c)'
+      fallback: 'radial-gradient(circle at 30% 50%, rgba(255, 0, 85, 0.35) 0%, transparent 70%), linear-gradient(to bottom, #050914, #240a1c)'
     },
     {
       url: 'webapp/assets/images/backgrounds/4.jpg',
-      fallback: 'radial-gradient(circle at 50% 50%, rgba(255, 211, 106, 0.25) 0%, transparent 70%), linear-gradient(to bottom, #060913, #1a150e)'
+      fallback: 'radial-gradient(circle at 50% 50%, rgba(255, 211, 106, 0.25) 0%, transparent 70%), linear-gradient(to bottom, #050914, #1a150e)'
     },
     {
       url: 'webapp/assets/images/backgrounds/5.jpg',
-      fallback: 'radial-gradient(circle at 40% 30%, rgba(0, 240, 255, 0.4) 0%, transparent 70%), linear-gradient(to bottom, #060913, #0d1e2e)'
+      fallback: 'radial-gradient(circle at 40% 30%, rgba(0, 240, 255, 0.4) 0%, transparent 70%), linear-gradient(to bottom, #050914, #0d1e2e)'
     },
     {
       url: 'webapp/assets/images/backgrounds/6.jpg',
-      fallback: 'radial-gradient(circle at 50% 50%, rgba(180, 0, 255, 0.5) 0%, transparent 70%), linear-gradient(to bottom, #060913, #1e0d36)'
+      fallback: 'radial-gradient(circle at 50% 50%, rgba(180, 0, 255, 0.5) 0%, transparent 70%), linear-gradient(to bottom, #050914, #1e0d36)'
     }
   ];
 
@@ -432,37 +464,32 @@
     { title: "🔮 ЯДРО NEXUS CORE", text: "Сердце вселенной. Квантовый реактор, хранящий сознание величайших воинов прошлого для Призыва." }
   ];
 
-  // 1. Инициализация Telegram WebApp
   if (tg) {
     tg.ready();
     tg.expand();
-    if (tg.setHeaderColor) tg.setHeaderColor('#060913');
-    if (tg.setBackgroundColor) tg.setBackgroundColor('#060913');
+    if (tg.setHeaderColor) tg.setHeaderColor('#050914');
+    if (tg.setBackgroundColor) tg.setBackgroundColor('#050914');
     if (tg.disableVerticalSwipes) tg.disableVerticalSwipes();
   }
 
-  // 2. Умное создание слоёв фона с автоподбором расширений (.jpg / .png / .jpeg) и путей
   const sliderContainer = document.getElementById('bgSliderContainer');
   const slideElements = [];
 
   BACKGROUND_SLIDES.forEach((item, idx) => {
     const layer = document.createElement('div');
     layer.className = `slide-layer ${idx === 0 ? 'active' : ''}`;
-    
-    // По умолчанию ставим оригинальный путь + красивое неоновое свечение
     layer.style.backgroundImage = `url('${item.url}'), ${item.fallback}`;
     sliderContainer.appendChild(layer);
     slideElements.push(layer);
 
-    // Список проверяемых путей в порядке приоритета
     const variants = [
-      item.url,                                      // 1. webapp/assets/images/backgrounds/1.jpg
-      item.url.replace('webapp/', './'),             // 2. ./assets/images/backgrounds/1.jpg
-      item.url.replace('webapp/', ''),               // 3. assets/images/backgrounds/1.jpg
-      '/' + item.url,                                // 4. /webapp/assets/images/backgrounds/1.jpg
-      item.url.replace('.jpg', '.png'),              // 5. webapp/assets/images/backgrounds/1.png
+      item.url,
+      item.url.replace('webapp/', './'),
+      item.url.replace('webapp/', ''),
+      '/' + item.url,
+      item.url.replace('.jpg', '.png'),
       item.url.replace('webapp/', './').replace('.jpg', '.png'),
-      item.url.replace('.jpg', '.jpeg')              // 7. .jpeg
+      item.url.replace('.jpg', '.jpeg')
     ];
 
     function tryLoadImage(vIndex) {
@@ -470,7 +497,6 @@
       const img = new Image();
       img.onload = () => {
         layer.style.backgroundImage = `url('${variants[vIndex]}'), ${item.fallback}`;
-        console.log("Успешно загружен фон:", variants[vIndex]);
       };
       img.onerror = () => tryLoadImage(vIndex + 1);
       img.src = variants[vIndex];
@@ -478,7 +504,6 @@
     tryLoadImage(0);
   });
 
-  // 3. Анимация смены фонов и лора
   let activeIdx = 0;
   const loreTitle = document.getElementById('loreTitle');
   const loreText = document.getElementById('loreText');
@@ -496,7 +521,6 @@
     }, 350);
   }, 4500);
 
-  // 4. Процесс синхронизации 0% -> 100%
   const startBtn = document.getElementById('startBtn');
   const settingsBtn = document.getElementById('settingsBtn');
   const syncPercent = document.getElementById('syncPercent');
@@ -521,7 +545,7 @@
       startBtn.disabled = false;
       startBtn.innerHTML = "⚡ НАЧАТЬ";
       syncStatusText.textContent = "Готово к погружению";
-      syncStatusText.style.color = "#ffd36a";
+      syncStatusText.style.color = "#00f0ff";
     }
 
     syncPercent.textContent = `${currentProgress}%`;
@@ -535,7 +559,6 @@
     }
   }, 100);
 
-  // 5. Обработчики кнопок
   startBtn.addEventListener('click', () => {
     if (startBtn.disabled) return;
 
