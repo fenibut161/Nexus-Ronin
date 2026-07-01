@@ -47,6 +47,9 @@
       overflow: hidden;
     }
 
+    /* На ПК (широкий экран) .room-stage растягивается на весь экран,
+       как и раньше — поведение для десктопа не меняется. */
+
     .room-bg {
       position: absolute;
       inset: -2%;
@@ -380,10 +383,42 @@
        Все элементы аккуратно подстраиваются, ничего не вылезает!
        ========================================================= */
     @media (max-width: 768px) {
-      .top-hud { flex-direction: column; align-items: stretch; gap: 6px; }
-      .currency-group { justify-content: space-between; width: 100%; }
-      .currency-pill { flex: 1; justify-content: center; padding: 4px; font-size: 11px; }
-      
+      /* Картинка фона имеет соотношение сторон ~1264:843 (широкий формат).
+         На узком телефоне при обычном "cover" края обрезаются и хотспоты
+         перестают совпадать с объектами на картинке. Поэтому на мобильном
+         .room-stage вписывается в экран с сохранением пропорций картинки
+         (letterbox), а свободные полосы сверху/снизу закрашиваются в цвет фона. */
+      .room-viewport {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--dark-bg);
+        overflow: hidden;
+      }
+      .room-stage {
+        position: relative;
+        inset: auto;
+        width: min(100vw, calc(100vh * 1264 / 843));
+        height: min(100vh, calc(100vw * 843 / 1264));
+      }
+
+      .top-hud {
+        flex-direction: row;
+        align-items: center;
+        gap: 6px;
+        flex-wrap: nowrap;
+      }
+      .player-profile { padding: 4px 7px; gap: 5px; }
+      .avatar-icon { font-size: 15px; }
+      .profile-name { font-size: 10px; }
+      .profile-level { font-size: 9px; padding: 1px 4px; }
+      .currency-group { justify-content: flex-end; gap: 4px; flex-wrap: nowrap; }
+      .currency-pill { flex: 0 0 auto; padding: 3px 6px; font-size: 10px; gap: 3px; }
+      .plus-btn { width: 14px; height: 14px; font-size: 10px; }
+      #musicBtn { padding: 3px 6px; font-size: 10px; }
+
       .side-menu { flex-direction: row; flex-wrap: wrap; width: 100%; gap: 4px; }
       .side-btn { flex: 1 1 calc(33% - 4px); justify-content: center; text-align: center; padding: 5px; font-size: 10px; }
 
@@ -395,6 +430,59 @@
       /* На iPhone в вертикальной ориентации хотспоты немного крупнее и удобнее для пальца */
       .hotspot-label { font-size: 10px; padding: 4px 8px; }
     }
+
+    /* === МОДАЛЬНОЕ ОКНО ПОДТВЕРЖДЕНИЯ ВЫХОДА === */
+    .exit-modal-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: rgba(2, 4, 10, 0.75);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      pointer-events: auto;
+    }
+    .exit-modal-overlay.open { display: flex; }
+    .exit-modal {
+      width: min(300px, 82vw);
+      background: rgba(8, 12, 24, 0.96);
+      border: 1px solid var(--cyan);
+      border-radius: 14px;
+      padding: 22px 18px 16px;
+      text-align: center;
+      box-shadow: 0 0 40px rgba(0, 240, 255, 0.35), 0 0 70px rgba(157, 0, 255, 0.25);
+    }
+    .exit-modal-text {
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: 0.3px;
+      line-height: 1.4;
+      margin-bottom: 18px;
+    }
+    .exit-modal-actions { display: flex; gap: 10px; }
+    .exit-modal-btn {
+      flex: 1;
+      padding: 10px 0;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: transform 0.15s;
+    }
+    .exit-modal-btn:active { transform: scale(0.95); }
+    .exit-modal-btn.yes {
+      background: linear-gradient(135deg, var(--pink) 0%, var(--purple) 100%);
+      color: #fff;
+      border-color: var(--pink);
+    }
+    .exit-modal-btn.no {
+      background: rgba(255, 255, 255, 0.06);
+      color: #fff;
+      border-color: rgba(0, 240, 255, 0.5);
+    }
   </style>
 </head>
 <body>
@@ -405,6 +493,7 @@
 </audio>
 
 <!-- 1. КОМНАТА С ФОНОМ И ИНТЕРАКТИВНЫМИ ЗОНАМИ (ВСТРОЕНЫ В ОБЪЕКТЫ ФОНА!) -->
+<div class="room-viewport">
 <div class="room-stage">
   <div class="room-bg" id="bgRoom"></div>
   <div class="vignette-layer"></div>
@@ -433,6 +522,7 @@
     <div class="hotspot-label">🍸 БАР «ПОСЛЕЖИЗНИЕ»</div>
   </div>
 </div>
+</div>
 
 <!-- 2. ИНТЕРФЕЙС ПОВЕРХ КОМНАТЫ (HUD) -->
 <div id="uiLayer">
@@ -442,7 +532,7 @@
       <span class="avatar-icon">🥷</span>
       <span class="profile-name">Ночная Тень</span>
       <span class="profile-level">УР. 68</span>
-      <button onclick="window.location.href='index.html'" style="background:none; border:none; color:#aaa; cursor:pointer; margin-left:6px;" title="Вернуться на загрузку">🚪</button>
+      <button onclick="confirmExitGame()" style="background:none; border:none; color:#aaa; cursor:pointer; margin-left:6px;" title="Выйти из игры">🚪</button>
     </div>
 
     <div class="currency-group">
@@ -480,10 +570,6 @@
     <div class="side-btn" onclick="alert('Хроники и база знаний')">
       <span>📚 АРХИВЫ</span>
     </div>
-    <div class="side-btn" onclick="alert('PvP Арена')">
-      <span>⚔️ PVP АРЕНА</span>
-      <span class="tag-new">NEW</span>
-    </div>
   </div>
 
   <!-- Нижняя панель навигации и кнопка кампании -->
@@ -519,6 +605,17 @@
       <span class="story-title">🚀 ГЛАВНАЯ КАМПАНИЯ</span>
       <span class="story-ch">ГЛАВА 12-5: Неоновый Шпиль ></span>
     </button>
+  </div>
+</div>
+
+<!-- Модальное окно подтверждения выхода из игры -->
+<div class="exit-modal-overlay" id="exitModalOverlay">
+  <div class="exit-modal">
+    <div class="exit-modal-text">Вы точно хотите выйти из игры?</div>
+    <div class="exit-modal-actions">
+      <button class="exit-modal-btn yes" onclick="doExitGame()">ДА</button>
+      <button class="exit-modal-btn no" onclick="closeExitModal()">НЕТ</button>
+    </div>
   </div>
 </div>
 
@@ -594,6 +691,36 @@
       musicBtn.textContent = "🔊 МУЗЫКА";
     }
   });
+
+  // =========================================================================
+  // ВЫХОД ИЗ ИГРЫ С ПОДТВЕРЖДЕНИЕМ
+  // Кнопка 🚪 закрывает саму игру (Telegram Mini App), а не ведёт на загрузочный экран.
+  // Используем нативный tg.showConfirm, если он доступен, иначе — своё модальное окно.
+  // =========================================================================
+  const exitModalOverlay = document.getElementById('exitModalOverlay');
+
+  function confirmExitGame() {
+    if (tg && typeof tg.showConfirm === 'function') {
+      tg.showConfirm('Вы точно хотите выйти из игры?', (confirmed) => {
+        if (confirmed) doExitGame();
+      });
+    } else {
+      exitModalOverlay.classList.add('open');
+    }
+  }
+
+  function closeExitModal() {
+    exitModalOverlay.classList.remove('open');
+  }
+
+  function doExitGame() {
+    closeExitModal();
+    if (tg && typeof tg.close === 'function') {
+      tg.close(); // закрывает Telegram Mini App
+    } else if (window.close) {
+      window.close(); // закрывает вкладку/окно в обычном браузере
+    }
+  }
 </script>
 </body>
 </html>
