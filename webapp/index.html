@@ -154,24 +154,34 @@ html,body{
   <source src="./assets/audio/music/neon_soul.mp3" type="audio/mpeg">
 </audio>
 
+<!-- ========== ЕДИНЫЙ СКРИПТ ========== -->
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script>
-// ---- 1. Telegram WebApp (expand) ----
+// ---- 1. Telegram WebApp (Fullscreen) ----
 function initTelegram() {
   if (window.Telegram && window.Telegram.WebApp) {
     const webApp = window.Telegram.WebApp;
     webApp.ready();
-    webApp.expand();
+    // Запрос полноэкранного режима (скрывает панели Telegram)
+    if (webApp.requestFullscreen) {
+      webApp.requestFullscreen().catch(() => {
+        console.log('Fullscreen не доступен');
+      });
+    }
+    // Разрешить вертикальные свайпы (опционально)
     if (webApp.enableVerticalSwipes) {
       webApp.enableVerticalSwipes();
     }
-    console.log('Telegram expanded');
+    console.log('Telegram fullscreen requested');
     return true;
   }
   return false;
 }
-initTelegram();
-setTimeout(initTelegram, 300);
-setTimeout(initTelegram, 1000);
+
+// Вызов сразу после загрузки DOM
+document.addEventListener('DOMContentLoaded', function() {
+  initTelegram();
+});
 
 // ---- 2. Прогресс-бар ----
 var percent = 0;
@@ -206,12 +216,10 @@ const splash = document.getElementById('splash');
 const gameContainer = document.getElementById('game-container');
 const rotateMsg = document.getElementById('rotate-msg');
 
-// --- Определение мобильного устройства (по User-Agent) ---
 function isMobile() {
   return /Mobi|Android|iPhone|iPad|iPod|BlackBerry|Opera Mini|IEMobile/i.test(navigator.userAgent);
 }
 
-// --- Функция показа игры ---
 function showGame() {
   splash.classList.add('hidden');
   gameContainer.style.display = 'block';
@@ -224,76 +232,42 @@ function showGame() {
   window.removeEventListener('resize', checkOrientation);
 }
 
-// --- Проверка ориентации (только для мобильных) ---
 function checkOrientation() {
-  // Мы вызываем эту функцию только на мобильных, поэтому просто проверяем портрет/ландшафт
   const isPortrait = window.innerHeight > window.innerWidth;
   if (!isPortrait) {
-    // Уже горизонтально — показываем игру
     showGame();
-  } else {
-    // Если опять портрет — показываем сообщение (но его уже показываем, можно ничего не делать)
   }
 }
 
-// --- Основная функция входа ---
 function enterGame() {
-  // Растягиваем экран ещё раз
+  // Ещё раз запрашиваем fullscreen (на случай, если не сработало)
   if (window.Telegram && window.Telegram.WebApp) {
-    window.Telegram.WebApp.expand();
+    const webApp = window.Telegram.WebApp;
+    if (webApp.requestFullscreen) {
+      webApp.requestFullscreen().catch(() => {});
+    }
   }
 
-  // Если это не мобильное устройство — сразу в игру
   if (!isMobile()) {
     showGame();
     return;
   }
 
-  // Мобильное устройство — проверяем ориентацию
   const isPortrait = window.innerHeight > window.innerWidth;
   if (isPortrait) {
-    // Вертикальная — показываем сообщение о повороте
     rotateMsg.style.display = 'flex';
-    splash.classList.add('hidden'); // скрываем splash, чтобы не мешал
-    // Вешаем обработчики на изменение ориентации
+    splash.classList.add('hidden');
     window.addEventListener('orientationchange', checkOrientation);
     window.addEventListener('resize', checkOrientation);
-    // Запускаем музыку (уже фоном)
     if (music) music.play().catch(() => {});
-    // Блокируем кнопку
     startBtn.disabled = true;
     startBtn.textContent = 'Поверните';
   } else {
-    // Уже горизонтально — сразу в игру
     showGame();
   }
 }
 
-// Обработчик клика по кнопке
 startBtn.addEventListener('click', enterGame);
-
-// ---- 5. Если на мобильном изначально горизонталь — кнопка сработает ----
-// Также, если пользователь повернул обратно в портрет — сообщение не появится,
-// но для простоты мы можем позволить ему играть в портрете, если он не хочет поворачивать.
-// В данном случае мы не блокируем портрет, просто рекомендуем повернуть.
 </script>
 </body>
 </html>
-<!-- Подключаем скрипт Telegram -->
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
-<script>
-  // Ждём загрузку страницы
-  document.addEventListener('DOMContentLoaded', function() {
-    // Проверяем, запущено ли внутри Telegram
-    if (window.Telegram && window.Telegram.WebApp) {
-      const tg = window.Telegram.WebApp;
-      tg.ready(); // обязательно!
-      
-      // Запрос полноэкранного режима (как через меню "Full Screen")
-      tg.requestFullscreen().catch(() => {
-        // Если не получилось — ничего страшного, игра работает
-        console.log('Fullscreen не доступен');
-      });
-    }
-  });
-</script>
