@@ -13,7 +13,7 @@ html,body{
   overflow:hidden;
   font-family:Arial,sans-serif;
   color:#fff;
-  touch-action:pan-x pan-y; /* разрешаем жесты */
+  touch-action:pan-x pan-y;
 }
 
 /* ---- Экран загрузки (splash) ---- */
@@ -65,7 +65,7 @@ html,body{
 .fill{height:100%;width:0%;background:linear-gradient(90deg,#22e7ff,#ff27d3,#ffd36a);box-shadow:0 0 18px rgba(34,231,255,.72);transition:width .18s ease}
 .hint{text-align:center;color:#9bb4bf;font-size:11px;margin-top:10px;letter-spacing:.06em}
 .buttons{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
-.btn{height:48px;border:1px solid rgba(34,231,255,.45);background:rgba(34,231,255,.08);color:#eafdff;font-weight:950;text-transform:uppercase;letter-spacing:.08em;clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px);cursor:pointer}
+.btn{height:48px;border:1px solid rgba(34,231,255,.45);background:rgba(34,231,255,.08);color:#eafdff;font-weight:950;text-transform:uppercase;letter-spacing:.08em;clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px);cursor:pointer;touch-action:manipulation}
 .btn.main{border-color:rgba(255,211,106,.72);background:linear-gradient(90deg,#ffd36a,#ff9b36);color:#07111b}
 .btn:active{transform:scale(.96)}
 .version{margin-top:12px;text-align:center;color:#6d8793;font-size:10px;letter-spacing:.12em;text-transform:uppercase}
@@ -82,19 +82,19 @@ html,body{
 }
 #game-container img {
   display:block;
-  width:auto;           /* натуральный размер, чтобы была прокрутка */
+  width:auto;
   height:auto;
   max-width:none;
   max-height:none;
-  min-height:100vh;     /* чтобы контент был выше экрана */
+  min-height:100vh;
   object-fit:fill;
 }
 
-/* ---- Сообщение о повороте (если не landscape) ---- */
+/* ---- Сообщение о повороте (изначально скрыто) ---- */
 #rotate-msg {
   display:none;
   position:fixed;inset:0;z-index:20;
-  background:rgba(0,0,0,0.9);
+  background:rgba(0,0,0,0.92);
   color:#fff;
   font-size:24px;
   text-align:center;
@@ -104,19 +104,16 @@ html,body{
   flex-direction:column;
 }
 #rotate-msg .icon { font-size:60px; margin-bottom:20px; }
-/* Показываем сообщение, если ориентация портретная и игра активна */
-@media (orientation: portrait) and (max-width: 768px) {
-  #rotate-msg { display:flex; }
-}
+#rotate-msg .sub { font-size:14px; margin-top:10px; color:#999; }
 </style>
 </head>
 <body>
 
-<!-- Сообщение о повороте -->
+<!-- Сообщение о повороте (появляется после клика "Начать", если ориентация портретная) -->
 <div id="rotate-msg">
   <div class="icon">📱</div>
   <div>Поверните телефон горизонтально</div>
-  <div style="font-size:14px;margin-top:10px;color:#999;">Для игры требуется ландшафтный режим</div>
+  <div class="sub">Для игры требуется ландшафтный режим</div>
 </div>
 
 <!-- ЭКРАН ЗАГРУЗКИ (splash) -->
@@ -158,33 +155,22 @@ html,body{
 </audio>
 
 <script>
-// ---- 1. Инициализация Telegram WebApp (Fullscreen + Swipes + Landscape) ----
+// ---- 1. Инициализация Telegram WebApp (expand + swipes) ----
 function initTelegram() {
   if (window.Telegram && window.Telegram.WebApp) {
     const webApp = window.Telegram.WebApp;
     webApp.ready();
-
-    // --- Включаем полноэкранный режим ---
-    if (webApp.requestFullscreen) {
-      webApp.requestFullscreen().catch(e => {
-        console.warn('Fullscreen failed, trying expand:', e);
-        webApp.expand(); // запасной вариант
-      });
-    } else {
-      webApp.expand();
-    }
-
-    // --- Разрешаем вертикальные свайпы (для прокрутки) ---
+    // Для iOS и Android используем expand (он работает надёжнее)
+    webApp.expand();
+    // Разрешаем вертикальные свайпы внутри приложения
     if (webApp.enableVerticalSwipes) {
       webApp.enableVerticalSwipes();
     }
-
-    console.log('Telegram WebApp initialized');
+    console.log('Telegram WebApp expanded');
     return true;
   }
   return false;
 }
-
 initTelegram();
 setTimeout(initTelegram, 300);
 setTimeout(initTelegram, 1000);
@@ -216,49 +202,70 @@ if (music) {
   music.load();
 }
 
-// ---- 4. Переход в игру (блокировка ориентации + fullscreen) ----
+// ---- 4. Переход в игру с проверкой ориентации ----
 const startBtn = document.getElementById('startBtn');
 const splash = document.getElementById('splash');
 const gameContainer = document.getElementById('game-container');
+const rotateMsg = document.getElementById('rotate-msg');
 
 function enterGame() {
-  // --- Ещё раз запрашиваем полноэкранный режим ---
+  // Растягиваем на весь экран
   if (window.Telegram && window.Telegram.WebApp) {
-    const webApp = window.Telegram.WebApp;
-    if (webApp.requestFullscreen) {
-      webApp.requestFullscreen().catch(() => webApp.expand());
-    } else {
-      webApp.expand();
-    }
+    window.Telegram.WebApp.expand();
   }
 
-  // --- Блокируем ориентацию на горизонталь (альбомную) ---
-  if (screen.orientation && screen.orientation.lock) {
-    screen.orientation.lock('landscape').catch(err => {
-      console.warn('Orientation lock failed:', err);
-    });
+  // Проверяем ориентацию: если портретная, показываем сообщение
+  const isPortrait = window.innerHeight > window.innerWidth;
+  if (isPortrait) {
+    // Показываем сообщение о повороте
+    rotateMsg.style.display = 'flex';
+    // Скрываем splash пока что (чтобы не мешал), но игру не показываем
+    splash.classList.add('hidden');
+    // Вешаем обработчик на изменение ориентации
+    window.addEventListener('orientationchange', checkOrientation);
+    window.addEventListener('resize', checkOrientation);
+    // Запускаем музыку (она будет играть фоном)
+    if (music) music.play().catch(() => {});
+    // Блокируем кнопку, чтобы повторно не нажали
+    startBtn.disabled = true;
+    startBtn.textContent = 'Поверните';
+    return;
   }
 
+  // Если уже горизонтально — сразу открываем игру
+  showGame();
+}
+
+function checkOrientation() {
+  const isPortrait = window.innerHeight > window.innerWidth;
+  if (!isPortrait) {
+    // Повернули в горизонталь — скрываем сообщение и показываем игру
+    rotateMsg.style.display = 'none';
+    window.removeEventListener('orientationchange', checkOrientation);
+    window.removeEventListener('resize', checkOrientation);
+    showGame();
+  }
+}
+
+function showGame() {
   // Скрываем splash
   splash.classList.add('hidden');
   // Показываем игровой контейнер
   gameContainer.style.display = 'block';
-
-  // Запускаем музыку
-  if (music) {
-    music.play().catch(() => {});
-  }
-
-  // Блокируем кнопку
-  startBtn.disabled = true;
+  // Запускаем музыку (если ещё не играет)
+  if (music) music.play().catch(() => {});
+  // Меняем кнопку
   startBtn.textContent = 'В игре';
+  startBtn.disabled = true;
   startBtn.style.opacity = '0.5';
+  // Скрываем сообщение о повороте (на всякий случай)
+  rotateMsg.style.display = 'none';
 }
 
 startBtn.addEventListener('click', enterGame);
 
-// ---- 5. Дополнительно: если пользователь повернул в портрет, показываем сообщение ----
-// Сообщение уже обрабатывается через CSS-медиазапрос
+// ---- 5. Дополнительно: если пользователь закрыл сообщение (на случай, если он уже в ландшафте) ----
+// Если при клике на "Начать" уже горизонтально, сработает сразу showGame()
 </script>
 </body>
 </html>
