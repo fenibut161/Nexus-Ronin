@@ -90,7 +90,7 @@ html,body{
   object-fit:fill;
 }
 
-/* ---- Сообщение о повороте (для мобильных) ---- */
+/* ---- Сообщение о повороте ---- */
 #rotate-msg {
   display:none;
   position:fixed;inset:0;z-index:20;
@@ -160,7 +160,7 @@ function initTelegram() {
   if (window.Telegram && window.Telegram.WebApp) {
     const webApp = window.Telegram.WebApp;
     webApp.ready();
-    webApp.expand(); // Надёжно работает на iOS/Android
+    webApp.expand();
     if (webApp.enableVerticalSwipes) {
       webApp.enableVerticalSwipes();
     }
@@ -206,12 +206,12 @@ const splash = document.getElementById('splash');
 const gameContainer = document.getElementById('game-container');
 const rotateMsg = document.getElementById('rotate-msg');
 
-// Определяем, мобильное ли устройство
+// --- Определение мобильного устройства (по User-Agent) ---
 function isMobile() {
-  return window.innerWidth <= 768; // планшеты и телефоны
+  return /Mobi|Android|iPhone|iPad|iPod|BlackBerry|Opera Mini|IEMobile/i.test(navigator.userAgent);
 }
 
-// Функция, которая показывает игру (скрывает splash, показывает контейнер)
+// --- Функция показа игры ---
 function showGame() {
   splash.classList.add('hidden');
   gameContainer.style.display = 'block';
@@ -219,29 +219,31 @@ function showGame() {
   startBtn.textContent = 'В игре';
   startBtn.disabled = true;
   startBtn.style.opacity = '0.5';
-  rotateMsg.style.display = 'none'; // на всякий случай скрываем
-  // Убираем обработчики ориентации
+  rotateMsg.style.display = 'none';
   window.removeEventListener('orientationchange', checkOrientation);
   window.removeEventListener('resize', checkOrientation);
 }
 
-// Проверка ориентации на мобильных
+// --- Проверка ориентации (только для мобильных) ---
 function checkOrientation() {
-  if (!isMobile()) return; // на ПК не проверяем
+  // Мы вызываем эту функцию только на мобильных, поэтому просто проверяем портрет/ландшафт
   const isPortrait = window.innerHeight > window.innerWidth;
   if (!isPortrait) {
-    // Стало горизонтально — открываем игру
+    // Уже горизонтально — показываем игру
     showGame();
+  } else {
+    // Если опять портрет — показываем сообщение (но его уже показываем, можно ничего не делать)
   }
 }
 
+// --- Основная функция входа ---
 function enterGame() {
-  // Ещё раз expand
+  // Растягиваем экран ещё раз
   if (window.Telegram && window.Telegram.WebApp) {
     window.Telegram.WebApp.expand();
   }
 
-  // Если это ПК (ширина > 768) — сразу открываем игру
+  // Если это не мобильное устройство — сразу в игру
   if (!isMobile()) {
     showGame();
     return;
@@ -270,8 +272,10 @@ function enterGame() {
 // Обработчик клика по кнопке
 startBtn.addEventListener('click', enterGame);
 
-// ---- 5. Если пользователь изначально в горизонтали на мобильном — кнопка работает ----
-// Также если во время показа сообщения пользователь уже повернул — checkOrientation сработает.
+// ---- 5. Если на мобильном изначально горизонталь — кнопка сработает ----
+// Также, если пользователь повернул обратно в портрет — сообщение не появится,
+// но для простоты мы можем позволить ему играть в портрете, если он не хочет поворачивать.
+// В данном случае мы не блокируем портрет, просто рекомендуем повернуть.
 </script>
 </body>
 </html>
