@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Nexus Ronin — Fullscreen Test</title>
   <style>
-    * { margin:0; padding:0; box-sizing:border-box; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       background: #0a0a1a;
       color: #fff;
@@ -15,49 +15,31 @@
       align-items: center;
       justify-content: center;
       flex-direction: column;
+      overflow: hidden;
     }
     #splash {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 20px;
-      transition: opacity 0.4s;
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center; gap: 20px; transition: opacity 0.4s; text-align: center; padding: 20px;
     }
-    #splash.hidden {
-      opacity: 0;
-      pointer-events: none;
-    }
+    #splash.hidden { opacity: 0; pointer-events: none; display: none; }
     #game {
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 20px;
-      font-size: 24px;
+      display: none; flex-direction: column; align-items: center;
+      justify-content: center; gap: 20px; font-size: 24px; text-align: center; padding: 20px;
     }
-    #game.active {
-      display: flex;
-    }
+    #game.active { display: flex; }
     .btn {
-      padding: 16px 40px;
-      font-size: 20px;
-      background: #ffd36a;
-      color: #0a0a1a;
-      border: none;
-      border-radius: 12px;
-      cursor: pointer;
-      font-weight: bold;
-      transition: transform 0.1s;
+      padding: 16px 40px; font-size: 20px; background: #ffd36a;
+      color: #0a0a1a; border: none; border-radius: 12px; cursor: pointer;
+      font-weight: bold; transition: transform 0.1s, background 0.2s;
     }
     .btn:active { transform: scale(0.95); }
-    #status {
-      color: #aaa;
-      font-size: 14px;
-      margin-top: 10px;
-      text-align: center;
+    .btn:hover { background: #ffdf88; }
+    #status { color: #aaa; font-size: 14px; margin-top: 10px; max-width: 90%; line-height: 1.4; }
+    .info-box {
+      background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px; padding: 12px 18px; font-size: 14px; color: #ccc; margin-top: 10px;
     }
-    .highlight { color: #22e7ff; }
+    .highlight { color: #22e7ff; font-weight: bold; }
   </style>
 </head>
 <body>
@@ -65,86 +47,113 @@
 <div id="splash">
   <h1 style="font-size: 48px;">NEXUS <span style="color:#ffd36a;">RONIN</span></h1>
   <button class="btn" id="startBtn">Начать</button>
-  <div id="status">Нажмите кнопку для входа</div>
+  <div id="status">Инициализация...</div>
+  <div class="info-box" id="debugInfo">Загрузка API...</div>
 </div>
 
 <div id="game">
   <div>🎮 <span class="highlight">ИГРА ЗАПУЩЕНА</span></div>
-  <div style="font-size: 16px; color:#aaa;">Полноэкранный режим должен быть активен</div>
+  <div style="font-size: 16px; color:#aaa;" id="gameStatus">Режим экрана проверяется...</div>
   <button class="btn" id="exitBtn" style="background:#666; color:#fff;">Выйти</button>
 </div>
 
+<!-- Официальный скрипт Telegram WebApp -->
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script>
   let tg = null;
   const splash = document.getElementById('splash');
   const game = document.getElementById('game');
   const statusDiv = document.getElementById('status');
+  const debugInfo = document.getElementById('debugInfo');
+  const gameStatus = document.getElementById('gameStatus');
   const startBtn = document.getElementById('startBtn');
   const exitBtn = document.getElementById('exitBtn');
 
-  // Инициализация Telegram WebApp
+  function updateDebugInfo() {
+    if (!tg) {
+      debugInfo.innerHTML = '⚠️ Telegram WebApp недоступен (запуск в браузере)';
+      return;
+    }
+    const version = tg.version || 'неизвестна';
+    const hasFS = typeof tg.requestFullscreen === 'function';
+    const isFS = tg.isFullscreen ? 'Да' : 'Нет';
+    debugInfo.innerHTML = `Bot API: <b>v${version}</b> | Fullscreen API: <b>${hasFS ? 'Доступен' : 'Отсутствует'}</b><br>Фулскрин активен: <b>${isFS}</b>`;
+    gameStatus.innerHTML = tg.isFullscreen 
+      ? '✨ Полноэкранный режим активен (верхняя панель скрыта)' 
+      : '⚠️ Обычный режим (Bot API < 8.0 или не поддерживается клиентом)';
+  }
+
   function initTelegram() {
     if (window.Telegram && window.Telegram.WebApp) {
       tg = window.Telegram.WebApp;
       tg.ready();
-      tg.expand();  // сразу растягиваем
-      console.log('Telegram WebApp инициализирован');
-      statusDiv.innerHTML = '✅ Telegram WebApp готов';
+      tg.expand(); // Разворачиваем приложение
+
+      // Красим шапку Telegram в цвет фона, чтобы не выделялась
+      if (tg.setHeaderColor) tg.setHeaderColor('#0a0a1a');
+      if (tg.setBackgroundColor) tg.setBackgroundColor('#0a0a1a');
+
+      // Отключаем закрытие свайпом вниз
+      if (tg.disableVerticalSwipes) tg.disableVerticalSwipes();
+
+      // Подписываемся на события изменения Fullscreen
+      if (tg.onEvent) {
+        tg.onEvent('fullscreenChanged', function() {
+          updateDebugInfo();
+        });
+        tg.onEvent('fullscreenFailed', function(error) {
+          statusDiv.innerHTML = '⚠️ Ошибка Fullscreen: ' + (error?.error || 'не поддерживается');
+          updateDebugInfo();
+        });
+      }
+
+      statusDiv.innerHTML = '✅ Telegram WebApp готов. Нажмите «Начать»';
+      updateDebugInfo();
       return true;
     } else {
       statusDiv.innerHTML = '⚠️ Запущено вне Telegram (или WebApp не загружен)';
+      updateDebugInfo();
       return false;
     }
   }
+
   initTelegram();
 
-  // Функция перехода в игру
   function enterGame() {
     splash.classList.add('hidden');
     game.classList.add('active');
-    // Попробуем запустить fullscreen (если ещё не включен)
-    if (tg && tg.requestFullscreen) {
-      tg.requestFullscreen().catch(() => {
-        // Если не вышло, просто используем expand
-        tg.expand();
-      });
-    }
-    statusDiv.innerHTML = '🔥 Игра активна';
+    updateDebugInfo();
   }
 
-  // Обработчик кнопки "Начать"
   startBtn.addEventListener('click', function() {
-    statusDiv.innerHTML = '⏳ Запрос полного экрана...';
+    statusDiv.innerHTML = '⏳ Запуск игры...';
 
-    // Сначала запрашиваем fullscreen, потом переходим
-    if (tg && tg.requestFullscreen) {
-      tg.requestFullscreen()
-        .then(() => {
-          statusDiv.innerHTML = '✅ Fullscreen включён';
-          enterGame();
-        })
-        .catch((err) => {
-          console.warn('Fullscreen не удался:', err);
-          statusDiv.innerHTML = '⚠️ Fullscreen недоступен, используем expand';
-          tg.expand();
-          enterGame();
-        });
-    } else {
-      // Если requestFullscreen нет, просто expand и переходим
-      if (tg) tg.expand();
-      enterGame();
+    if (tg) {
+      tg.expand();
+      // Вызываем синхронно БЕЗ .then() и .catch()!
+      if (typeof tg.requestFullscreen === 'function') {
+        try {
+          tg.requestFullscreen();
+        } catch (e) {
+          console.error('Ошибка вызова requestFullscreen:', e);
+        }
+      }
     }
+
+    enterGame();
   });
 
-  // Выход (для теста)
   exitBtn.addEventListener('click', function() {
     splash.classList.remove('hidden');
     game.classList.remove('active');
     statusDiv.innerHTML = 'Вы вышли из игры';
-    if (tg && tg.exitFullscreen) {
-      tg.exitFullscreen().catch(() => {});
+
+    if (tg && typeof tg.exitFullscreen === 'function') {
+      try {
+        tg.exitFullscreen();
+      } catch (e) {}
     }
+    updateDebugInfo();
   });
 </script>
 </body>
