@@ -336,6 +336,7 @@
       flex-direction: column;
       gap: 6px;
       width: 140px;
+      transform: translateY(-4vh);
     }
 
     .side-btn {
@@ -378,6 +379,8 @@
       border-radius: 12px;
       padding: 4px;
       backdrop-filter: blur(10px);
+      max-width: min(100%, 860px);
+      overflow: hidden;
     }
 
     .nav-tab {
@@ -458,12 +461,12 @@
       #musicBtn { padding: 0 7px !important; height: 28px; border-radius: 10px !important; font-size: 10px !important; }
       .music-label { display: none; }
       
-      .side-menu { width: 118px; gap: 4px; }
+      .side-menu { width: 118px; gap: 4px; transform: translateY(-8vh); }
       .side-btn { padding: 5px 7px; font-size: 9.5px; border-radius: 5px; }
 
       .bottom-hud { gap: 6px; }
-      .nav-bar { padding: 3px; gap: 2px; }
-      .nav-tab { padding: 4px 6px; font-size: 8.8px; gap: 1px; }
+      .nav-bar { padding: 3px; gap: 2px; flex: 1 1 auto; }
+      .nav-tab { padding: 4px 4px; font-size: 7.9px; gap: 1px; flex: 1 1 0; min-width: 0; }
       .story-btn { padding: 7px 12px; }
       .story-title { font-size: 8.5px; }
       .story-ch { font-size: 10.5px; }
@@ -476,13 +479,16 @@
       .profile-name { max-width: 56px; }
       .currency-pill { font-size: 9px; padding: 3px 4px; }
       .plus-btn { display: none; }
+      .side-menu { transform: translateY(-9vh); }
+      .nav-tab { font-size: 7.1px; padding: 3px 2px; }
     }
 
     @media (max-height: 430px) and (orientation: landscape) {
       :root { --safe-top: 6px; --safe-bottom: 6px; }
       .top-hud { padding-left: 72px; padding-right: 72px; }
       .bottom-hud { align-items: flex-end; }
-      .nav-tab { font-size: 8px; padding: 3px 5px; }
+      .nav-tab { font-size: 7.4px; padding: 3px 3px; }
+      .side-menu { transform: translateY(-9vh); }
       .side-btn { font-size: 9px; padding: 4px 6px; }
       .story-btn { padding: 6px 10px; }
     }
@@ -599,30 +605,29 @@
 
   <!-- Средняя зона: Левое меню -->
   <div class="side-menu interactive-ui">
-    <div class="side-btn" onclick="alert('Список миссий Ронина')">
-      <span>📋 МИССИИ</span>
-    </div>
     <div class="side-btn" onclick="alert('Кибер-пропуск 3 сезона')">
       <span>🔥 ПРОПУСК</span>
       <span class="tag-new">NEW</span>
     </div>
-    <div class="side-btn" onclick="alert('Чёрный рынок')">
-      <span>🛒 МАГАЗИН</span>
-    </div>
     <div class="side-btn" onclick="alert('Инвентарь предметов')">
       <span>🎒 ИНВЕНТАРЬ</span>
-    </div>
-    <div class="side-btn" onclick="alert('Хроники и база знаний')">
-      <span>📚 АРХИВЫ</span>
     </div>
   </div>
 
   <!-- Нижняя панель навигации и кнопка кампании -->
   <div class="bottom-hud interactive-ui">
     <div class="nav-bar">
-      <div class="nav-tab active">
-        <span>🏠</span>
-        <span>ГЛАВНАЯ</span>
+      <div class="nav-tab" onclick="alert('Чёрный рынок')">
+        <span>🛒</span>
+        <span>МАГАЗИН</span>
+      </div>
+      <div class="nav-tab" onclick="alert('Список миссий Ронина')">
+        <span>📋</span>
+        <span>МИССИИ</span>
+      </div>
+      <div class="nav-tab" onclick="alert('Ежедневные и недельные задания')">
+        <span>🎯</span>
+        <span>ЗАДАНИЯ</span>
       </div>
       <div class="nav-tab" onclick="alert('Коллекция агентов')">
         <span>👤</span>
