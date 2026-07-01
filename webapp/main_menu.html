@@ -3,17 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>NEXUS RONIN — Main Menu</title>
+  <title>NEXUS RONIN — Главная база</title>
   <style>
     :root {
+      /* Защитные отступы Telegram (верхний 60px гарантирует защиту от кнопок [X Закрыть] и [...]) */
       --safe-top: max(60px, var(--tg-content-safe-area-inset-top, 60px));
-      --safe-bottom: max(20px, var(--tg-content-safe-area-inset-bottom, 20px));
+      --safe-bottom: max(16px, var(--tg-content-safe-area-inset-bottom, 16px));
       --safe-left: max(16px, var(--tg-content-safe-area-inset-left, 16px));
       --safe-right: max(16px, var(--tg-content-safe-area-inset-right, 16px));
 
       --cyan: #00f0ff;
       --pink: #ff007b;
       --gold: #ffd36a;
+      --purple: #9d00ff;
       --dark-bg: #060913;
     }
 
@@ -36,239 +38,652 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      align-items: center;
-      background-image: 
-        linear-gradient(to bottom, rgba(6, 9, 19, 0.4) 0%, rgba(6, 9, 19, 0.1) 40%, rgba(6, 9, 19, 0.8) 85%, rgba(6, 9, 19, 0.98) 100%),
-        url('webapp/assets/images/backgrounds/main_menu_bg.jpg');
+    }
+
+    /* === ФОНОВОЕ ИЗОБРАЖЕНИЕ И АНИМАЦИЯ АТМОСФЕРЫ === */
+    .bg-image-layer {
+      position: absolute;
+      inset: -2%;
+      width: 104%;
+      height: 104%;
+      z-index: 1;
+      background-image: url('webapp/assets/images/backgrounds/main_menu_bg.jpg');
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
+      filter: brightness(0.75) contrast(1.1);
+      animation: breatheBg 16s infinite alternate ease-in-out;
     }
 
-    /* Верхняя панель ресурсов (с защитным отступом 60px от кнопок Telegram) */
-    .top-resources {
+    @keyframes breatheBg {
+      0% { transform: scale(1); }
+      100% { transform: scale(1.04); }
+    }
+
+    /* Анимированные плавающие неоновые частицы поверх комнаты */
+    .particles-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .mote {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(2px);
+      animation: floatMote 10s infinite linear;
+    }
+
+    .mote-1 { width: 6px; height: 6px; background: var(--cyan); top: 30%; left: 20%; animation-duration: 8s; }
+    .mote-2 { width: 4px; height: 4px; background: var(--pink); top: 60%; left: 70%; animation-duration: 12s; }
+    .mote-3 { width: 5px; height: 5px; background: var(--gold); top: 40%; left: 50%; animation-duration: 9s; }
+    .mote-4 { width: 7px; height: 7px; background: var(--purple); top: 75%; left: 30%; animation-duration: 11s; }
+
+    @keyframes floatMote {
+      0% { transform: translateY(0) translateX(0); opacity: 0.2; }
+      50% { transform: translateY(-40px) translateX(20px); opacity: 0.8; }
+      100% { transform: translateY(-80px) translateX(-10px); opacity: 0; }
+    }
+
+    /* Голографическая сетка / сканирование */
+    .scanlines {
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+      background-size: 100% 4px, 6px 100%;
+      pointer-events: none;
+      opacity: 0.6;
+    }
+
+    .dark-vignette {
+      position: absolute;
+      inset: 0;
+      z-index: 4;
+      background: radial-gradient(circle at center, transparent 40%, rgba(6, 9, 19, 0.7) 90%, rgba(6, 9, 19, 0.95) 100%);
+      pointer-events: none;
+    }
+
+    /* === ОСНОВНОЙ ИГРОВОЙ ИНТЕРФЕЙС (HUD) === */
+    #gameUi {
+      position: relative;
+      z-index: 10;
+      height: 100%;
       width: 100%;
-      padding-top: max(60px, var(--tg-content-safe-area-inset-top, 60px));
-      padding-left: max(16px, var(--tg-content-safe-area-inset-left, 16px));
-      padding-right: max(16px, var(--tg-content-safe-area-inset-right, 16px));
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left);
+    }
+
+    /* === ВЕРХНЯЯ ПАНЕЛЬ: ПРОФИЛЬ И ВАЛЮТА === */
+    .top-bar {
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      z-index: 50;
+      align-items: flex-start;
+      gap: 15px;
+      flex-wrap: wrap;
     }
 
-    .resource-pill {
-      background: rgba(10, 18, 35, 0.88);
-      border: 1px solid rgba(0, 240, 255, 0.35);
-      border-radius: 20px;
-      padding: 5px 12px;
+    /* Профиль игрока слева */
+    .player-profile {
+      background: rgba(10, 16, 30, 0.88);
+      border: 1px solid rgba(157, 0, 255, 0.5);
+      border-radius: 12px;
+      padding: 8px 14px;
       display: flex;
       align-items: center;
-      gap: 6px;
-      font-size: 13px;
-      font-weight: 700;
-      box-shadow: 0 0 12px rgba(0, 240, 255, 0.2);
-      backdrop-filter: blur(8px);
+      gap: 12px;
+      box-shadow: 0 0 20px rgba(157, 0, 255, 0.25);
+      backdrop-filter: blur(10px);
     }
 
-    .plus-btn {
-      background: rgba(255, 255, 255, 0.15);
-      border-radius: 4px;
-      width: 18px;
-      height: 18px;
+    .avatar-box {
+      width: 44px;
+      height: 44px;
+      border-radius: 8px;
+      border: 2px solid var(--cyan);
+      background: linear-gradient(135deg, #1f0b38, #3b1466);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 12px;
-      color: #fff;
-      cursor: pointer;
+      font-size: 22px;
+      box-shadow: 0 0 10px var(--cyan);
     }
 
-    .header-logo-container {
-      margin-top: 15px;
+    .profile-info {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .player-name {
+      font-size: 14px;
+      font-weight: 800;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .player-level {
+      color: var(--cyan);
+      font-size: 12px;
+      background: rgba(0, 240, 255, 0.15);
+      padding: 1px 6px;
+      border-radius: 4px;
+    }
+
+    .xp-bar-track {
+      width: 110px;
+      height: 5px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .xp-bar-fill {
+      width: 72%;
+      height: 100%;
+      background: linear-gradient(90deg, var(--pink), var(--cyan));
+    }
+
+    .combat-power {
+      font-size: 12px;
+      color: var(--gold);
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* Панель валют по центру/справа */
+    .currency-panel {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .currency-pill {
+      background: rgba(10, 18, 35, 0.9);
+      border: 1px solid rgba(0, 240, 255, 0.4);
+      border-radius: 20px;
+      padding: 6px 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13.5px;
+      font-weight: 800;
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+      backdrop-filter: blur(10px);
+    }
+
+    .currency-icon { font-size: 16px; }
+
+    .plus-btn {
+      background: rgba(0, 240, 255, 0.2);
+      border: 1px solid var(--cyan);
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      color: #fff;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .plus-btn:hover { background: var(--cyan); color: #000; }
+
+    .top-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .icon-btn {
+      background: rgba(10, 18, 35, 0.88);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 10px;
+      width: 38px;
+      height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      cursor: pointer;
+      position: relative;
+      backdrop-filter: blur(8px);
+      transition: all 0.2s;
+    }
+    .icon-btn:hover { border-color: var(--cyan); box-shadow: 0 0 12px rgba(0, 240, 255, 0.4); }
+
+    .notif-badge {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      background: var(--pink);
+      color: #fff;
+      font-size: 10px;
+      font-weight: bold;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 8px var(--pink);
+    }
+
+    /* === СРЕДНЯЯ ЗОНА: БОКОВОЕ МЕНЮ И ИНТЕРАКТИВНЫЕ ХАБЫ === */
+    .center-workspace {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      overflow-y: auto;
+      padding: 15px 0;
+    }
+
+    /* Левое боковое меню (Миссии, Магазин и т.д.) */
+    .left-sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      width: 170px;
+      flex-shrink: 0;
+    }
+
+    /* Баннер спецсобытия */
+    .event-banner {
+      background: linear-gradient(135deg, rgba(157, 0, 255, 0.4), rgba(0, 240, 255, 0.3));
+      border: 1px solid var(--cyan);
+      border-radius: 10px;
+      padding: 10px;
+      cursor: pointer;
+      box-shadow: 0 0 18px rgba(157, 0, 255, 0.4);
+      margin-bottom: 5px;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.2s;
+    }
+    .event-banner:active { transform: scale(0.96); }
+    .event-tag { font-size: 9.5px; background: var(--pink); padding: 2px 6px; border-radius: 4px; font-weight: bold; display: inline-block; margin-bottom: 4px; }
+    .event-title { font-size: 12.5px; font-weight: 800; color: #fff; }
+    .event-time { font-size: 10.5px; color: var(--gold); }
+
+    .sidebar-btn {
+      background: rgba(10, 18, 35, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-left: 3px solid var(--cyan);
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 12.5px;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      backdrop-filter: blur(8px);
+      transition: all 0.2s;
+    }
+    .sidebar-btn:hover {
+      background: rgba(0, 240, 255, 0.2);
+      border-color: var(--cyan);
+      transform: translateX(4px);
+    }
+    .new-tag {
+      background: var(--pink);
+      color: #fff;
+      font-size: 9px;
+      padding: 1px 5px;
+      border-radius: 4px;
+      font-weight: 900;
+      box-shadow: 0 0 6px var(--pink);
+    }
+
+    /* Интерактивные зоны комнаты по центру (Голографические карточки) */
+    .room-hubs-grid {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      flex: 1;
+      max-width: 750px;
+    }
+
+    .hub-card {
+      background: rgba(6, 12, 24, 0.88);
+      border: 1px solid rgba(0, 240, 255, 0.4);
+      border-radius: 14px;
+      padding: 14px 18px;
+      width: 220px;
       display: flex;
       flex-direction: column;
       align-items: center;
       text-align: center;
-      z-index: 10;
-    }
-
-    .nr-badge {
-      background: linear-gradient(135deg, rgba(0, 240, 255, 0.25), rgba(180, 0, 255, 0.35));
-      border: 1px solid var(--cyan);
-      padding: 5px 16px;
-      font-size: 22px;
-      font-weight: 900;
-      color: var(--gold);
-      letter-spacing: 2px;
-      clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
-      box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
-      margin-bottom: 8px;
-    }
-
-    .game-subtitle {
-      font-size: 11px;
-      letter-spacing: 3px;
-      color: var(--cyan);
-      font-weight: 700;
-      margin-bottom: 3px;
-    }
-
-    .game-title {
-      font-size: 34px;
-      font-weight: 900;
-      line-height: 0.95;
-      letter-spacing: 1px;
-    }
-    .game-title .nexus { color: #ffffff; }
-    .game-title .ronin { color: var(--gold); }
-
-    .menu-hud-box {
-      width: calc(100% - 32px);
-      max-width: 420px;
-      margin-bottom: max(35px, calc(var(--tg-content-safe-area-inset-bottom, 20px) + 35px));
-      z-index: 20;
-    }
-
-    .cyber-box {
-      background: rgba(6, 12, 24, 0.94);
-      border: 1px solid rgba(0, 240, 255, 0.45);
-      padding: 20px;
+      gap: 10px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.8);
+      transition: all 0.25s;
       position: relative;
-      clip-path: polygon(15px 0%, 100% 0%, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0% 100%, 0% 15px);
-      box-shadow: 0 10px 35px rgba(0, 0, 0, 0.9), inset 0 0 20px rgba(0, 240, 255, 0.12);
-      backdrop-filter: blur(14px);
+      overflow: hidden;
     }
 
-    .menu-badge-header {
-      background: linear-gradient(90deg, rgba(0,240,255,0.2), rgba(255,0,123,0.2));
-      border-left: 3px solid var(--cyan);
-      border-right: 3px solid var(--pink);
-      padding: 10px;
-      text-align: center;
-      font-size: 13px;
-      font-weight: 800;
-      letter-spacing: 2px;
-      color: #fff;
-      margin-bottom: 14px;
-    }
-
-    .cyber-btn {
-      width: 100%;
-      padding: 15px;
-      font-size: 15px;
-      font-weight: 800;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      cursor: pointer;
-      border: none;
-      transition: all 0.2s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
-    }
-    .cyber-btn:active { transform: scale(0.97); }
-
-    .btn-primary {
-      background: linear-gradient(90deg, #ffe082 0%, #ffd36a 50%, #ffaf00 100%);
-      color: #060913;
-      margin-bottom: 10px;
-      box-shadow: 0 0 18px rgba(255, 211, 106, 0.45);
-    }
-
-    .btn-secondary {
-      background: rgba(10, 25, 45, 0.75);
-      color: #fff;
-      border: 1px solid rgba(0, 240, 255, 0.4);
-    }
-    .btn-secondary:hover {
-      background: rgba(0, 240, 255, 0.2);
-      border-color: var(--cyan);
-    }
-
-    .build-version {
-      text-align: center;
-      font-size: 11px;
-      letter-spacing: 2px;
-      color: rgba(255, 255, 255, 0.4);
-      margin-top: 12px;
-    }
-
-    .bottom-nav {
+    .hub-card::before {
+      content: '';
       position: absolute;
-      bottom: max(15px, var(--tg-content-safe-area-inset-bottom, 15px));
+      top: 0;
       left: 0;
       width: 100%;
-      display: flex;
-      justify-content: space-around;
-      padding: 0 30px;
-      z-index: 30;
-      opacity: 0.35;
-      font-size: 11px;
-      font-weight: 700;
+      height: 3px;
+    }
+
+    .hub-summon { border-color: var(--purple); box-shadow: 0 0 25px rgba(157, 0, 255, 0.3); }
+    .hub-summon::before { background: linear-gradient(90deg, var(--purple), var(--pink)); }
+
+    .hub-dungeons { border-color: var(--cyan); box-shadow: 0 0 25px rgba(0, 240, 255, 0.25); }
+    .hub-dungeons::before { background: var(--cyan); }
+
+    .hub-cyberware { border-color: var(--gold); box-shadow: 0 0 25px rgba(255, 211, 106, 0.25); }
+    .hub-cyberware::before { background: var(--gold); }
+
+    .hub-card:hover {
+      transform: translateY(-5px) scale(1.03);
+      box-shadow: 0 12px 35px rgba(0, 240, 255, 0.4);
+    }
+
+    .hub-icon { font-size: 28px; }
+    .hub-title { font-size: 15px; font-weight: 900; letter-spacing: 1px; }
+    .hub-desc { font-size: 11.5px; color: #aaa; line-height: 1.3; }
+
+    .hub-action-btn {
+      width: 100%;
+      padding: 8px;
+      border-radius: 6px;
+      border: none;
+      font-size: 12px;
+      font-weight: 800;
       letter-spacing: 1px;
-      pointer-events: none;
+      cursor: pointer;
+      transition: all 0.15s;
+      text-transform: uppercase;
+    }
+    .btn-purple { background: linear-gradient(90deg, var(--purple), var(--pink)); color: #fff; }
+    .btn-cyan { background: var(--cyan); color: #000; }
+    .btn-gold { background: var(--gold); color: #000; }
+
+    .hub-action-btn:active { transform: scale(0.95); }
+
+    /* === НИЖНЯЯ ПАНЕЛЬ НАВИГАЦИИ И КНОПКА КАМПАНИИ === */
+    .bottom-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    /* Меню внизу экрана */
+    .nav-tabs {
+      display: flex;
+      gap: 6px;
+      background: rgba(6, 12, 24, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 14px;
+      padding: 6px;
+      backdrop-filter: blur(12px);
+      flex-wrap: wrap;
+    }
+
+    .nav-tab {
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 800;
+      color: #aaa;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 1px solid transparent;
+    }
+
+    .nav-tab.active {
+      background: rgba(0, 240, 255, 0.2);
+      color: var(--cyan);
+      border-color: var(--cyan);
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
+    }
+
+    .nav-tab:hover:not(.active) {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    /* Огромная кнопка ГЛАВНОЙ КАМПАНИИ справа внизу */
+    .campaign-btn {
+      background: linear-gradient(135deg, #ff007b 0%, #9d00ff 100%);
+      border: 2px solid var(--pink);
+      padding: 14px 28px;
+      border-radius: 12px;
+      cursor: pointer;
+      box-shadow: 0 0 30px rgba(255, 0, 123, 0.6);
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 3px;
+      clip-path: polygon(15px 0%, 100% 0%, calc(100% - 15px) 100%, 0% 100%);
+      transition: all 0.2s;
+      animation: pulseCampaign 2s infinite;
+    }
+
+    @keyframes pulseCampaign {
+      0% { box-shadow: 0 0 20px rgba(255, 0, 123, 0.5); }
+      50% { box-shadow: 0 0 40px rgba(255, 0, 123, 0.95); }
+      100% { box-shadow: 0 0 20px rgba(255, 0, 123, 0.5); }
+    }
+
+    .campaign-btn:active { transform: scale(0.96); }
+
+    .campaign-tag { font-size: 11px; font-weight: 900; letter-spacing: 2px; color: #fff; text-transform: uppercase; }
+    .campaign-chapter { font-size: 14px; font-weight: 800; color: var(--gold); }
+
+    /* Адаптивность под узкие мобильные экраны */
+    @media (max-width: 768px) {
+      .center-workspace { flex-direction: column; align-items: stretch; }
+      .left-sidebar { width: 100%; flex-direction: row; flex-wrap: wrap; }
+      .sidebar-btn { flex: 1; min-width: 140px; }
+      .room-hubs-grid { flex-direction: column; width: 100%; }
+      .hub-card { width: 100%; }
+      .bottom-bar { flex-direction: column; align-items: stretch; }
+      .campaign-btn { align-items: center; text-align: center; }
     }
   </style>
 </head>
 <body>
 
+<!-- Аудио плеер музыки главного меню -->
 <audio id="bgMusic" loop preload="auto">
   <source src="webapp/assets/audio/music/neon_soul.mp3" type="audio/mpeg">
 </audio>
 
-<div class="top-resources">
-  <div class="resource-pill">
-    <span style="color:#22e7ff;">⚡</span> 120 / 120
-    <div class="plus-btn">+</div>
+<!-- Анимированный фон комнаты и эффекты -->
+<div class="bg-image-layer" id="bgRoom"></div>
+<div class="particles-layer">
+  <div class="mote mote-1"></div>
+  <div class="mote mote-2"></div>
+  <div class="mote mote-3"></div>
+  <div class="mote mote-4"></div>
+</div>
+<div class="scanlines"></div>
+<div class="dark-vignette"></div>
+
+<!-- ОСНОВНОЙ ИНТЕРФЕЙС ГЛАВНОГО МЕНЮ БАЗЫ -->
+<div id="gameUi">
+  <!-- 1. ВЕРХНЯЯ ПАНЕЛЬ (HUD) -->
+  <div class="top-bar">
+    <!-- Профиль игрока -->
+    <div class="player-profile">
+      <div class="avatar-box">🥷</div>
+      <div class="profile-info">
+        <div class="player-name">
+          Ночная Тень <span class="player-level">УР. 68</span>
+        </div>
+        <div class="xp-bar-track">
+          <div class="xp-bar-fill"></div>
+        </div>
+        <div class="combat-power">⚔️ МОЩЬ: 256 800</div>
+      </div>
+    </div>
+
+    <!-- Панель валют (Энергия, Кредиты, Кристаллы) -->
+    <div class="currency-panel">
+      <div class="currency-pill">
+        <span class="currency-icon" style="color:var(--cyan);">⚡</span>
+        <span>120 / 120</span>
+        <div class="plus-btn" onclick="alert('Пополнение энергии кибер-батареей...')">+</div>
+      </div>
+
+      <div class="currency-pill">
+        <span class="currency-icon" style="color:var(--gold);">🪙</span>
+        <span style="color:var(--gold);">2 450 790</span>
+        <div class="plus-btn" onclick="alert('Хранилище золотых кредитов Синдикатов...')">+</div>
+      </div>
+
+      <div class="currency-pill">
+        <span class="currency-icon" style="color:var(--pink);">💎</span>
+        <span style="color:var(--pink);">8 960</span>
+        <div class="plus-btn" onclick="alert('Магазин нейро-кристаллов...')">+</div>
+      </div>
+
+      <!-- Быстрые действия справа -->
+      <div class="top-actions">
+        <div class="icon-btn" onclick="alert('Почтовый ящик: 1 новое сообщение от корпорации.')" title="Почта">
+          📬<div class="notif-badge">1</div>
+        </div>
+        <div class="icon-btn" onclick="alert('Список кибер-друзей и альянса')" title="Друзья">👥</div>
+        <div class="icon-btn" id="musicToggleBtn" title="Включить/выключить музыку">🔊</div>
+        <div class="icon-btn" onclick="window.location.href='index.html'" title="Вернуться на экран загрузки">🚪</div>
+      </div>
+    </div>
   </div>
-  <div class="resource-pill">
-    <span style="color:#ffd36a;">🪙</span> 2,450,790
-    <div class="plus-btn">+</div>
+
+  <!-- 2. СРЕДНЯЯ РАБОЧАЯ ЗОНА -->
+  <div class="center-workspace">
+    <!-- Левое боковое меню -->
+    <div class="left-sidebar">
+      <div class="event-banner" onclick="alert('Событие: Неоновый Мятеж. Выполняйте рейды для получения редкого скина!')">
+        <div class="event-tag">СОБЫТИЕ</div>
+        <div class="event-title">Неоновый Мятеж</div>
+        <div class="event-time">⏳ Осталось 8 д. 12 ч.</div>
+      </div>
+
+      <div class="sidebar-btn" onclick="alert('Ежедневные и сюжетные миссии Ронина')">
+        <span>📋 МИССИИ</span>
+      </div>
+      <div class="sidebar-btn" onclick="alert('Кибер-пропуск 3 сезона')">
+        <span>🔥 БОЕВОЙ ПРОПУСК</span>
+        <span class="new-tag">NEW</span>
+      </div>
+      <div class="sidebar-btn" onclick="alert('Чёрный рынок оружия и имплантов')">
+        <span>🛒 МАГАЗИН</span>
+      </div>
+      <div class="sidebar-btn" onclick="alert('Инвентарь предметов, имплантов и чертежей')">
+        <span>🎒 ИНВЕНТАРЬ</span>
+      </div>
+      <div class="sidebar-btn" onclick="alert('База знаний и хроники Синдикатов')">
+        <span>📚 АРХИВЫ</span>
+      </div>
+      <div class="sidebar-btn" onclick="alert('Дуэли кибер-самураев 1 на 1')">
+        <span>⚔️ PVP АРЕНА</span>
+        <span class="new-tag">NEW</span>
+      </div>
+    </div>
+
+    <!-- Центральные интерактивные зоны комнаты (ХАБЫ) -->
+    <div class="room-hubs-grid">
+      <!-- Капсула призыва -->
+      <div class="hub-card hub-summon">
+        <div class="hub-icon">🧬</div>
+        <div class="hub-title">ПРИЗЫВ (SUMMON)</div>
+        <div class="hub-desc">Капсула клонирования SSR. Повышенный шанс на легендарного агента!</div>
+        <button class="hub-action-btn btn-purple" onclick="alert('Открытие капсулы призыва SSR...')">⚡ ПРИЗВАТЬ АГЕНТА</button>
+      </div>
+
+      <!-- Подземелья -->
+      <div class="hub-card hub-dungeons">
+        <div class="hub-icon">🌐</div>
+        <div class="hub-title">ПОДЗЕМЕЛЬЯ</div>
+        <div class="hub-desc">Голографическая карта рейдов: Пустота, Красная Сеть, Неоновые Стоки.</div>
+        <button class="hub-action-btn btn-cyan" onclick="alert('Переход на тактическую карту подземелий...')">🚀 ИССЛЕДОВАТЬ</button>
+      </div>
+
+      <!-- Кибер-импланты -->
+      <div class="hub-card hub-cyberware">
+        <div class="hub-icon">🦾</div>
+        <div class="hub-title">ИМПЛАНТЫ</div>
+        <div class="hub-desc">Модернизация нейроядер, брони и плазменных клинков Ронина.</div>
+        <button class="hub-action-btn btn-gold" onclick="alert('Вход в мастерскую имплантов...')">⚙️ МОДЕРНИЗАЦИЯ</button>
+      </div>
+    </div>
   </div>
-  <div class="resource-pill">
-    <span style="color:#ff007b;">💎</span> 8,500
-    <div class="plus-btn">+</div>
+
+  <!-- 3. НИЖНЯЯ НАВИГАЦИЯ И КНОПКА КАМПАНИИ -->
+  <div class="bottom-bar">
+    <!-- Вкладки навигации -->
+    <div class="nav-tabs">
+      <div class="nav-tab active">
+        <span>🏠</span>
+        <span>ГЛАВНАЯ</span>
+      </div>
+      <div class="nav-tab" onclick="alert('Управление коллекцией кибер-агентов')">
+        <span>👤</span>
+        <span>АГЕНТЫ</span>
+      </div>
+      <div class="nav-tab" onclick="alert('Формирование боевого отряда')">
+        <span>🛡️</span>
+        <span>ОТРЯД</span>
+      </div>
+      <div class="nav-tab" onclick="alert('Древо технологий и исследования')">
+        <span>⚡</span>
+        <span>ТЕХНОЛОГИИ</span>
+      </div>
+      <div class="nav-tab" onclick="alert('Кодекс самурая и лор')">
+        <span>📖</span>
+        <span>КОДЕКС</span>
+      </div>
+      <div class="nav-tab" onclick="alert('Альянс корпораций и кланы')">
+        <span>🏢</span>
+        <span>КОРПОРАЦИЯ</span>
+      </div>
+    </div>
+
+    <!-- Кнопка запуска главной сюжетной кампании -->
+    <button class="campaign-btn" onclick="alert('Запуск сюжета: Глава 12-5 «Неоновый Шпиль»...')">
+      <span class="campaign-tag">🚀 ГЛАВНАЯ КАМПАНИЯ</span>
+      <span class="campaign-chapter">ГЛАВА 12-5: Неоновый Шпиль ></span>
+    </button>
   </div>
 </div>
 
-<div class="header-logo-container">
-  <div class="nr-badge">NR</div>
-  <div class="game-subtitle">LEGENDARY CYBERPUNK RPG</div>
-  <div class="game-title">
-    <div class="nexus">NEXUS</div>
-    <div class="ronin">RONIN</div>
-  </div>
-</div>
-
-<div style="flex:1;"></div>
-
-<div class="menu-hud-box">
-  <div class="cyber-box">
-    <div class="menu-badge-header">🌟 ГЛАВНАЯ БАЗА РОНИНА 🌟</div>
-    <button class="cyber-btn btn-primary" onclick="alert('Переход к капсуле Призыва (Summon)...')">🧬 ПРИЗЫВ (SUMMON)</button>
-    <button class="cyber-btn btn-secondary" style="margin-bottom: 10px;" onclick="alert('Список кибер-миссий...')">⚔️ КИБЕР-МИССИИ</button>
-    <button class="cyber-btn btn-secondary" style="margin-bottom: 10px;" id="musicToggleBtn">🔊 МУЗЫКА: ВКЛ</button>
-    <button class="cyber-btn btn-secondary" id="backToLoadingBtn" style="border-color: #555; color: #aaa;">🚪 НА ЗАГРУЗОЧНЫЙ ЭКРАН</button>
-  </div>
-  <div class="build-version">CONNECTED TO NEXUS CORE</div>
-</div>
-
-<div class="bottom-nav">
-  <div>TECH</div>
-  <div>CODEX</div>
-  <div>CORP</div>
-</div>
-
+<!-- Официальный скрипт Telegram -->
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script>
   const tg = window.Telegram?.WebApp;
   const bgMusic = document.getElementById('bgMusic');
   const musicToggleBtn = document.getElementById('musicToggleBtn');
-  const backToLoadingBtn = document.getElementById('backToLoadingBtn');
   let isMusicPlaying = false;
 
+  // Инициализация Telegram WebApp
   if (tg) {
     tg.ready();
     tg.expand();
@@ -277,49 +692,45 @@
     if (tg.disableVerticalSwipes) tg.disableVerticalSwipes();
   }
 
-  // Умный поиск картинки главного меню (.jpg / .png / пути)
+  // Умный поиск картинки главного меню
+  const bgRoom = document.getElementById('bgRoom');
   const bgVariants = [
     'webapp/assets/images/backgrounds/main_menu_bg.jpg',
     './assets/images/backgrounds/main_menu_bg.jpg',
     'assets/images/backgrounds/main_menu_bg.jpg',
-    '/webapp/assets/images/backgrounds/main_menu_bg.jpg',
-    'webapp/assets/images/backgrounds/main_menu_bg.png',
-    './assets/images/backgrounds/main_menu_bg.png'
+    '/webapp/assets/images/backgrounds/main_menu_bg.jpg'
   ];
 
   function tryLoadMenuBg(vIndex) {
     if (vIndex >= bgVariants.length) return;
     const img = new Image();
     img.onload = () => {
-      document.body.style.backgroundImage = `linear-gradient(to bottom, rgba(6, 9, 19, 0.4) 0%, rgba(6, 9, 19, 0.1) 40%, rgba(6, 9, 19, 0.8) 85%, rgba(6, 9, 19, 0.98) 100%), url('${bgVariants[vIndex]}')`;
+      bgRoom.style.backgroundImage = `url('${bgVariants[vIndex]}')`;
     };
     img.onerror = () => tryLoadMenuBg(vIndex + 1);
     img.src = bgVariants[vIndex];
   }
   tryLoadMenuBg(0);
 
+  // Управление звуком
   bgMusic.volume = 0.65;
   bgMusic.play().then(() => {
     isMusicPlaying = true;
-    musicToggleBtn.textContent = "🔊 МУЗЫКА: ВКЛ";
-  }).catch(e => {
-    musicToggleBtn.textContent = "🔇 МУЗЫКА: ВЫКЛ (НАЖМИТЕ)";
+    musicToggleBtn.textContent = "🔊";
+  }).catch(() => {
+    musicToggleBtn.textContent = "🔇";
   });
 
   musicToggleBtn.addEventListener('click', () => {
     if (isMusicPlaying) {
       bgMusic.pause();
       isMusicPlaying = false;
-      musicToggleBtn.textContent = "🔇 МУЗЫКА: ВЫКЛ";
+      musicToggleBtn.textContent = "🔇";
     } else {
       bgMusic.play();
       isMusicPlaying = true;
-      musicToggleBtn.textContent = "🔊 МУЗЫКА: ВКЛ";
+      musicToggleBtn.textContent = "🔊";
     }
-  });
-
-  backToLoadingBtn.addEventListener('click', () => {
-    window.location.href = 'index.html';
   });
 </script>
 </body>
