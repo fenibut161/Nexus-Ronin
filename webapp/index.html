@@ -89,32 +89,9 @@ html,body{
   min-height:100vh;
   object-fit:fill;
 }
-
-/* ---- Сообщение о повороте ---- */
-#rotate-msg {
-  display:none;
-  position:fixed;inset:0;z-index:20;
-  background:rgba(0,0,0,0.92);
-  color:#fff;
-  font-size:24px;
-  text-align:center;
-  padding:40px;
-  justify-content:center;
-  align-items:center;
-  flex-direction:column;
-}
-#rotate-msg .icon { font-size:60px; margin-bottom:20px; }
-#rotate-msg .sub { font-size:14px; margin-top:10px; color:#999; }
 </style>
 </head>
 <body>
-
-<!-- Сообщение о повороте -->
-<div id="rotate-msg">
-  <div class="icon">📱</div>
-  <div>Поверните телефон горизонтально</div>
-  <div class="sub">Для игры требуется ландшафтный режим</div>
-</div>
 
 <!-- Splash -->
 <div id="splash">
@@ -154,34 +131,26 @@ html,body{
   <source src="./assets/audio/music/neon_soul.mp3" type="audio/mpeg">
 </audio>
 
-<!-- ========== ЕДИНЫЙ СКРИПТ ========== -->
+<!-- ====== СКРИПТ ====== -->
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script>
-// ---- 1. Telegram WebApp (Fullscreen) ----
+// ---- 1. Telegram WebApp (инициализация) ----
 function initTelegram() {
   if (window.Telegram && window.Telegram.WebApp) {
     const webApp = window.Telegram.WebApp;
     webApp.ready();
-    // Запрос полноэкранного режима (скрывает панели Telegram)
-    if (webApp.requestFullscreen) {
-      webApp.requestFullscreen().catch(() => {
-        console.log('Fullscreen не доступен');
-      });
-    }
-    // Разрешить вертикальные свайпы (опционально)
+    // Расширяем окно (на случай, если fullscreen не сработает)
+    webApp.expand();
+    // Включаем вертикальные свайпы (опционально)
     if (webApp.enableVerticalSwipes) {
       webApp.enableVerticalSwipes();
     }
-    console.log('Telegram fullscreen requested');
+    console.log('Telegram WebApp инициализирован');
     return true;
   }
   return false;
 }
-
-// Вызов сразу после загрузки DOM
-document.addEventListener('DOMContentLoaded', function() {
-  initTelegram();
-});
+document.addEventListener('DOMContentLoaded', initTelegram);
 
 // ---- 2. Прогресс-бар ----
 var percent = 0;
@@ -210,15 +179,10 @@ if (music) {
   music.load();
 }
 
-// ---- 4. Переход в игру с учётом ориентации ----
+// ---- 4. Переход в игру ----
 const startBtn = document.getElementById('startBtn');
 const splash = document.getElementById('splash');
 const gameContainer = document.getElementById('game-container');
-const rotateMsg = document.getElementById('rotate-msg');
-
-function isMobile() {
-  return /Mobi|Android|iPhone|iPad|iPod|BlackBerry|Opera Mini|IEMobile/i.test(navigator.userAgent);
-}
 
 function showGame() {
   splash.classList.add('hidden');
@@ -227,47 +191,19 @@ function showGame() {
   startBtn.textContent = 'В игре';
   startBtn.disabled = true;
   startBtn.style.opacity = '0.5';
-  rotateMsg.style.display = 'none';
-  window.removeEventListener('orientationchange', checkOrientation);
-  window.removeEventListener('resize', checkOrientation);
 }
 
-function checkOrientation() {
-  const isPortrait = window.innerHeight > window.innerWidth;
-  if (!isPortrait) {
-    showGame();
-  }
-}
-
-function enterGame() {
-  // Ещё раз запрашиваем fullscreen (на случай, если не сработало)
+startBtn.addEventListener('click', function() {
+  // Запрос полноэкранного режима (обязательно в ответ на клик)
   if (window.Telegram && window.Telegram.WebApp) {
     const webApp = window.Telegram.WebApp;
-    if (webApp.requestFullscreen) {
-      webApp.requestFullscreen().catch(() => {});
-    }
+    webApp.requestFullscreen().catch((err) => {
+      console.warn('Fullscreen не доступен:', err);
+    });
   }
-
-  if (!isMobile()) {
-    showGame();
-    return;
-  }
-
-  const isPortrait = window.innerHeight > window.innerWidth;
-  if (isPortrait) {
-    rotateMsg.style.display = 'flex';
-    splash.classList.add('hidden');
-    window.addEventListener('orientationchange', checkOrientation);
-    window.addEventListener('resize', checkOrientation);
-    if (music) music.play().catch(() => {});
-    startBtn.disabled = true;
-    startBtn.textContent = 'Поверните';
-  } else {
-    showGame();
-  }
-}
-
-startBtn.addEventListener('click', enterGame);
+  // Переход в игру
+  showGame();
+});
 </script>
 </body>
 </html>
