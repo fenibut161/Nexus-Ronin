@@ -2,15 +2,16 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>NEXUS RONIN — Главная база</title>
   <style>
     :root {
-      /* Защитные отступы Telegram для iPhone и ПК */
-      --safe-top: max(55px, var(--tg-content-safe-area-inset-top, 55px));
-      --safe-bottom: max(12px, var(--tg-content-safe-area-inset-bottom, 12px));
-      --safe-left: max(12px, var(--tg-content-safe-area-inset-left, 12px));
-      --safe-right: max(12px, var(--tg-content-safe-area-inset-right, 12px));
+      /* Защитные отступы Telegram / iOS */
+      --safe-top: max(55px, var(--tg-content-safe-area-inset-top, env(safe-area-inset-top, 55px)));
+      --safe-bottom: max(12px, var(--tg-content-safe-area-inset-bottom, env(safe-area-inset-bottom, 12px)));
+      --safe-left: max(12px, var(--tg-content-safe-area-inset-left, env(safe-area-inset-left, 12px)));
+      --safe-right: max(12px, var(--tg-content-safe-area-inset-right, env(safe-area-inset-right, 12px)));
+      --tg-top-button-zone: 54px;
 
       --cyan: #00f0ff;
       --pink: #ff007b;
@@ -35,6 +36,7 @@
       width: 100vw;
       overflow: hidden;
       position: relative;
+      touch-action: none;
     }
 
     /* === КОНТЕЙНЕР КОМНАТЫ С ФОНОМ И ИНТЕРАКТИВНЫМИ ЗОНАМИ === */
@@ -46,9 +48,6 @@
       z-index: 1;
       overflow: hidden;
     }
-
-    /* На ПК (широкий экран) .room-stage растягивается на весь экран,
-       как и раньше — поведение для десктопа не меняется. */
 
     .room-bg {
       position: absolute;
@@ -231,13 +230,45 @@
     /* Разрешаем клики по элементам интерфейса */
     .interactive-ui { pointer-events: auto; }
 
+    .top-button {
+      height: 32px;
+      min-width: 34px;
+      background: rgba(5, 9, 20, 0.88);
+      border: 1px solid rgba(0, 240, 255, 0.45);
+      color: #fff;
+      border-radius: 10px;
+      padding: 0 10px;
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      box-shadow: 0 0 16px rgba(0, 240, 255, 0.12);
+      backdrop-filter: blur(8px);
+      flex: 0 0 auto;
+    }
+    .top-button:active { transform: scale(0.94); }
+    .exit-btn { border-color: rgba(255, 0, 123, 0.55); color: #ffd6e8; }
+
+    .top-center-hud {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-width: 0;
+      flex: 1 1 auto;
+    }
+
     /* === ВЕРХНЯЯ ПАНЕЛЬ: ПРОФИЛЬ И ВАЛЮТА === */
     .top-hud {
       display: flex;
-      justify-content: space-between;
+      justify-content: center;
       align-items: center;
       gap: 8px;
       width: 100%;
+      min-height: 36px;
+      /* Держим HUD в центре между системными кнопками Telegram: закрыть слева и многоточие справа */
+      padding-left: var(--tg-top-button-zone);
+      padding-right: var(--tg-top-button-zone);
     }
 
     .player-profile {
@@ -255,13 +286,23 @@
     .avatar-icon { font-size: 18px; }
     .profile-name { font-size: 12px; font-weight: 800; color: #fff; }
     .profile-level { color: var(--cyan); font-size: 10.5px; background: rgba(0, 240, 255, 0.15); padding: 1px 5px; border-radius: 3px; }
+    .profile-exit-btn {
+      background: none;
+      border: none;
+      color: #aaa;
+      cursor: pointer;
+      margin-left: 6px;
+      font-size: 14px;
+      line-height: 1;
+    }
+    .profile-exit-btn:active { transform: scale(0.9); color: #fff; }
 
     .currency-group {
       display: flex;
       align-items: center;
       gap: 6px;
       flex-wrap: wrap;
-      justify-content: flex-end;
+      justify-content: flex-start;
     }
 
     .currency-pill {
@@ -382,106 +423,112 @@
        МАСШТАБИРОВАНИЕ ДЛЯ IPHONE И УЗКИХ ЭКРАНОВ (PORTRAIT)
        Все элементы аккуратно подстраиваются, ничего не вылезает!
        ========================================================= */
-    @media (max-width: 768px) {
-      /* Картинка фона имеет соотношение сторон ~1264:843 (широкий формат).
-         На узком телефоне при обычном "cover" края обрезаются и хотспоты
-         перестают совпадать с объектами на картинке. Поэтому на мобильном
-         .room-stage вписывается в экран с сохранением пропорций картинки
-         (letterbox), а свободные полосы сверху/снизу закрашиваются в цвет фона. */
-      .room-viewport {
-        position: absolute;
-        inset: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: var(--dark-bg);
-        overflow: hidden;
+    @media (max-width: 900px), (pointer: coarse) {
+      :root {
+        /* На телефоне поднимаем профиль и валюту в верхнюю строку — между кнопкой закрытия Telegram и троеточием. */
+        --safe-top: max(8px, env(safe-area-inset-top, 0px));
+        --safe-bottom: max(8px, env(safe-area-inset-bottom, 0px));
+        --safe-left: max(8px, env(safe-area-inset-left, 0px));
+        --safe-right: max(8px, env(safe-area-inset-right, 0px));
       }
-      .room-stage {
-        position: relative;
-        inset: auto;
-        width: min(100vw, calc(100vh * 1264 / 843));
-        height: min(100vh, calc(100vw * 843 / 1264));
+
+      #uiLayer {
+        padding-top: var(--safe-top);
+        padding-left: max(var(--safe-left), 8px);
+        padding-right: max(var(--safe-right), 8px);
+        padding-bottom: max(var(--safe-bottom), 8px);
       }
 
       .top-hud {
-        flex-direction: row;
-        align-items: center;
-        gap: 6px;
-        flex-wrap: nowrap;
+        justify-content: center;
+        gap: 5px;
+        padding-left: 68px;
+        padding-right: 68px;
       }
-      .player-profile { padding: 4px 7px; gap: 5px; }
+
+      .player-profile { padding: 3px 6px; gap: 5px; border-radius: 9px; }
       .avatar-icon { font-size: 15px; }
-      .profile-name { font-size: 10px; }
+      .profile-name { font-size: 10px; max-width: 72px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
       .profile-level { font-size: 9px; padding: 1px 4px; }
-      .currency-group { justify-content: flex-end; gap: 4px; flex-wrap: nowrap; }
-      .currency-pill { flex: 0 0 auto; padding: 3px 6px; font-size: 10px; gap: 3px; }
+
+      .currency-group { justify-content: center; gap: 4px; flex-wrap: nowrap; min-width: 0; flex: 0 1 auto; }
+      .currency-pill { padding: 3px 6px; font-size: 10px; gap: 3px; white-space: nowrap; }
       .plus-btn { width: 14px; height: 14px; font-size: 10px; }
-      #musicBtn { padding: 3px 6px; font-size: 10px; }
+      .profile-exit-btn { margin-left: 2px; font-size: 13px; }
+      #musicBtn { padding: 0 7px !important; height: 28px; border-radius: 10px !important; font-size: 10px !important; }
+      .music-label { display: none; }
+      
+      .side-menu { width: 118px; gap: 4px; }
+      .side-btn { padding: 5px 7px; font-size: 9.5px; border-radius: 5px; }
 
-      .side-menu { flex-direction: row; flex-wrap: wrap; width: 100%; gap: 4px; }
-      .side-btn { flex: 1 1 calc(33% - 4px); justify-content: center; text-align: center; padding: 5px; font-size: 10px; }
+      .bottom-hud { gap: 6px; }
+      .nav-bar { padding: 3px; gap: 2px; }
+      .nav-tab { padding: 4px 6px; font-size: 8.8px; gap: 1px; }
+      .story-btn { padding: 7px 12px; }
+      .story-title { font-size: 8.5px; }
+      .story-ch { font-size: 10.5px; }
 
-      .bottom-hud { flex-direction: column; align-items: stretch; gap: 6px; }
-      .nav-bar { justify-content: space-around; width: 100%; }
-      .nav-tab { flex: 1; padding: 4px; font-size: 9.5px; }
-      .story-btn { align-items: center; text-align: center; padding: 8px 12px; }
-
-      /* На iPhone в вертикальной ориентации хотспоты немного крупнее и удобнее для пальца */
-      .hotspot-label { font-size: 10px; padding: 4px 8px; }
+      .hotspot-label { font-size: 9.5px; padding: 4px 8px; }
     }
 
-    /* === МОДАЛЬНОЕ ОКНО ПОДТВЕРЖДЕНИЯ ВЫХОДА === */
-    .exit-modal-overlay {
-      position: fixed;
-      inset: 0;
-      z-index: 100;
-      background: rgba(2, 4, 10, 0.75);
-      backdrop-filter: blur(4px);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      pointer-events: auto;
+    @media (max-width: 760px), (max-height: 390px) {
+      .top-hud { padding-left: 76px; padding-right: 76px; }
+      .profile-name { max-width: 56px; }
+      .currency-pill { font-size: 9px; padding: 3px 4px; }
+      .plus-btn { display: none; }
     }
-    .exit-modal-overlay.open { display: flex; }
-    .exit-modal {
-      width: min(300px, 82vw);
-      background: rgba(8, 12, 24, 0.96);
-      border: 1px solid var(--cyan);
-      border-radius: 14px;
-      padding: 22px 18px 16px;
-      text-align: center;
-      box-shadow: 0 0 40px rgba(0, 240, 255, 0.35), 0 0 70px rgba(157, 0, 255, 0.25);
+
+    @media (max-height: 430px) and (orientation: landscape) {
+      :root { --safe-top: 6px; --safe-bottom: 6px; }
+      .top-hud { padding-left: 72px; padding-right: 72px; }
+      .bottom-hud { align-items: flex-end; }
+      .nav-tab { font-size: 8px; padding: 3px 5px; }
+      .side-btn { font-size: 9px; padding: 4px 6px; }
+      .story-btn { padding: 6px 10px; }
     }
-    .exit-modal-text {
-      font-size: 14px;
-      font-weight: 800;
-      letter-spacing: 0.3px;
-      line-height: 1.4;
-      margin-bottom: 18px;
-    }
-    .exit-modal-actions { display: flex; gap: 10px; }
-    .exit-modal-btn {
-      flex: 1;
-      padding: 10px 0;
-      border-radius: 8px;
-      font-size: 13px;
-      font-weight: 900;
-      letter-spacing: 1px;
-      cursor: pointer;
-      border: 2px solid transparent;
-      transition: transform 0.15s;
-    }
-    .exit-modal-btn:active { transform: scale(0.95); }
-    .exit-modal-btn.yes {
-      background: linear-gradient(135deg, var(--pink) 0%, var(--purple) 100%);
-      color: #fff;
-      border-color: var(--pink);
-    }
-    .exit-modal-btn.no {
-      background: rgba(255, 255, 255, 0.06);
-      color: #fff;
-      border-color: rgba(0, 240, 255, 0.5);
+
+    /* Принудительная горизонтальная ориентация для телефона.
+       Если браузер/Telegram не разрешит lock(), портретный экран визуально поворачивается как в мобильных играх. */
+    @media (orientation: portrait) and (max-width: 900px) {
+      body::before {
+        content: 'Поверните телефон горизонтально';
+        position: fixed;
+        left: 50%;
+        bottom: 14px;
+        z-index: 1000;
+        transform: translateX(-50%);
+        padding: 6px 12px;
+        border: 1px solid rgba(0, 240, 255, 0.45);
+        border-radius: 999px;
+        background: rgba(5, 9, 20, 0.78);
+        color: #dffcff;
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 0.4px;
+        pointer-events: none;
+        box-shadow: 0 0 18px rgba(0, 240, 255, 0.16);
+      }
+
+      .room-stage,
+      #uiLayer {
+        width: 100vh;
+        height: 100vw;
+        left: 50%;
+        top: 50%;
+        right: auto;
+        bottom: auto;
+        transform: translate(-50%, -50%) rotate(90deg);
+        transform-origin: center center;
+      }
+
+      #uiLayer {
+        position: absolute;
+      }
+
+      .top-hud {
+        padding-left: 72px;
+        padding-right: 72px;
+      }
     }
   </style>
 </head>
@@ -493,7 +540,6 @@
 </audio>
 
 <!-- 1. КОМНАТА С ФОНОМ И ИНТЕРАКТИВНЫМИ ЗОНАМИ (ВСТРОЕНЫ В ОБЪЕКТЫ ФОНА!) -->
-<div class="room-viewport">
 <div class="room-stage">
   <div class="room-bg" id="bgRoom"></div>
   <div class="vignette-layer"></div>
@@ -522,7 +568,6 @@
     <div class="hotspot-label">🍸 БАР «ПОСЛЕЖИЗНИЕ»</div>
   </div>
 </div>
-</div>
 
 <!-- 2. ИНТЕРФЕЙС ПОВЕРХ КОМНАТЫ (HUD) -->
 <div id="uiLayer">
@@ -532,7 +577,7 @@
       <span class="avatar-icon">🥷</span>
       <span class="profile-name">Ночная Тень</span>
       <span class="profile-level">УР. 68</span>
-      <button onclick="confirmExitGame()" style="background:none; border:none; color:#aaa; cursor:pointer; margin-left:6px;" title="Выйти из игры">🚪</button>
+      <button id="exitBtn" class="profile-exit-btn" title="Выйти из игры">🚪</button>
     </div>
 
     <div class="currency-group">
@@ -548,7 +593,7 @@
         <span style="color:var(--pink);">💎</span> 8 960
         <div class="plus-btn" onclick="alert('Кристаллы Nexus Core...')">+</div>
       </div>
-      <button id="musicBtn" style="background:rgba(5,9,20,0.88); border:1px solid var(--cyan); color:#fff; border-radius:12px; padding:4px 8px; font-size:11px; cursor:pointer;">🔊</button>
+      <button id="musicBtn" style="background:rgba(5,9,20,0.88); border:1px solid var(--cyan); color:#fff; border-radius:12px; padding:4px 8px; font-size:11px; cursor:pointer;">🔊 <span class="music-label">МУЗЫКА</span></button>
     </div>
   </div>
 
@@ -608,23 +653,13 @@
   </div>
 </div>
 
-<!-- Модальное окно подтверждения выхода из игры -->
-<div class="exit-modal-overlay" id="exitModalOverlay">
-  <div class="exit-modal">
-    <div class="exit-modal-text">Вы точно хотите выйти из игры?</div>
-    <div class="exit-modal-actions">
-      <button class="exit-modal-btn yes" onclick="doExitGame()">ДА</button>
-      <button class="exit-modal-btn no" onclick="closeExitModal()">НЕТ</button>
-    </div>
-  </div>
-</div>
-
 <!-- Официальный скрипт Telegram -->
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script>
   const tg = window.Telegram?.WebApp;
   const bgMusic = document.getElementById('bgMusic');
   const musicBtn = document.getElementById('musicBtn');
+  const exitBtn = document.getElementById('exitBtn');
   const bgRoom = document.getElementById('bgRoom');
   let isMusicPlaying = false;
 
@@ -635,11 +670,49 @@
     if (tg.setHeaderColor) tg.setHeaderColor('#050914');
     if (tg.setBackgroundColor) tg.setBackgroundColor('#050914');
     if (tg.disableVerticalSwipes) tg.disableVerticalSwipes();
+    if (tg.requestFullscreen) tg.requestFullscreen();
   }
+
+  // Пытаемся включить системный landscape-lock. В Telegram/iOS он может быть запрещён,
+  // поэтому ниже в CSS есть визуальный fallback с поворотом сцены в портретном режиме.
+  async function lockLandscape() {
+    try {
+      if (screen.orientation?.lock) await screen.orientation.lock('landscape');
+    } catch (e) {
+      console.warn('Landscape lock недоступен, работает CSS-поворот:', e);
+    }
+  }
+  lockLandscape();
+  document.addEventListener('fullscreenchange', lockLandscape);
+
+  // Музыка главного меню. Важно: не пересоздаём src после play(), иначе на телефоне
+  // можно потерять пользовательскую активацию, полученную кнопкой «Начать» на загрузочном экране.
+  const musicVariants = [
+    'webapp/assets/audio/music/neon_soul.mp3',
+    './assets/audio/music/neon_soul.mp3',
+    'assets/audio/music/neon_soul.mp3',
+    '/webapp/assets/audio/music/neon_soul.mp3'
+  ];
+  let musicVariantIndex = 0;
+
+  function setMusicSource(index) {
+    musicVariantIndex = index;
+    bgMusic.src = musicVariants[index];
+    bgMusic.load();
+  }
+  setMusicSource(0);
+
+  bgMusic.addEventListener('error', () => {
+    if (musicVariantIndex < musicVariants.length - 1) {
+      setMusicSource(musicVariantIndex + 1);
+      startAudio();
+    }
+  });
 
   // Умный поиск картинки фона
   const bgVariants = [
     'webapp/assets/images/backgrounds/main_menu_bg.jpg',
+    'uploads/main_menu_bg.jpg',
     './assets/images/backgrounds/main_menu_bg.jpg',
     'assets/images/backgrounds/main_menu_bg.jpg',
     '/webapp/assets/images/backgrounds/main_menu_bg.jpg'
@@ -659,18 +732,21 @@
   // =========================================================================
   // ГАРАНТИРОВАННЫЙ ЗАПУСК МУЗЫКИ НА IPHONE / IOS / ПК
   // Браузеры на iPhone требуют касания экрана для старта аудио.
-  // Мы запускаем музыку сразу при загрузке, либо при первом же тапе в любой точке экрана!
+  // Мы запускаем музыку сразу при загрузке. Если браузер всё же заблокировал autoplay,
+  // первый тап в меню повторит попытку.
   // =========================================================================
   function startAudio() {
-    if (!isMusicPlaying) {
-      bgMusic.volume = 0.65;
-      bgMusic.play().then(() => {
-        isMusicPlaying = true;
-        musicBtn.textContent = "🔊 МУЗЫКА";
-      }).catch(e => {
-        console.warn("Аудио ждёт тапа по экрану:", e);
-      });
-    }
+    if (!bgMusic.paused || isMusicPlaying) return;
+
+    bgMusic.volume = 0.65;
+    bgMusic.play().then(() => {
+      isMusicPlaying = true;
+      sessionStorage.setItem('nexusRoninMenuMusic', 'on');
+      musicBtn.innerHTML = "🔊 <span class=\"music-label\">МУЗЫКА</span>";
+    }).catch(e => {
+      isMusicPlaying = false;
+      console.warn("Аудио ждёт тапа по экрану:", e);
+    });
   }
 
   startAudio();
@@ -678,49 +754,47 @@
   // Первый тап в любой точке экрана автоматически включит фоновую музыку на iPhone!
   document.addEventListener('pointerdown', startAudio, { once: true });
   document.addEventListener('touchstart', startAudio, { once: true });
+  window.addEventListener('pageshow', startAudio);
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden && sessionStorage.getItem('nexusRoninMenuMusic') !== 'off') startAudio();
+  });
 
   musicBtn.addEventListener('click', (e) => {
     e.stopPropagation();
     if (isMusicPlaying) {
       bgMusic.pause();
       isMusicPlaying = false;
-      musicBtn.textContent = "🔇 ВЫКЛ";
+      sessionStorage.setItem('nexusRoninMenuMusic', 'off');
+      musicBtn.innerHTML = "🔇 <span class=\"music-label\">ВЫКЛ</span>";
     } else {
-      bgMusic.play();
-      isMusicPlaying = true;
-      musicBtn.textContent = "🔊 МУЗЫКА";
+      bgMusic.play().then(() => {
+        isMusicPlaying = true;
+        sessionStorage.setItem('nexusRoninMenuMusic', 'on');
+        musicBtn.innerHTML = "🔊 <span class=\"music-label\">МУЗЫКА</span>";
+      }).catch(e => console.warn('Не удалось включить музыку:', e));
     }
   });
 
-  // =========================================================================
-  // ВЫХОД ИЗ ИГРЫ С ПОДТВЕРЖДЕНИЕМ
-  // Кнопка 🚪 закрывает саму игру (Telegram Mini App), а не ведёт на загрузочный экран.
-  // Используем нативный tg.showConfirm, если он доступен, иначе — своё модальное окно.
-  // =========================================================================
-  const exitModalOverlay = document.getElementById('exitModalOverlay');
+  exitBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const shouldExit = confirm('Вы точно хотите выйти из игры?');
+    if (!shouldExit) return;
 
-  function confirmExitGame() {
-    if (tg && typeof tg.showConfirm === 'function') {
-      tg.showConfirm('Вы точно хотите выйти из игры?', (confirmed) => {
-        if (confirmed) doExitGame();
-      });
-    } else {
-      exitModalOverlay.classList.add('open');
-    }
-  }
+    try { bgMusic.pause(); } catch (_) {}
 
-  function closeExitModal() {
-    exitModalOverlay.classList.remove('open');
-  }
-
-  function doExitGame() {
-    closeExitModal();
     if (tg && typeof tg.close === 'function') {
-      tg.close(); // закрывает Telegram Mini App
-    } else if (window.close) {
-      window.close(); // закрывает вкладку/окно в обычном браузере
+      tg.close();
+      return;
     }
-  }
+
+    // Fallback для обычного браузера/локального теста: пытаемся закрыть вкладку.
+    // Если браузер не разрешит window.close(), показываем закрытое состояние вместо загрузочного экрана.
+    window.close();
+    setTimeout(() => {
+      document.body.innerHTML = '<div style="height:100vh;display:flex;align-items:center;justify-content:center;background:#050914;color:#fff;font-family:Segoe UI,Arial,sans-serif;text-align:center;">Игра закрыта</div>';
+    }, 150);
+  });
+
 </script>
 </body>
 </html>
