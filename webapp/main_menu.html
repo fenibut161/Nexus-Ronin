@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Главная база — Призыв</title>
+  <title>Главная база — Призыв clean glass</title>
 
   <style>
     :root {
@@ -155,14 +155,21 @@
     .capsule-btn::after {
       content: "";
       position: absolute;
-      inset: 2% 8%;
+      /* Полоса теперь ограничена областью самой капсулы, а не всей кнопкой. */
+      left: 16%;
+      top: 3%;
+      width: 68%;
+      height: 86%;
       z-index: 3;
-      background: linear-gradient(115deg, transparent 12%, rgba(255,255,255,0) 34%, rgba(255,255,255,.58) 48%, rgba(var(--pink), .30) 54%, transparent 72%);
+      border-radius: 42% / 12%;
+      clip-path: polygon(10% 0, 90% 0, 100% 100%, 0 100%);
+      background: linear-gradient(115deg, transparent 16%, rgba(255,255,255,0) 38%, rgba(255,255,255,.54) 49%, rgba(var(--pink), .26) 55%, transparent 70%);
       opacity: 0;
-      transform: translateX(-72%) skewX(-10deg);
-      filter: blur(.4px);
+      transform: translateX(-62%) skewX(-10deg);
+      filter: blur(.35px);
       mix-blend-mode: screen;
       pointer-events: none;
+      overflow: hidden;
     }
 
     .capsule-btn:hover,
@@ -287,9 +294,9 @@
     }
 
     @keyframes scan {
-      from { transform: translateX(-72%) skewX(-10deg); opacity: 0; }
-      22% { opacity: .92; }
-      to { transform: translateX(72%) skewX(-10deg); opacity: 0; }
+      from { transform: translateX(-58%) skewX(-10deg); opacity: 0; }
+      22% { opacity: .82; }
+      to { transform: translateX(58%) skewX(-10deg); opacity: 0; }
     }
 
     @keyframes ripple {
@@ -335,8 +342,8 @@
         data-name="Призыв"
         data-action="Клонировать · Призвать · Пробудить"
       >
-        <img class="capsule-sprite capsule-static" src="./cyber_base_sprite_assets/capsule_static.png" alt="Призыв" draggable="false" />
-        <img class="capsule-sprite capsule-active" src="./cyber_base_sprite_assets/capsule_active_clean.png" onerror="this.onerror=null; this.src='./cyber_base_sprite_assets/capsule_active.png';" alt="Призыв активен" draggable="false" />
+        <img class="capsule-sprite capsule-static" src="./cyber_base_sprite_assets/capsule_static_glassfill.png" alt="Призыв" draggable="false" />
+        <img class="capsule-sprite capsule-active" src="./cyber_base_sprite_assets/capsule_active_glassfill.png" onerror="this.onerror=null; this.src='./cyber_base_sprite_assets/capsule_active_pretty.png';" alt="Призыв активен" draggable="false" />
 
         <span class="capsule-label">
           <span class="capsule-title">Призыв <span class="capsule-arrow">›</span></span>
