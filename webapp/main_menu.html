@@ -3,20 +3,30 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Интерактивная база — фон + sprite objects</title>
+  <title>Cyber Base — Main Menu</title>
+
   <style>
     :root {
       --cyan: 0, 229, 255;
       --pink: 255, 43, 222;
       --gold: 255, 213, 95;
+      --violet: 156, 81, 255;
       --bg-w: 1376;
       --bg-h: 768;
     }
 
     * { box-sizing: border-box; }
 
-    body {
+    html, body {
       margin: 0;
+      width: 100%;
+      min-height: 100%;
+      background: #020611;
+      color: #ecfbff;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+    }
+
+    body {
       min-height: 100vh;
       display: grid;
       place-items: center;
@@ -25,8 +35,10 @@
         radial-gradient(circle at 52% 45%, rgba(104, 0, 255, .24), transparent 34%),
         radial-gradient(circle at 18% 82%, rgba(var(--cyan), .16), transparent 30%),
         linear-gradient(135deg, #020611, #070014 52%, #010208);
-      color: #ecfbff;
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+    }
+
+    button {
+      font: inherit;
     }
 
     .stage {
@@ -49,6 +61,7 @@
       object-fit: cover;
       pointer-events: none;
       filter: saturate(1.04) contrast(1.02);
+      z-index: 0;
     }
 
     .ambient {
@@ -63,6 +76,12 @@
       opacity: .9;
       z-index: 1;
     }
+
+    /* =========================================================
+       MAIN OBJECT SPRITES
+       Фон лежит отдельно, эти объекты — отдельные PNG-спрайты.
+       Координаты в системе 1376×768.
+       ========================================================= */
 
     .sprite-btn {
       --x: 0px;
@@ -85,13 +104,34 @@
       outline: none;
     }
 
-    .sprite-btn img {
+    .sprite-btn .sprite-art {
       display: block;
       width: 100%;
       height: auto;
       pointer-events: none;
       filter: drop-shadow(0 18px 22px rgba(0,0,0,.55));
       transition: filter .2s ease, opacity .2s ease;
+    }
+
+    /* Дополнительная форма обрезки поверх PNG-альфы, чтобы убрать грубые края авто-вырезки. */
+    .sprite-btn.dungeons .sprite-art {
+      clip-path: polygon(4% 35%, 23% 13%, 62% 3%, 83% 10%, 98% 37%, 93% 67%, 78% 89%, 35% 99%, 6% 84%, 0 58%);
+    }
+
+    .sprite-btn.summon .sprite-art {
+      clip-path: polygon(25% 3%, 75% 3%, 92% 16%, 97% 54%, 86% 88%, 65% 99%, 28% 96%, 7% 78%, 5% 22%);
+    }
+
+    .sprite-btn.bar .sprite-art {
+      clip-path: polygon(7% 6%, 96% 2%, 99% 86%, 82% 96%, 10% 92%, 0 55%);
+    }
+
+    .sprite-btn.cyberware .sprite-art {
+      clip-path: polygon(11% 4%, 96% 1%, 100% 72%, 82% 99%, 15% 94%, 0 68%, 4% 22%);
+    }
+
+    .sprite-btn.main-story .sprite-art {
+      clip-path: polygon(12% 6%, 99% 6%, 90% 93%, 1% 93%);
     }
 
     .sprite-btn::before,
@@ -105,7 +145,6 @@
       border-radius: 18px;
     }
 
-    /* soft outer aura */
     .sprite-btn::before {
       background: radial-gradient(ellipse at 50% 55%, rgba(var(--rgb), .42), transparent 58%);
       filter: blur(14px);
@@ -113,10 +152,9 @@
       z-index: -1;
     }
 
-    /* animated scanline sheen */
     .sprite-btn::after {
       inset: 2% 8%;
-      background: linear-gradient(115deg, transparent 12%, rgba(255,255,255,.0) 34%, rgba(255,255,255,.52) 48%, rgba(var(--rgb), .28) 54%, transparent 70%);
+      background: linear-gradient(115deg, transparent 12%, rgba(255,255,255,0) 34%, rgba(255,255,255,.52) 48%, rgba(var(--rgb), .28) 54%, transparent 70%);
       transform: translateX(-45%) skewX(-10deg);
       mix-blend-mode: screen;
       filter: blur(.5px);
@@ -132,9 +170,9 @@
         drop-shadow(0 0 48px rgba(var(--rgb), .28));
     }
 
-    .sprite-btn:hover img,
-    .sprite-btn:focus-visible img,
-    .sprite-btn.is-active img {
+    .sprite-btn:hover .sprite-art,
+    .sprite-btn:focus-visible .sprite-art,
+    .sprite-btn.is-active .sprite-art {
       filter:
         brightness(1.14)
         saturate(1.18)
@@ -158,7 +196,7 @@
       animation: scan .95s ease-out infinite;
     }
 
-    .sprite-btn .label {
+    .sprite-label {
       position: absolute;
       left: 50%;
       bottom: -22px;
@@ -179,30 +217,389 @@
       backdrop-filter: blur(10px);
       transition: opacity .18s ease, transform .18s ease;
       text-shadow: 0 0 8px rgba(var(--rgb), .7);
+      white-space: nowrap;
     }
 
-    .sprite-btn:hover .label,
-    .sprite-btn:focus-visible .label,
-    .sprite-btn.is-active .label {
+    .sprite-btn:hover .sprite-label,
+    .sprite-btn:focus-visible .sprite-label,
+    .sprite-btn.is-active .sprite-label {
       opacity: 1;
       transform: translateX(-50%) translateY(0);
     }
 
+    /* =========================================================
+       OLD UI BUTTONS: profile, currency, left menu, bottom menu
+       ========================================================= */
+
+    .ui-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 30;
+      pointer-events: none;
+    }
+
+    .ui-hot {
+      --x: 0;
+      --y: 0;
+      --w: 100;
+      --h: 40;
+      --rgb: var(--cyan);
+      position: absolute;
+      left: calc(var(--x) / var(--bg-w) * 100%);
+      top: calc(var(--y) / var(--bg-h) * 100%);
+      width: calc(var(--w) / var(--bg-w) * 100%);
+      height: calc(var(--h) / var(--bg-h) * 100%);
+      pointer-events: all;
+      border: 1px solid rgba(var(--rgb), .24);
+      color: #ecfbff;
+      background: linear-gradient(135deg, rgba(3, 10, 27, .63), rgba(17, 3, 32, .52));
+      box-shadow: inset 0 0 16px rgba(var(--rgb), .04), 0 8px 18px rgba(0,0,0,.24);
+      backdrop-filter: blur(7px);
+      cursor: pointer;
+      outline: none;
+      transform: translateZ(0);
+      transition: border-color .18s ease, box-shadow .18s ease, transform .18s ease, background .18s ease, filter .18s ease;
+      -webkit-tap-highlight-color: transparent;
+      overflow: hidden;
+    }
+
+    .ui-hot::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(var(--rgb), .22), transparent 44%);
+      opacity: 0;
+      transition: opacity .18s ease;
+      pointer-events: none;
+      mix-blend-mode: screen;
+    }
+
+    .ui-hot::after {
+      content: "";
+      position: absolute;
+      inset: -40% -70%;
+      background: linear-gradient(115deg, transparent 42%, rgba(255,255,255,.34) 49%, rgba(var(--rgb), .18) 53%, transparent 62%);
+      opacity: 0;
+      transform: translateX(-35%);
+      pointer-events: none;
+      mix-blend-mode: screen;
+    }
+
+    .ui-hot:hover,
+    .ui-hot:focus-visible,
+    .ui-hot.is-active {
+      border-color: rgba(var(--rgb), .95);
+      background: linear-gradient(135deg, rgba(5, 22, 42, .76), rgba(31, 4, 47, .68));
+      box-shadow:
+        0 0 8px rgba(var(--rgb), .52),
+        0 0 22px rgba(var(--rgb), .24),
+        inset 0 0 20px rgba(var(--rgb), .10);
+      transform: translateY(-1px);
+      filter: brightness(1.08);
+    }
+
+    .ui-hot:hover::before,
+    .ui-hot:focus-visible::before,
+    .ui-hot.is-active::before {
+      opacity: 1;
+    }
+
+    .ui-hot:hover::after,
+    .ui-hot:focus-visible::after,
+    .ui-hot.is-active::after {
+      animation: uiScan .92s ease-out infinite;
+    }
+
+    .profile-card {
+      border-radius: 10px;
+      clip-path: polygon(0 0, 95% 0, 100% 45%, 95% 100%, 0 100%);
+      padding: 9px 12px 9px 96px;
+      text-align: left;
+    }
+
+    .avatar {
+      position: absolute;
+      left: 9px;
+      top: 9px;
+      width: 70px;
+      height: 70px;
+      border: 1px solid rgba(var(--pink), .75);
+      border-radius: 4px;
+      background:
+        radial-gradient(circle at 45% 25%, rgba(255,255,255,.85), transparent 11%),
+        radial-gradient(circle at 50% 35%, rgba(190, 133, 255, .95), transparent 28%),
+        linear-gradient(135deg, #19072f, #05203c 56%, #0c0614);
+      box-shadow: 0 0 18px rgba(var(--pink), .35), inset 0 0 18px rgba(var(--cyan), .14);
+    }
+
+    .avatar::before {
+      content: "";
+      position: absolute;
+      left: 20px;
+      top: 13px;
+      width: 31px;
+      height: 42px;
+      border-radius: 52% 48% 44% 44%;
+      background: linear-gradient(160deg, #d6c2ff, #8c6fff 42%, #1a1230 43%);
+      filter: drop-shadow(0 0 8px rgba(var(--pink), .4));
+    }
+
+    .avatar::after {
+      content: "";
+      position: absolute;
+      left: 27px;
+      top: 38px;
+      width: 16px;
+      height: 21px;
+      border-radius: 50% 50% 45% 45%;
+      background: linear-gradient(#ffd8ec, #a264ac);
+      box-shadow: -12px -7px 0 -8px #9ff, 13px -7px 0 -8px #9ff;
+    }
+
+    .profile-name {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: clamp(12px, 1.35vw, 19px);
+      font-weight: 900;
+      line-height: 1.05;
+      white-space: nowrap;
+    }
+
+    .profile-name small {
+      color: #fff;
+      font-size: .9em;
+      text-shadow: 0 0 8px rgba(var(--pink), .7);
+    }
+
+    .xp-line {
+      margin-top: 8px;
+      height: 7px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.12);
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,.1);
+    }
+
+    .xp-fill {
+      width: 73%;
+      height: 100%;
+      background: linear-gradient(90deg, #c800ff, #ff2bde);
+      box-shadow: 0 0 10px rgba(var(--pink), .8);
+    }
+
+    .power {
+      margin-top: 7px;
+      color: rgb(var(--gold));
+      font-weight: 900;
+      text-shadow: 0 0 8px rgba(var(--gold), .35);
+      font-size: clamp(12px, 1.35vw, 18px);
+    }
+
+    .resource {
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 0 8px 0 13px;
+      font-weight: 900;
+      letter-spacing: .02em;
+      font-size: clamp(11px, 1.2vw, 16px);
+      white-space: nowrap;
+    }
+
+    .res-left {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      min-width: 0;
+    }
+
+    .res-icon {
+      width: 22px;
+      height: 22px;
+      display: grid;
+      place-items: center;
+      color: rgb(var(--rgb));
+      text-shadow: 0 0 10px rgba(var(--rgb), .85);
+      font-size: 18px;
+      flex: 0 0 auto;
+    }
+
+    .plus {
+      width: 27px;
+      height: 27px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(255,255,255,.35);
+      border-radius: 6px;
+      background: rgba(255,255,255,.07);
+      color: #fff;
+      box-shadow: inset 0 0 8px rgba(var(--rgb), .1);
+      flex: 0 0 auto;
+    }
+
+    .top-icon {
+      border-radius: 11px;
+      display: grid;
+      place-items: center;
+      font-size: clamp(17px, 1.7vw, 25px);
+      font-weight: 900;
+      background: rgba(3, 8, 20, .38);
+      border-color: transparent;
+      backdrop-filter: none;
+      box-shadow: none;
+    }
+
+    .top-icon .badge {
+      position: absolute;
+      right: 4px;
+      top: 2px;
+      width: 12px;
+      height: 12px;
+      border-radius: 999px;
+      background: #ff2b76;
+      box-shadow: 0 0 9px rgba(255, 43, 118, .8);
+      border: 1px solid #fff;
+    }
+
+    .event-card {
+      border-radius: 9px;
+      padding: 12px 14px;
+      text-align: left;
+      clip-path: polygon(0 0, 96% 0, 100% 18%, 100% 100%, 0 100%);
+    }
+
+    .event-kicker {
+      color: #ff8cff;
+      text-transform: uppercase;
+      font-weight: 900;
+      font-size: clamp(10px, 1vw, 14px);
+      letter-spacing: .08em;
+      text-shadow: 0 0 10px rgba(var(--pink), .72);
+    }
+
+    .event-title {
+      margin-top: 4px;
+      font-size: clamp(13px, 1.35vw, 19px);
+      font-weight: 900;
+      line-height: 1.05;
+    }
+
+    .event-time {
+      margin-top: 8px;
+      color: rgba(236,251,255,.82);
+      font-size: clamp(10px, 1vw, 13px);
+      font-weight: 700;
+    }
+
+    .side-btn {
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 12px;
+      background: rgba(2, 8, 20, .28);
+      border-color: transparent;
+      text-align: left;
+    }
+
+    .side-icon {
+      width: 31px;
+      height: 31px;
+      display: grid;
+      place-items: center;
+      color: #dffbff;
+      font-size: clamp(17px, 1.6vw, 24px);
+      text-shadow: 0 0 12px rgba(var(--cyan), .8);
+      flex: 0 0 auto;
+    }
+
+    .side-label {
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: .025em;
+      font-size: clamp(11px, 1.15vw, 16px);
+      color: #effcff;
+      text-shadow: 0 0 9px rgba(var(--cyan), .25);
+    }
+
+    .new-badge {
+      margin-left: auto;
+      color: #ff6ef2;
+      font-size: clamp(9px, .9vw, 12px);
+      font-weight: 900;
+      text-shadow: 0 0 10px rgba(var(--pink), .85);
+    }
+
+    .bottom-shell {
+      --x: 8;
+      --y: 680;
+      --w: 865;
+      --h: 78;
+      position: absolute;
+      left: calc(var(--x) / var(--bg-w) * 100%);
+      top: calc(var(--y) / var(--bg-h) * 100%);
+      width: calc(var(--w) / var(--bg-w) * 100%);
+      height: calc(var(--h) / var(--bg-h) * 100%);
+      z-index: 28;
+      pointer-events: none;
+      background: linear-gradient(90deg, rgba(7, 18, 37, .88), rgba(5, 12, 27, .72));
+      border: 1px solid rgba(var(--cyan), .12);
+      clip-path: polygon(0 0, 100% 0, 97% 100%, 0 100%);
+      box-shadow: 0 -8px 25px rgba(0,0,0,.32), inset 0 0 25px rgba(var(--cyan), .05);
+    }
+
+    .bottom-nav {
+      border-radius: 0;
+      background: transparent;
+      border-color: rgba(var(--cyan), .06);
+      border-top-color: transparent;
+      border-bottom-color: transparent;
+      display: grid;
+      place-items: center;
+      gap: 3px;
+      padding: 6px 4px;
+      text-align: center;
+    }
+
+    .bottom-nav.home {
+      background: linear-gradient(135deg, rgba(0, 133, 199, .66), rgba(9, 50, 86, .82));
+      clip-path: polygon(0 0, 80% 0, 100% 100%, 0 100%);
+      border-color: rgba(var(--cyan), .35);
+    }
+
+    .nav-icon {
+      font-size: clamp(18px, 2vw, 28px);
+      line-height: 1;
+      text-shadow: 0 0 12px rgba(var(--cyan), .65);
+    }
+
+    .nav-label {
+      font-size: clamp(10px, 1vw, 14px);
+      line-height: 1;
+      font-weight: 900;
+      text-transform: uppercase;
+      color: rgba(236,251,255,.86);
+    }
+
     .hud {
       position: absolute;
-      left: 18px;
-      bottom: 16px;
-      z-index: 10;
+      left: 300px;
+      bottom: 86px;
+      z-index: 40;
       max-width: min(520px, calc(100% - 36px));
-      padding: 12px 14px;
-      border: 1px solid rgba(var(--cyan), .32);
+      padding: 10px 13px;
+      border: 1px solid rgba(var(--cyan), .24);
       border-radius: 14px;
-      background: linear-gradient(135deg, rgba(2, 8, 22, .76), rgba(25, 4, 35, .66));
-      backdrop-filter: blur(13px);
-      box-shadow: 0 0 28px rgba(0,0,0,.48), inset 0 0 22px rgba(var(--cyan), .05);
-      font-size: clamp(12px, 1.1vw, 15px);
+      background: linear-gradient(135deg, rgba(2, 8, 22, .56), rgba(25, 4, 35, .46));
+      backdrop-filter: blur(10px);
+      box-shadow: 0 0 22px rgba(0,0,0,.38), inset 0 0 18px rgba(var(--cyan), .04);
+      font-size: clamp(11px, 1vw, 14px);
       line-height: 1.35;
       pointer-events: none;
+      opacity: .86;
     }
 
     .hud strong {
@@ -215,19 +612,21 @@
     .debug {
       position: absolute;
       right: 14px;
-      top: 14px;
-      z-index: 20;
+      top: 58px;
+      z-index: 45;
       display: flex;
       gap: 8px;
+      pointer-events: none;
     }
 
     .debug button {
-      border: 1px solid rgba(var(--cyan), .5);
+      pointer-events: all;
+      border: 1px solid rgba(var(--cyan), .34);
       color: #edfcff;
-      background: rgba(4, 10, 25, .72);
+      background: rgba(4, 10, 25, .58);
       border-radius: 12px;
-      padding: 9px 11px;
-      font-size: 12px;
+      padding: 8px 10px;
+      font-size: 11px;
       font-weight: 850;
       letter-spacing: .05em;
       text-transform: uppercase;
@@ -238,11 +637,12 @@
 
     .debug button:hover { border-color: rgba(var(--pink), .9); }
 
-    .stage.hide-labels .sprite-btn .label { display: none; }
+    .stage.hide-labels .sprite-label { display: none; }
 
-    .stage.editor .sprite-btn {
+    .stage.editor .sprite-btn,
+    .stage.editor .ui-hot {
       outline: 1px dashed rgba(var(--cyan), .5);
-      background: rgba(var(--cyan), .035);
+      background-color: rgba(var(--cyan), .045);
     }
 
     .ripple {
@@ -252,7 +652,7 @@
       margin: -12px 0 0 -12px;
       border: 2px solid rgba(var(--ripple-rgb), .96);
       border-radius: 999px;
-      z-index: 9;
+      z-index: 60;
       pointer-events: none;
       filter: drop-shadow(0 0 12px rgba(var(--ripple-rgb), .95));
       animation: ripple .78s ease-out forwards;
@@ -274,49 +674,126 @@
       to { transform: translateX(72%) skewX(-10deg); opacity: 0; }
     }
 
+    @keyframes uiScan {
+      from { transform: translateX(-35%); opacity: 0; }
+      24% { opacity: .85; }
+      to { transform: translateX(38%); opacity: 0; }
+    }
+
     @keyframes ripple {
       from { transform: scale(.55); opacity: 1; }
       to { transform: scale(7); opacity: 0; }
     }
 
     @media (max-width: 760px) {
-      body { overflow: auto; place-items: start center; }
+      body {
+        overflow: auto;
+        place-items: start center;
+      }
+
       .stage { width: 100vw; }
-      .debug button { padding: 7px 9px; font-size: 10px; }
-      .hud { padding: 9px 11px; }
+
+      .hud {
+        left: 10px;
+        right: 10px;
+        bottom: 86px;
+        max-width: none;
+        padding: 8px 10px;
+      }
+
+      .debug button {
+        padding: 6px 8px;
+        font-size: 9px;
+      }
     }
   </style>
 </head>
+
 <body>
-  <main class="stage" id="stage" aria-label="База с объектами-спрайтами">
-    <img class="bg" src="cyber_base_sprite_assets/bg_clean_final.png" alt="Очищенный фон базы" draggable="false" />
+  <main class="stage" id="stage" aria-label="Главная база">
+    <!-- main_menu.html лежит внутри webapp, поэтому пути относительные: ./cyber_base_sprite_assets/... -->
+    <img class="bg" src="./cyber_base_sprite_assets/bg_clean_final.png" alt="Очищенный фон базы" draggable="false" />
     <div class="ambient"></div>
 
-    <!-- Координаты указаны в системе чистого фона 1376×768. Меняйте --x/--y/--w для точного арт-дирекшена. -->
-    <button class="sprite-btn" style="--x: 150; --y: 390; --w: 440; --rgb: 0, 229, 255; --z: 4;" data-name="Dungeons" data-action="Explore. Fight. Ascend." aria-label="Dungeons">
-      <img src="cyber_base_sprite_assets/dungeons.png" alt="Dungeons" draggable="false" />
-      <span class="label">Dungeons</span>
+    <!-- Main interactive base objects -->
+    <button class="sprite-btn dungeons" style="--x: 150; --y: 390; --w: 440; --rgb: 0, 229, 255; --z: 4;" data-name="Dungeons" data-action="Explore. Fight. Ascend." aria-label="Dungeons" type="button">
+      <img class="sprite-art" src="./cyber_base_sprite_assets/dungeons.png" alt="Dungeons" draggable="false" />
+      <span class="sprite-label">Dungeons</span>
     </button>
 
-    <button class="sprite-btn" style="--x: 600; --y: 145; --w: 320; --rgb: 255, 43, 222; --z: 5;" data-name="Summon" data-action="Clone. Summon. Awaken." aria-label="Summon">
-      <img src="cyber_base_sprite_assets/summon.png" alt="Summon" draggable="false" />
-      <span class="label">Summon</span>
+    <button class="sprite-btn summon" style="--x: 600; --y: 145; --w: 320; --rgb: 255, 43, 222; --z: 5;" data-name="Summon" data-action="Clone. Summon. Awaken." aria-label="Summon" type="button">
+      <img class="sprite-art" src="./cyber_base_sprite_assets/summon.png" alt="Summon" draggable="false" />
+      <span class="sprite-label">Summon</span>
     </button>
 
-    <button class="sprite-btn" style="--x: 935; --y: 95; --w: 415; --rgb: 255, 43, 222; --z: 4;" data-name="Afterlife Bar" data-action="Drink. Relax. Connect." aria-label="Afterlife Bar">
-      <img src="cyber_base_sprite_assets/bar.png" alt="Afterlife Bar" draggable="false" />
-      <span class="label">Afterlife Bar</span>
+    <button class="sprite-btn bar" style="--x: 935; --y: 95; --w: 415; --rgb: 255, 43, 222; --z: 4;" data-name="Afterlife Bar" data-action="Drink. Relax. Connect." aria-label="Afterlife Bar" type="button">
+      <img class="sprite-art" src="./cyber_base_sprite_assets/bar.png" alt="Afterlife Bar" draggable="false" />
+      <span class="sprite-label">Afterlife Bar</span>
     </button>
 
-    <button class="sprite-btn" style="--x: 835; --y: 430; --w: 475; --rgb: 0, 229, 255; --z: 6;" data-name="Cyberware" data-action="Enhance. Upgrade. Evolve." aria-label="Cyberware">
-      <img src="cyber_base_sprite_assets/cyberware.png" alt="Cyberware" draggable="false" />
-      <span class="label">Cyberware</span>
+    <button class="sprite-btn cyberware" style="--x: 835; --y: 430; --w: 475; --rgb: 0, 229, 255; --z: 6;" data-name="Cyberware" data-action="Enhance. Upgrade. Evolve." aria-label="Cyberware" type="button">
+      <img class="sprite-art" src="./cyber_base_sprite_assets/cyberware.png" alt="Cyberware" draggable="false" />
+      <span class="sprite-label">Cyberware</span>
     </button>
 
-    <button class="sprite-btn" style="--x: 935; --y: 635; --w: 390; --rgb: 255, 43, 222; --z: 7;" data-name="Main Story" data-action="Chapter 12-5" aria-label="Main Story">
-      <img src="cyber_base_sprite_assets/main_story.png" alt="Main Story" draggable="false" />
-      <span class="label">Main Story</span>
+    <button class="sprite-btn main-story" style="--x: 935; --y: 635; --w: 390; --rgb: 255, 43, 222; --z: 7;" data-name="Main Story" data-action="Chapter 12-5" aria-label="Main Story" type="button">
+      <img class="sprite-art" src="./cyber_base_sprite_assets/main_story.png" alt="Main Story" draggable="false" />
+      <span class="sprite-label">Main Story</span>
     </button>
+
+    <!-- Old UI buttons restored as real interactive elements -->
+    <section class="ui-layer" aria-label="Интерфейс главной базы">
+      <!-- Profile -->
+      <button class="ui-hot profile-card" style="--x: 18; --y: 16; --w: 360; --h: 96; --rgb: 255, 43, 222;" data-name="Profile" data-action="Nightshade · Lv. 68 · Power 256,800" aria-label="Profile" type="button">
+        <span class="avatar" aria-hidden="true"></span>
+        <span class="profile-name">Nightshade <small>Lv. 68</small></span>
+        <span class="xp-line"><span class="xp-fill"></span></span>
+        <span class="power">◆ 256,800</span>
+      </button>
+
+      <!-- Resources -->
+      <button class="ui-hot resource" style="--x: 470; --y: 18; --w: 146; --h: 38; --rgb: 0, 229, 255;" data-name="Energy" data-action="120 / 120" aria-label="Energy" type="button">
+        <span class="res-left"><span class="res-icon">⚡</span><span>120 / 120</span></span><span class="plus">＋</span>
+      </button>
+
+      <button class="ui-hot resource" style="--x: 640; --y: 18; --w: 190; --h: 38; --rgb: 255, 213, 95;" data-name="Credits" data-action="2,450,790" aria-label="Credits" type="button">
+        <span class="res-left"><span class="res-icon">⬡</span><span>2,450,790</span></span><span class="plus">＋</span>
+      </button>
+
+      <button class="ui-hot resource" style="--x: 850; --y: 18; --w: 150; --h: 38; --rgb: 156, 81, 255;" data-name="Crystals" data-action="8,960" aria-label="Crystals" type="button">
+        <span class="res-left"><span class="res-icon">⬢</span><span>8,960</span></span><span class="plus">＋</span>
+      </button>
+
+      <!-- Top-right icons -->
+      <button class="ui-hot top-icon" style="--x: 1110; --y: 16; --w: 44; --h: 44; --rgb: 255, 43, 222;" data-name="Mail" data-action="Open inbox" aria-label="Mail" type="button">✉<span class="badge" aria-hidden="true"></span></button>
+      <button class="ui-hot top-icon" style="--x: 1180; --y: 16; --w: 44; --h: 44; --rgb: 0, 229, 255;" data-name="Friends" data-action="Social hub" aria-label="Friends" type="button">♟</button>
+      <button class="ui-hot top-icon" style="--x: 1250; --y: 16; --w: 44; --h: 44; --rgb: 0, 229, 255;" data-name="Settings" data-action="Game settings" aria-label="Settings" type="button">⚙</button>
+      <button class="ui-hot top-icon" style="--x: 1320; --y: 16; --w: 44; --h: 44; --rgb: 0, 229, 255;" data-name="Network" data-action="Connection status" aria-label="Network" type="button">⌁</button>
+
+      <!-- Event card -->
+      <button class="ui-hot event-card" style="--x: 18; --y: 122; --w: 246; --h: 88; --rgb: 255, 43, 222;" data-name="Event: Neon Uprising" data-action="8D 12H Left" aria-label="Event Neon Uprising" type="button">
+        <span class="event-kicker">Event</span>
+        <span class="event-title">Neon Uprising</span>
+        <span class="event-time">◷ 8D 12H Left</span>
+      </button>
+
+      <!-- Left navigation -->
+      <button class="ui-hot side-btn" style="--x: 20; --y: 235; --w: 210; --h: 48; --rgb: 0, 229, 255;" data-name="Missions" data-action="Open missions" aria-label="Missions" type="button"><span class="side-icon">▣</span><span class="side-label">Missions</span></button>
+      <button class="ui-hot side-btn" style="--x: 20; --y: 290; --w: 210; --h: 48; --rgb: 0, 229, 255;" data-name="Battle Pass" data-action="Season rewards" aria-label="Battle Pass" type="button"><span class="side-icon">✺</span><span class="side-label">Battle Pass</span><span class="new-badge">NEW</span></button>
+      <button class="ui-hot side-btn" style="--x: 20; --y: 345; --w: 210; --h: 48; --rgb: 0, 229, 255;" data-name="Store" data-action="Open store" aria-label="Store" type="button"><span class="side-icon">🛒</span><span class="side-label">Store</span></button>
+      <button class="ui-hot side-btn" style="--x: 20; --y: 400; --w: 210; --h: 48; --rgb: 0, 229, 255;" data-name="Inventory" data-action="Open inventory" aria-label="Inventory" type="button"><span class="side-icon">▤</span><span class="side-label">Inventory</span></button>
+      <button class="ui-hot side-btn" style="--x: 20; --y: 455; --w: 210; --h: 48; --rgb: 0, 229, 255;" data-name="Archives" data-action="Open archives" aria-label="Archives" type="button"><span class="side-icon">◫</span><span class="side-label">Archives</span></button>
+      <button class="ui-hot side-btn" style="--x: 20; --y: 510; --w: 210; --h: 48; --rgb: 255, 43, 222;" data-name="PVP Arena" data-action="Competitive mode" aria-label="PVP Arena" type="button"><span class="side-icon">⚔</span><span class="side-label">PVP Arena</span><span class="new-badge">NEW</span></button>
+
+      <!-- Bottom nav shell + buttons -->
+      <div class="bottom-shell" aria-hidden="true"></div>
+      <button class="ui-hot bottom-nav home" style="--x: 10; --y: 682; --w: 175; --h: 76; --rgb: 0, 229, 255;" data-name="Home" data-action="Current section" aria-label="Home" type="button"><span class="nav-icon">✥</span><span class="nav-label">Home</span></button>
+      <button class="ui-hot bottom-nav" style="--x: 190; --y: 682; --w: 135; --h: 76; --rgb: 0, 229, 255;" data-name="Agents" data-action="Manage agents" aria-label="Agents" type="button"><span class="nav-icon">☣</span><span class="nav-label">Agents</span></button>
+      <button class="ui-hot bottom-nav" style="--x: 326; --y: 682; --w: 135; --h: 76; --rgb: 255, 43, 222;" data-name="Squad" data-action="Team setup" aria-label="Squad" type="button"><span class="nav-icon">♟</span><span class="nav-label">Squad</span></button>
+      <button class="ui-hot bottom-nav" style="--x: 462; --y: 682; --w: 135; --h: 76; --rgb: 0, 229, 255;" data-name="Tech" data-action="Tech upgrades" aria-label="Tech" type="button"><span class="nav-icon">▧</span><span class="nav-label">Tech</span></button>
+      <button class="ui-hot bottom-nav" style="--x: 598; --y: 682; --w: 135; --h: 76; --rgb: 0, 229, 255;" data-name="Codex" data-action="Game codex" aria-label="Codex" type="button"><span class="nav-icon">◈</span><span class="nav-label">Codex</span></button>
+      <button class="ui-hot bottom-nav" style="--x: 734; --y: 682; --w: 135; --h: 76; --rgb: 0, 229, 255;" data-name="Corp" data-action="Corporation" aria-label="Corp" type="button"><span class="nav-icon">⌂</span><span class="nav-label">Corp</span></button>
+    </section>
 
     <div class="debug">
       <button id="toggleLabels" type="button">Labels</button>
@@ -324,15 +801,15 @@
     </div>
 
     <div class="hud" id="hud">
-      <strong>Фон очищен, объекты вынесены в PNG-спрайты.</strong>
-      <span> Наведи курсор или тапни: спрайт подсветится, приподнимется, появится aura/scan animation.</span>
+      <strong>Главная база.</strong>
+      <span> Все старые кнопки вернулись: профиль, валюта, меню слева, нижняя навигация и системные иконки.</span>
     </div>
   </main>
 
   <script>
     const stage = document.getElementById('stage');
     const hud = document.getElementById('hud');
-    const buttons = [...document.querySelectorAll('.sprite-btn')];
+    const hotElements = [...document.querySelectorAll('.sprite-btn, .ui-hot')];
 
     function rgbOf(el) {
       const raw = (el.getAttribute('style') || '').match(/--rgb:\s*([^;]+)/);
@@ -340,32 +817,54 @@
     }
 
     function setHud(el) {
-      hud.innerHTML = `<strong>${el.dataset.name}</strong><span> — ${el.dataset.action}. Это отдельный PNG-спрайт поверх очищенного фона.</span>`;
+      hud.innerHTML = `<strong>${el.dataset.name}</strong><span> — ${el.dataset.action}</span>`;
+    }
+
+    function updateMouseVars(el, event) {
+      const rect = el.getBoundingClientRect();
+      const mx = ((event.clientX - rect.left) / rect.width) * 100;
+      const my = ((event.clientY - rect.top) / rect.height) * 100;
+      el.style.setProperty('--mx', `${mx}%`);
+      el.style.setProperty('--my', `${my}%`);
     }
 
     function tapFX(el, x, y) {
-      buttons.forEach(b => b.classList.remove('is-active'));
+      hotElements.forEach(item => item.classList.remove('is-active'));
       el.classList.add('is-active');
       setHud(el);
 
       if (Number.isFinite(x) && Number.isFinite(y)) {
         const rect = stage.getBoundingClientRect();
-        const r = document.createElement('i');
-        r.className = 'ripple';
-        r.style.left = `${x - rect.left}px`;
-        r.style.top = `${y - rect.top}px`;
-        r.style.setProperty('--ripple-rgb', rgbOf(el));
-        stage.appendChild(r);
-        r.addEventListener('animationend', () => r.remove());
+        const ripple = document.createElement('i');
+        ripple.className = 'ripple';
+        ripple.style.left = `${x - rect.left}px`;
+        ripple.style.top = `${y - rect.top}px`;
+        ripple.style.setProperty('--ripple-rgb', rgbOf(el));
+        stage.appendChild(ripple);
+        ripple.addEventListener('animationend', () => ripple.remove());
       }
 
       clearTimeout(el._timer);
-      el._timer = setTimeout(() => el.classList.remove('is-active'), 1100);
+      el._timer = setTimeout(() => {
+        el.classList.remove('is-active');
+      }, 1100);
     }
 
-    buttons.forEach(el => {
-      el.addEventListener('pointerenter', () => setHud(el));
-      el.addEventListener('pointerdown', event => tapFX(el, event.clientX, event.clientY));
+    hotElements.forEach(el => {
+      el.addEventListener('pointerenter', event => {
+        updateMouseVars(el, event);
+        setHud(el);
+      });
+
+      el.addEventListener('pointermove', event => {
+        updateMouseVars(el, event);
+      });
+
+      el.addEventListener('pointerdown', event => {
+        updateMouseVars(el, event);
+        tapFX(el, event.clientX, event.clientY);
+      });
+
       el.addEventListener('keydown', event => {
         if (event.key === 'Enter' || event.key === ' ') {
           event.preventDefault();
