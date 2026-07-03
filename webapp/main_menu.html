@@ -3,18 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Интерактивная База - PRO</title>
+    <title>Интерактивная База - Точные Контуры</title>
     <style>
         body, html {
             margin: 0; padding: 0; width: 100%; height: 100%;
             background-color: #020205; overflow: hidden;
             display: flex; justify-content: center; align-items: center;
             font-family: 'Consolas', 'Courier New', monospace;
-            /* Включаем перспективу для 3D вращения */
             perspective: 1000px;
         }
 
-        /* Контейнер сцены, который будет вращаться */
         #scene-wrapper {
             position: relative;
             width: 100%; max-width: 1280px;
@@ -24,7 +22,6 @@
             box-shadow: 0 0 50px rgba(18, 14, 46, 0.8);
         }
 
-        /* Сама картинка */
         #bg-image {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background-image: url('IMG_4870.jpeg'); /* ПУТЬ К ВАШЕЙ КАРТИНКЕ */
@@ -32,7 +29,6 @@
             border-radius: 10px; overflow: hidden;
         }
 
-        /* Эффект старого монитора (Scanlines) */
         #scanlines {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
@@ -40,45 +36,42 @@
             pointer-events: none; z-index: 5; opacity: 0.6;
         }
 
-        /* SVG слой поверх всего */
         #interaction-layer {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             z-index: 10;
         }
 
-        /* Зоны: базовое состояние */
+        /* Настройки контуров */
         .zone {
             fill: rgba(0, 255, 255, 0);
             stroke: rgba(0, 255, 255, 0);
-            stroke-width: 2;
+            stroke-width: 3;
             cursor: pointer;
             transition: fill 0.3s, stroke 0.3s;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        /* Анимация бегущей рамки при наведении */
         @keyframes scanBorder {
             to { stroke-dashoffset: -50; }
         }
 
         @keyframes pulseGlow {
-            0% { fill: rgba(0, 255, 255, 0.1); }
-            50% { fill: rgba(0, 255, 255, 0.25); }
-            100% { fill: rgba(0, 255, 255, 0.1); }
+            0% { fill: rgba(0, 255, 255, 0.05); filter: drop-shadow(0 0 5px rgba(0,255,255,0.5)); }
+            50% { fill: rgba(0, 255, 255, 0.2); filter: drop-shadow(0 0 15px rgba(0,255,255,0.9)); }
+            100% { fill: rgba(0, 255, 255, 0.05); filter: drop-shadow(0 0 5px rgba(0,255,255,0.5)); }
         }
 
-        /* Эффект при наведении на объекты */
+        /* Эффект выделения ТОЧНО по контуру */
         .zone:hover {
-            stroke: rgba(0, 255, 255, 0.9);
-            stroke-dasharray: 10 5;
+            stroke: rgba(0, 255, 255, 1);
+            stroke-dasharray: 8 4;
             animation: scanBorder 1s linear infinite, pulseGlow 1.5s ease-in-out infinite;
-            /* Режим наложения для эффекта встроенного неонового свечения */
-            mix-blend-mode: color-dodge; 
+            mix-blend-mode: screen; 
         }
 
-        /* Кибер-тултип (UI элемент) */
         #cyber-tooltip {
             position: absolute;
-            background: rgba(8, 14, 30, 0.85);
+            background: rgba(8, 14, 30, 0.9);
             color: #00ffff;
             padding: 10px 20px;
             font-size: 16px;
@@ -89,20 +82,13 @@
             opacity: 0;
             z-index: 20;
             backdrop-filter: blur(4px);
-            /* Скошенные углы в стиле sci-fi */
             clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
             border-left: 3px solid #f0f;
             box-shadow: inset 0 0 15px rgba(0, 255, 255, 0.3);
             transition: opacity 0.15s ease, transform 0.15s ease;
-            transform: scale(0.9) translateZ(30px); /* 3D вылет вперед */
+            transform: scale(0.9) translateZ(30px);
         }
 
-        #cyber-tooltip::after {
-            content: ''; position: absolute; top: 0; right: 0; width: 10px; height: 100%;
-            background: repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(0,255,255,0.3) 2px, rgba(0,255,255,0.3) 4px);
-        }
-
-        /* Уведомление на весь экран */
         #system-alert {
             position: fixed; top: 40%; left: 0; width: 100%;
             text-align: center; color: #fff; font-size: 2vw; letter-spacing: 5px;
@@ -110,7 +96,6 @@
             padding: 20px 0; z-index: 100;
             pointer-events: none; opacity: 0; transform: scaleY(0);
             transition: opacity 0.3s, transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 0 40px rgba(255, 0, 85, 0.6);
             backdrop-filter: blur(5px);
         }
     </style>
@@ -124,27 +109,27 @@
         <div id="scanlines"></div>
         
         <svg id="interaction-layer" viewBox="0 0 1280 853" preserveAspectRatio="none">
-            <!-- 1. Dungeons -->
+            <!-- 1. Dungeons (Голографический стол - Точный контур основания и граней) -->
             <polygon class="zone" data-name="VOID CORE // DUNGEONS" 
-                     points="190,470 510,480 620,680 470,780 180,810 50,680" />
+                     points="270,460 400,460 520,560 520,650 510,680 450,750 260,810 90,760 60,710 60,580 180,480" />
                      
-            <!-- 2. Summon -->
+            <!-- 2. Summon (Капсула - Точный контур купола, стекла и платформы) -->
             <polygon class="zone" data-name="AWAKEN // SUMMON" 
-                     points="550,220 730,220 770,550 770,680 520,680 520,550" />
+                     points="580,180 640,160 700,180 730,220 740,240 740,260 750,540 770,580 760,630 740,660 640,690 540,660 520,630 510,580 540,540 540,260 550,240 550,220" />
 
-            <!-- 3. Afterlife Bar -->
+            <!-- 3. Afterlife Bar (Бар - Контур вывески, бармена и стойки) -->
             <polygon class="zone" data-name="RELAX // AFTERLIFE BAR" 
-                     points="850,150 1260,150 1260,440 850,440" />
+                     points="940,110 1260,110 1260,300 1280,300 1280,440 840,440 840,300 890,180" />
 
-            <!-- 4. Cyberware -->
+            <!-- 4. Cyberware (Верстак - Огибает мех. руку, кресло и мониторы) -->
             <polygon class="zone" data-name="EVOLVE // CYBERWARE" 
-                     points="850,480 1150,480 1260,780 850,780" />
+                     points="860,490 970,480 1090,410 1180,410 1250,480 1260,700 1210,800 840,800 830,600" />
 
-            <!-- 5. Main Story -->
+            <!-- 5. Main Story (Сюжет - Скошенная кнопка в правом нижнем углу) -->
             <polygon class="zone" data-name="CAMPAIGN // MAIN STORY" 
-                     points="940,760 1280,760 1280,853 900,853" />
+                     points="860,750 1280,750 1280,853 810,853" />
 
-            <!-- Боковое меню -->
+            <!-- UI элементы меню (Они остаются прямоугольными, т.к. это классические кнопки) -->
             <rect class="zone" data-name="SYSTEM // MISSIONS" x="10" y="270" width="180" height="380" />
         </svg>
 
@@ -152,7 +137,7 @@
     </div>
 
     <script>
-        // --- 1. АУДИО ДВИЖОК (Генерация sci-fi звуков без файлов) ---
+        // АУДИО ДВИЖОК
         const AudioContext = window.AudioContext || window.webkitAudioContext;
         let actx = null;
 
@@ -166,10 +151,9 @@
             const osc = actx.createOscillator();
             const gain = actx.createGain();
             osc.connect(gain); gain.connect(actx.destination);
-
             const now = actx.currentTime;
+            
             if (type === 'hover') {
-                // Звук наведения: короткий высокочастотный "блип"
                 osc.type = 'sine';
                 osc.frequency.setValueAtTime(800, now);
                 osc.frequency.exponentialRampToValueAtTime(1600, now + 0.05);
@@ -177,7 +161,6 @@
                 gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
                 osc.start(now); osc.stop(now + 0.05);
             } else if (type === 'click') {
-                // Звук клика: мощный цифровой щелчок
                 osc.type = 'square';
                 osc.frequency.setValueAtTime(150, now);
                 osc.frequency.exponentialRampToValueAtTime(40, now + 0.15);
@@ -187,31 +170,28 @@
             }
         }
 
-        // --- 2. ЛОГИКА ИНТЕРФЕЙСА ---
+        // ЛОГИКА
         const wrapper = document.getElementById('scene-wrapper');
         const tooltip = document.getElementById('cyber-tooltip');
         const alertBox = document.getElementById('system-alert');
         const zones = document.querySelectorAll('.zone');
         let alertTimeout;
 
-        // Инициализируем аудио по первому движению/клику на странице (ограничение браузеров)
         document.body.addEventListener('pointerdown', initAudio, { once: true });
         document.body.addEventListener('pointermove', initAudio, { once: true });
 
-        // 3D Параллакс при движении мыши (отключаем на мобильных)
         const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
         if (!isTouch) {
             document.addEventListener('mousemove', (e) => {
-                const xAxis = (window.innerWidth / 2 - e.pageX) / 40; // Сила наклона по X
-                const yAxis = (window.innerHeight / 2 - e.pageY) / 40; // Сила наклона по Y
+                const xAxis = (window.innerWidth / 2 - e.pageX) / 40; 
+                const yAxis = (window.innerHeight / 2 - e.pageY) / 40; 
                 wrapper.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
             });
         }
 
-        // Обработка зон (наведение, клик)
         zones.forEach(zone => {
             zone.addEventListener('mouseenter', (e) => {
-                if (isTouch) return; // На телефонах нет hover
+                if (isTouch) return;
                 playSound('hover');
                 tooltip.style.opacity = '1';
                 tooltip.style.transform = 'scale(1) translateZ(40px)';
@@ -223,7 +203,6 @@
                 const rect = wrapper.getBoundingClientRect();
                 const x = e.clientX - rect.left;
                 const y = e.clientY - rect.top;
-                // Привязываем тултип к мыши
                 tooltip.style.left = (x + 20) + 'px';
                 tooltip.style.top = (y + 20) + 'px';
             });
@@ -236,8 +215,6 @@
             zone.addEventListener('click', () => {
                 playSound('click');
                 const name = zone.getAttribute('data-name');
-                
-                // Красивое оповещение в кибер-стиле
                 alertBox.textContent = `> ACCESSING: ${name} ...`;
                 alertBox.style.opacity = '1';
                 alertBox.style.transform = 'scaleY(1)';
