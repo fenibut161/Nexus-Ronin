@@ -14,7 +14,7 @@
       --bg-w: 1376;
       --bg-h: 768;
       /* Отступы для мобильного webview, где сверху может быть системная шапка с Close / ⋮ */
-      --mobile-top-gap: 58px;
+      --mobile-top-gap: 54px;
       --mobile-bottom-gap: 0px;
       --mobile-side-gap: 0px;
     }
@@ -336,6 +336,22 @@
         radial-gradient(circle at 50% 35%, rgba(190, 133, 255, .95), transparent 28%),
         linear-gradient(135deg, #19072f, #05203c 56%, #0c0614);
       box-shadow: 0 0 18px rgba(var(--pink), .35), inset 0 0 18px rgba(var(--cyan), .14);
+    }
+
+
+    .avatar img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 4px;
+      display: block;
+    }
+
+    .avatar.has-image::before,
+    .avatar.has-image::after {
+      display: none;
     }
 
     .avatar::before {
@@ -694,11 +710,12 @@
     }
 
     /*
-      MOBILE / WEBVIEW FIX v6
-      Цель: чёрная системная полоса только сверху, а сама база растянута до низа экрана.
-      Close / ⋮ — это шапка мобильного webview, из HTML её не убрать, поэтому держим игру ниже неё.
+      MOBILE / WEBVIEW FIX v7
+      Нужно: чёрная полоса только сверху под Close / ⋮, база сразу на весь экран,
+      без квадратов и без сжатой карточки. В portrait мы принудительно поворачиваем
+      саму игровую сцену в landscape, даже если телефон держат вертикально.
     */
-    @media (max-width: 860px), (max-height: 540px) {
+    @media (max-width: 1024px), (max-height: 560px) {
       html,
       body {
         width: 100%;
@@ -722,6 +739,7 @@
         height: calc(100dvh - env(safe-area-inset-top, 0px) - var(--mobile-top-gap));
         max-height: none;
         transform: none;
+        transform-origin: top left;
         box-shadow: none;
       }
 
@@ -729,20 +747,17 @@
         object-fit: fill;
       }
 
-      /* Подсказку на телефоне полностью убираем, чтобы она не превращалась в полосу у нижнего меню. */
       .hud {
         display: none !important;
       }
 
-      /* Убираем большую подложку нижнего меню: она визуально закрывала кнопки. */
       .bottom-shell {
         display: none !important;
       }
 
-      /* Нижняя навигация остаётся внизу игрового поля, но сама становится читаемее. */
       .bottom-nav {
-        --y: 672;
-        --h: 84;
+        --y: 668;
+        --h: 88;
         padding: 8px 4px 10px;
         background: linear-gradient(180deg, rgba(4, 22, 48, .84), rgba(3, 10, 28, .92));
         border: 1px solid rgba(var(--cyan), .28);
@@ -769,38 +784,50 @@
       .event-card { --y: 112; }
     }
 
-    /* Портрет: оставляем верхний safe-gap, но не добавляем нижнюю чёрную полосу. */
-    @media (max-width: 600px) and (orientation: portrait) {
+    /* Portrait phone: визуально принудительно landscape.
+       Верхняя чёрная полоса остаётся сверху, а игра заполняет всё место ниже неё. */
+    @media (max-width: 760px) and (orientation: portrait) {
       :root {
-        --mobile-top-gap: 68px;
+        --mobile-top-gap: 64px;
         --mobile-bottom-gap: 0px;
         --mobile-side-gap: 0px;
       }
 
       .stage {
+        width: calc(100dvh - env(safe-area-inset-top, 0px) - var(--mobile-top-gap));
+        height: 100vw;
+        left: 100vw;
         top: calc(env(safe-area-inset-top, 0px) + var(--mobile-top-gap));
-        bottom: 0;
-        height: calc(100dvh - env(safe-area-inset-top, 0px) - var(--mobile-top-gap));
-      }
-    }
-
-    /* Landscape: самый частый режим для игры. Делаем максимум полезной высоты. */
-    @media (max-height: 540px) and (orientation: landscape) {
-      :root {
-        --mobile-top-gap: 44px;
-        --mobile-bottom-gap: 0px;
-        --mobile-side-gap: 0px;
-      }
-
-      .stage {
-        top: calc(env(safe-area-inset-top, 0px) + var(--mobile-top-gap));
-        bottom: 0;
-        height: calc(100dvh - env(safe-area-inset-top, 0px) - var(--mobile-top-gap));
+        bottom: auto;
+        transform: rotate(90deg);
+        transform-origin: top left;
       }
 
       .bottom-nav {
-        --y: 668;
-        --h: 88;
+        --y: 666;
+        --h: 90;
+      }
+    }
+
+    /* Landscape phone: максимум полезной высоты, только верхняя safe-полоса. */
+    @media (max-height: 560px) and (orientation: landscape) {
+      :root {
+        --mobile-top-gap: 42px;
+        --mobile-bottom-gap: 0px;
+        --mobile-side-gap: 0px;
+      }
+
+      .stage {
+        left: 0;
+        top: calc(env(safe-area-inset-top, 0px) + var(--mobile-top-gap));
+        width: 100vw;
+        height: calc(100dvh - env(safe-area-inset-top, 0px) - var(--mobile-top-gap));
+        transform: none;
+      }
+
+      .bottom-nav {
+        --y: 666;
+        --h: 90;
       }
     }
 
@@ -815,7 +842,14 @@
 <body>
   <main class="stage" id="stage" aria-label="Главная база">
     <!-- main_menu.html лежит внутри webapp, поэтому пути относительные: ./cyber_base_sprite_assets/... -->
-    <img class="bg" src="./cyber_base_sprite_assets/bg_clean_final.jpg" onerror="this.onerror=null; this.src='./cyber_base_sprite_assets/bg_clean_final.png';" alt="Очищенный фон базы" draggable="false" />
+    <img
+      class="bg"
+      id="baseBg"
+      src="./cyber_base_sprite_assets/bg_clean_final.jpg"
+      data-candidates="./cyber_base_sprite_assets/bg_clean_final.jpg|./cyber_base_sprite_assets/bg_clean_final.jpeg|./cyber_base_sprite_assets/bg_clean_final.png|./cyber_base_sprite_assets/base_cyberpunk.jpg"
+      alt="Фон базы"
+      draggable="false"
+    />
     <div class="ambient"></div>
 
     <audio id="menuMusic" src="./assets/audio/music/neon_soul.mp3" loop preload="auto"></audio>
@@ -850,7 +884,7 @@
     <section class="ui-layer" aria-label="Интерфейс главной базы">
       <!-- Profile -->
       <button class="ui-hot profile-card" style="--x: 18; --y: 16; --w: 360; --h: 96; --rgb: 255, 43, 222;" data-name="Profile" data-action="Nightshade · Lv. 68 · Power 256,800" aria-label="Profile" type="button">
-        <span class="avatar" aria-hidden="true"></span>
+        <span class="avatar has-image" aria-hidden="true"><img src="./cyber_base_sprite_assets/avatar_nightshade.png" alt="" draggable="false"></span>
         <span class="profile-name">Nightshade <small>Lv. 68</small></span>
         <span class="xp-line"><span class="xp-fill"></span></span>
         <span class="power">◆ 256,800</span>
@@ -900,7 +934,7 @@
 
     <div class="hud" id="hud">
       <strong>Главная база.</strong>
-      <span> Мобильная версия v6: верхняя safe-полоса сохранена, низ растянут до края экрана, нижние кнопки усилены, большой фон-подложка меню убран.</span>
+      <span> Мобильная версия v7: база принудительно разворачивается в landscape, сверху остаётся safe-полоса под webview, низ заполнен до края.</span>
     </div>
   </main>
 
@@ -908,7 +942,18 @@
     const stage = document.getElementById('stage');
     const hud = document.getElementById('hud');
     const menuMusic = document.getElementById('menuMusic');
+    const baseBg = document.getElementById('baseBg');
     const hotElements = [...document.querySelectorAll('.sprite-btn, .ui-hot')];
+
+    // Фон: сначала пробуем новый JPG, потом JPEG/PNG/base_cyberpunk.
+    // Это спасает, если в репозитории расширение отличается от ожидаемого.
+    const bgCandidates = (baseBg.dataset.candidates || '').split('|').filter(Boolean);
+    let bgIndex = 0;
+    baseBg.addEventListener('error', () => {
+      bgIndex += 1;
+      if (bgCandidates[bgIndex]) baseBg.src = bgCandidates[bgIndex];
+      else console.warn('Base background was not found. Check file path:', bgCandidates);
+    });
 
     // Музыка меню. Браузеры часто блокируют autoplay, поэтому
     // сначала пробуем запустить сразу, а если нельзя — запускаем после первого клика/тапа/клавиши.
@@ -1013,5 +1058,5 @@
       });
     });
   </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a15676aadb57485b',t:'MTc4MzA4NzcyMA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</body>
 </html>
