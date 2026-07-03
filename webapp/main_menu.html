@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Cyber Base — Main Menu</title>
 
   <style>
@@ -13,6 +13,9 @@
       --violet: 156, 81, 255;
       --bg-w: 1376;
       --bg-h: 768;
+      /* Отступы для мобильного webview, где сверху может быть системная шапка с Close / ⋮ */
+      --mobile-top-gap: 56px;
+      --mobile-bottom-gap: 58px;
     }
 
     * { box-sizing: border-box; }
@@ -549,16 +552,16 @@
       height: calc(var(--h) / var(--bg-h) * 100%);
       z-index: 28;
       pointer-events: none;
-      background: linear-gradient(90deg, rgba(7, 18, 37, .88), rgba(5, 12, 27, .72));
-      border: 1px solid rgba(var(--cyan), .12);
+      background: linear-gradient(90deg, rgba(7, 26, 52, .94), rgba(5, 15, 32, .86));
+      border: 1px solid rgba(var(--cyan), .24);
       clip-path: polygon(0 0, 100% 0, 97% 100%, 0 100%);
-      box-shadow: 0 -8px 25px rgba(0,0,0,.32), inset 0 0 25px rgba(var(--cyan), .05);
+      box-shadow: 0 -8px 25px rgba(0,0,0,.42), 0 0 22px rgba(var(--cyan), .08), inset 0 0 25px rgba(var(--cyan), .09);
     }
 
     .bottom-nav {
       border-radius: 0;
-      background: transparent;
-      border-color: rgba(var(--cyan), .06);
+      background: rgba(4, 15, 31, .36);
+      border-color: rgba(var(--cyan), .12);
       border-top-color: transparent;
       border-bottom-color: transparent;
       display: grid;
@@ -585,7 +588,7 @@
       line-height: 1;
       font-weight: 900;
       text-transform: uppercase;
-      color: rgba(236,251,255,.86);
+      color: rgba(236,251,255,.98);
     }
 
     .hud {
@@ -689,26 +692,88 @@
       to { transform: scale(7); opacity: 0; }
     }
 
-    @media (max-width: 760px) {
+    /*
+      MOBILE / WEBVIEW FIX
+      В мобильных webview часто поверх страницы висит системная шапка: Close слева и ⋮ справа.
+      Мы не можем убрать её из HTML, поэтому резервируем сверху и снизу безопасную область.
+    */
+    @media (max-width: 860px), (max-height: 520px) {
+      html, body {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        overscroll-behavior: none;
+      }
+
       body {
-        overflow: auto;
-        place-items: start center;
+        display: block;
       }
 
-      .stage { width: 100vw; height: 100dvh; }
+      .stage {
+        left: 0;
+        right: 0;
+        top: calc(env(safe-area-inset-top, 0px) + var(--mobile-top-gap));
+        bottom: calc(env(safe-area-inset-bottom, 0px) + var(--mobile-bottom-gap));
+        width: 100vw;
+        height: auto;
+        min-height: 0;
+      }
 
+      /* На телефоне подсказка мешает нижней навигации — скрываем. */
       .hud {
-        left: 10px;
-        right: 10px;
-        bottom: 86px;
-        max-width: none;
-        padding: 8px 10px;
+        display: none;
       }
 
-      .debug button {
-        padding: 6px 8px;
-        font-size: 9px;
+      .bottom-shell {
+        --y: 670;
+        --h: 88;
+        background: linear-gradient(90deg, rgba(7, 28, 58, .98), rgba(5, 15, 34, .94));
+        box-shadow: 0 -10px 28px rgba(0,0,0,.55), 0 0 24px rgba(var(--cyan), .16), inset 0 0 28px rgba(var(--cyan), .12);
       }
+
+      .bottom-nav {
+        --y: 670;
+        --h: 88;
+        padding: 7px 4px;
+        background: rgba(4, 18, 39, .52);
+      }
+
+      .nav-icon {
+        font-size: clamp(18px, 4.2vw, 30px);
+      }
+
+      .nav-label {
+        font-size: clamp(9px, 2.5vw, 14px);
+        color: #f4feff;
+      }
+
+      .profile-card {
+        --y: 12;
+      }
+
+      .event-card {
+        --y: 112;
+      }
+    }
+
+    /* Если телефон в landscape и высоты совсем мало — уменьшаем отступы, но оставляем защиту от шапки. */
+    @media (max-height: 430px) and (orientation: landscape) {
+      :root {
+        --mobile-top-gap: 38px;
+        --mobile-bottom-gap: 22px;
+      }
+
+      .bottom-shell,
+      .bottom-nav {
+        --y: 662;
+        --h: 92;
+      }
+    }
+
+    /* Если шапка webview особенно высокая, можно быстро увеличить этот отступ через класс body.mobile-safe-plus. */
+    body.mobile-safe-plus {
+      --mobile-top-gap: 72px;
+      --mobile-bottom-gap: 68px;
     }
   </style>
 </head>
@@ -801,7 +866,7 @@
 
     <div class="hud" id="hud">
       <strong>Главная база.</strong>
-      <span> Вернул музыку, профиль, валюту, меню слева, нижнюю навигацию и системные иконки. Архивы/PVP убраны.</span>
+      <span> Мобильная версия: добавлены safe-отступы сверху/снизу, нижние кнопки усилены, музыка включается после первого тапа при блокировке autoplay.</span>
     </div>
   </main>
 
@@ -832,6 +897,18 @@
     document.addEventListener('visibilitychange', () => {
       if (!document.hidden) startMenuMusic();
     });
+
+    // Если меню открыто как Telegram/WebApp, просим контейнер раскрыться на максимум.
+    // Если объекта Telegram нет — код просто ничего не делает.
+    try {
+      const tg = window.Telegram && window.Telegram.WebApp;
+      if (tg) {
+        tg.ready();
+        tg.expand();
+        if (typeof tg.requestFullscreen === 'function') tg.requestFullscreen();
+        if (typeof tg.disableVerticalSwipes === 'function') tg.disableVerticalSwipes();
+      }
+    } catch (error) {}
 
     function rgbOf(el) {
       const raw = (el.getAttribute('style') || '').match(/--rgb:\s*([^;]+)/);
