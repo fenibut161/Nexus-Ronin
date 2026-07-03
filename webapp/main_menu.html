@@ -2,38 +2,41 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Интерактивная База - Точные Контуры</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Интерактивная База - Telegram WebApp</title>
+    
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    
     <style>
         body, html {
             margin: 0; padding: 0; width: 100%; height: 100%;
-            background-color: #020205; overflow: hidden;
+            background-color: var(--tg-theme-bg-color, #050505);
+            color: var(--tg-theme-text-color, #ffffff);
+            overflow: hidden;
             display: flex; justify-content: center; align-items: center;
-            font-family: 'Consolas', 'Courier New', monospace;
-            perspective: 1000px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            overscroll-behavior-y: none;
         }
 
         #scene-wrapper {
             position: relative;
-            width: 100%; max-width: 1280px;
-            aspect-ratio: 1280 / 853;
-            transform-style: preserve-3d;
-            transition: transform 0.1s ease-out;
-            box-shadow: 0 0 50px rgba(18, 14, 46, 0.8);
+            display: flex; justify-content: center; align-items: center;
+            width: 100vw; height: 100vh;
+        }
+
+        #game-container {
+            position: relative;
+            width: 100%; height: 100%;
+            max-width: calc(100vh * (1280 / 853));
+            max-height: calc(100vw * (853 / 1280));
         }
 
         #bg-image {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background-image: url('IMG_4870.jpeg'); /* ПУТЬ К ВАШЕЙ КАРТИНКЕ */
-            background-size: cover; background-position: center;
-            border-radius: 10px; overflow: hidden;
-        }
-
-        #scanlines {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-            background-size: 100% 4px, 3px 100%;
-            pointer-events: none; z-index: 5; opacity: 0.6;
+            background-image: url('IMG_4870.jpeg'); 
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
         }
 
         #interaction-layer {
@@ -41,188 +44,88 @@
             z-index: 10;
         }
 
-        /* Настройки контуров */
         .zone {
-            fill: rgba(0, 255, 255, 0);
-            stroke: rgba(0, 255, 255, 0);
+            fill: rgba(0, 255, 255, 0.0);
+            stroke: rgba(0, 255, 255, 0.0);
             stroke-width: 3;
             cursor: pointer;
-            transition: fill 0.3s, stroke 0.3s;
             -webkit-tap-highlight-color: transparent;
         }
 
-        @keyframes scanBorder {
-            to { stroke-dashoffset: -50; }
+        @keyframes tapFlash {
+            0% { fill: rgba(0, 255, 255, 0.4); stroke: rgba(0, 255, 255, 1); filter: drop-shadow(0 0 10px #0ff); }
+            100% { fill: rgba(0, 255, 255, 0.0); stroke: rgba(0, 255, 255, 0); filter: none; }
         }
 
-        @keyframes pulseGlow {
-            0% { fill: rgba(0, 255, 255, 0.05); filter: drop-shadow(0 0 5px rgba(0,255,255,0.5)); }
-            50% { fill: rgba(0, 255, 255, 0.2); filter: drop-shadow(0 0 15px rgba(0,255,255,0.9)); }
-            100% { fill: rgba(0, 255, 255, 0.05); filter: drop-shadow(0 0 5px rgba(0,255,255,0.5)); }
+        .zone.active {
+            animation: tapFlash 0.5s ease-out forwards;
         }
 
-        /* Эффект выделения ТОЧНО по контуру */
-        .zone:hover {
-            stroke: rgba(0, 255, 255, 1);
-            stroke-dasharray: 8 4;
-            animation: scanBorder 1s linear infinite, pulseGlow 1.5s ease-in-out infinite;
-            mix-blend-mode: screen; 
-        }
-
-        #cyber-tooltip {
-            position: absolute;
-            background: rgba(8, 14, 30, 0.9);
-            color: #00ffff;
-            padding: 10px 20px;
-            font-size: 16px;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            pointer-events: none;
-            opacity: 0;
-            z-index: 20;
-            backdrop-filter: blur(4px);
-            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
-            border-left: 3px solid #f0f;
-            box-shadow: inset 0 0 15px rgba(0, 255, 255, 0.3);
-            transition: opacity 0.15s ease, transform 0.15s ease;
-            transform: scale(0.9) translateZ(30px);
-        }
-
-        #system-alert {
-            position: fixed; top: 40%; left: 0; width: 100%;
-            text-align: center; color: #fff; font-size: 2vw; letter-spacing: 5px;
-            background: rgba(255, 0, 85, 0.8);
-            padding: 20px 0; z-index: 100;
-            pointer-events: none; opacity: 0; transform: scaleY(0);
-            transition: opacity 0.3s, transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            backdrop-filter: blur(5px);
+        #notification {
+            position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+            background: var(--tg-theme-button-color, #2ecc71);
+            color: var(--tg-theme-button-text-color, #ffffff);
+            padding: 10px 20px; border-radius: 8px; font-weight: bold; font-size: 16px;
+            opacity: 0; transition: opacity 0.3s; z-index: 100;
+            pointer-events: none; box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            white-space: nowrap;
         }
     </style>
 </head>
 <body>
 
-    <div id="system-alert">INITIATING MODULE...</div>
+    <div id="notification">Модуль запущен</div>
 
     <div id="scene-wrapper">
-        <div id="bg-image"></div>
-        <div id="scanlines"></div>
-        
-        <svg id="interaction-layer" viewBox="0 0 1280 853" preserveAspectRatio="none">
-            <!-- 1. Dungeons (Голографический стол - Точный контур основания и граней) -->
-            <polygon class="zone" data-name="VOID CORE // DUNGEONS" 
-                     points="270,460 400,460 520,560 520,650 510,680 450,750 260,810 90,760 60,710 60,580 180,480" />
-                     
-            <!-- 2. Summon (Капсула - Точный контур купола, стекла и платформы) -->
-            <polygon class="zone" data-name="AWAKEN // SUMMON" 
-                     points="580,180 640,160 700,180 730,220 740,240 740,260 750,540 770,580 760,630 740,660 640,690 540,660 520,630 510,580 540,540 540,260 550,240 550,220" />
-
-            <!-- 3. Afterlife Bar (Бар - Контур вывески, бармена и стойки) -->
-            <polygon class="zone" data-name="RELAX // AFTERLIFE BAR" 
-                     points="940,110 1260,110 1260,300 1280,300 1280,440 840,440 840,300 890,180" />
-
-            <!-- 4. Cyberware (Верстак - Огибает мех. руку, кресло и мониторы) -->
-            <polygon class="zone" data-name="EVOLVE // CYBERWARE" 
-                     points="860,490 970,480 1090,410 1180,410 1250,480 1260,700 1210,800 840,800 830,600" />
-
-            <!-- 5. Main Story (Сюжет - Скошенная кнопка в правом нижнем углу) -->
-            <polygon class="zone" data-name="CAMPAIGN // MAIN STORY" 
-                     points="860,750 1280,750 1280,853 810,853" />
-
-            <!-- UI элементы меню (Они остаются прямоугольными, т.к. это классические кнопки) -->
-            <rect class="zone" data-name="SYSTEM // MISSIONS" x="10" y="270" width="180" height="380" />
-        </svg>
-
-        <div id="cyber-tooltip">DATA</div>
+        <div id="game-container">
+            <div id="bg-image"></div>
+            
+            <svg id="interaction-layer" viewBox="0 0 1280 853" preserveAspectRatio="xMidYMid meet">
+                <!-- Dungeons -->
+                <polygon class="zone" data-name="DUNGEONS" points="100,750 280,810 460,750 510,650 500,560 380,470 270,470 170,500 70,580" />
+                <!-- Summon -->
+                <polygon class="zone" data-name="SUMMON" points="530,660 640,690 740,660 770,580 750,260 720,180 640,150 550,180 530,260 510,580" />
+                <!-- Afterlife Bar -->
+                <polygon class="zone" data-name="AFTERLIFE BAR" points="840,440 1280,440 1280,110 940,110 890,180 840,300" />
+                <!-- Cyberware -->
+                <polygon class="zone" data-name="CYBERWARE" points="830,600 840,800 1210,800 1260,700 1250,480 1180,410 1090,410 970,480 860,490" />
+                <!-- Main Story -->
+                <polygon class="zone" data-name="MAIN STORY" points="810,853 1280,853 1280,750 860,750" />
+                <!-- Menu -->
+                <rect class="zone" data-name="МЕНЮ" x="10" y="270" width="180" height="380" />
+                <!-- Profile -->
+                <rect class="zone" data-name="ПРОФИЛЬ" x="10" y="10" width="280" height="110" />
+            </svg>
+        </div>
     </div>
 
     <script>
-        // АУДИО ДВИЖОК
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        let actx = null;
+        const tg = window.Telegram.WebApp;
+        tg.ready();
+        tg.expand(); 
+        tg.setHeaderColor('bg_color');
 
-        function initAudio() {
-            if (!actx) actx = new AudioContext();
-            if (actx.state === 'suspended') actx.resume();
-        }
-
-        function playSound(type) {
-            if (!actx) return;
-            const osc = actx.createOscillator();
-            const gain = actx.createGain();
-            osc.connect(gain); gain.connect(actx.destination);
-            const now = actx.currentTime;
-            
-            if (type === 'hover') {
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(800, now);
-                osc.frequency.exponentialRampToValueAtTime(1600, now + 0.05);
-                gain.gain.setValueAtTime(0.05, now);
-                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
-                osc.start(now); osc.stop(now + 0.05);
-            } else if (type === 'click') {
-                osc.type = 'square';
-                osc.frequency.setValueAtTime(150, now);
-                osc.frequency.exponentialRampToValueAtTime(40, now + 0.15);
-                gain.gain.setValueAtTime(0.1, now);
-                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
-                osc.start(now); osc.stop(now + 0.15);
-            }
-        }
-
-        // ЛОГИКА
-        const wrapper = document.getElementById('scene-wrapper');
-        const tooltip = document.getElementById('cyber-tooltip');
-        const alertBox = document.getElementById('system-alert');
         const zones = document.querySelectorAll('.zone');
-        let alertTimeout;
-
-        document.body.addEventListener('pointerdown', initAudio, { once: true });
-        document.body.addEventListener('pointermove', initAudio, { once: true });
-
-        const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
-        if (!isTouch) {
-            document.addEventListener('mousemove', (e) => {
-                const xAxis = (window.innerWidth / 2 - e.pageX) / 40; 
-                const yAxis = (window.innerHeight / 2 - e.pageY) / 40; 
-                wrapper.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
-            });
-        }
+        const notify = document.getElementById('notification');
+        let notifyTimeout;
 
         zones.forEach(zone => {
-            zone.addEventListener('mouseenter', (e) => {
-                if (isTouch) return;
-                playSound('hover');
-                tooltip.style.opacity = '1';
-                tooltip.style.transform = 'scale(1) translateZ(40px)';
-                tooltip.textContent = zone.getAttribute('data-name');
-            });
-
-            zone.addEventListener('mousemove', (e) => {
-                if (isTouch) return;
-                const rect = wrapper.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-                tooltip.style.left = (x + 20) + 'px';
-                tooltip.style.top = (y + 20) + 'px';
-            });
-
-            zone.addEventListener('mouseleave', () => {
-                tooltip.style.opacity = '0';
-                tooltip.style.transform = 'scale(0.9) translateZ(30px)';
-            });
-
             zone.addEventListener('click', () => {
-                playSound('click');
-                const name = zone.getAttribute('data-name');
-                alertBox.textContent = `> ACCESSING: ${name} ...`;
-                alertBox.style.opacity = '1';
-                alertBox.style.transform = 'scaleY(1)';
+                zone.classList.remove('active');
+                void zone.offsetWidth; 
+                zone.classList.add('active');
                 
-                clearTimeout(alertTimeout);
-                alertTimeout = setTimeout(() => {
-                    alertBox.style.opacity = '0';
-                    alertBox.style.transform = 'scaleY(0)';
+                if (tg.HapticFeedback) {
+                    tg.HapticFeedback.impactOccurred('medium');
+                }
+
+                const name = zone.getAttribute('data-name');
+                notify.textContent = `Открытие: ${name}...`;
+                notify.style.opacity = '1';
+                
+                clearTimeout(notifyTimeout);
+                notifyTimeout = setTimeout(() => {
+                    notify.style.opacity = '0';
                 }, 1500);
             });
         });
