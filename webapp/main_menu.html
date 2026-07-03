@@ -3,25 +3,22 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Cyber Base — Redrawn UI</title>
+  <title>Главная база — капсула</title>
 
   <style>
     :root {
-      --bg-w: 1376;
-      --bg-h: 768;
-      --cyan: 0, 229, 255;
+      /* Новый чистый фон: bg_clean_final.jpg = 1536×1024 */
+      --bg-w: 1536;
+      --bg-h: 1024;
       --pink: 255, 43, 222;
-      --gold: 255, 213, 95;
-      --violet: 156, 81, 255;
+      --cyan: 0, 229, 255;
       --white: 236, 251, 255;
-      --glass-a: rgba(4, 10, 27, .78);
-      --glass-b: rgba(23, 4, 42, .60);
-      --safe-top-mobile: 44px;
     }
 
     * { box-sizing: border-box; }
 
-    html, body {
+    html,
+    body {
       margin: 0;
       width: 100%;
       height: 100%;
@@ -55,7 +52,7 @@
       object-fit: fill;
       pointer-events: none;
       z-index: 0;
-      filter: saturate(1.05) contrast(1.03);
+      filter: saturate(1.04) contrast(1.02);
     }
 
     .ambient {
@@ -64,541 +61,247 @@
       z-index: 1;
       pointer-events: none;
       background:
-        radial-gradient(ellipse at 47% 51%, rgba(var(--pink), .10), transparent 26%),
-        radial-gradient(ellipse at 34% 74%, rgba(var(--cyan), .11), transparent 24%),
-        linear-gradient(to bottom, rgba(0,0,0,.10), transparent 30%, rgba(0,0,0,.18));
+        radial-gradient(ellipse at 56% 50%, rgba(var(--pink), .13), transparent 24%),
+        radial-gradient(ellipse at 38% 74%, rgba(var(--cyan), .11), transparent 24%),
+        linear-gradient(to bottom, rgba(0,0,0,.10), transparent 35%, rgba(0,0,0,.20));
       mix-blend-mode: screen;
     }
 
-    .ui-layer,
     .object-layer {
       position: absolute;
       inset: 0;
-      z-index: 20;
+      z-index: 10;
       pointer-events: none;
     }
 
-    .object-layer { z-index: 5; }
-    .ui-layer { z-index: 30; }
+    /*
+      КАПСУЛА — двигать здесь:
+      --x: вправо/влево
+      --y: вверх/вниз
+      --w: размер
 
-    .pos {
-      --x: 0;
-      --y: 0;
-      --w: 100;
-      --h: 40;
+      Пример:
+      --x: 690;  правее
+      --y: 220;  ниже
+      --w: 360;  крупнее
+    */
+    .capsule-btn {
+      --x: 650;
+      --y: 208;
+      --w: 355;
+      --rgb: var(--pink);
+
       position: absolute;
       left: calc(var(--x) / var(--bg-w) * 100%);
       top: calc(var(--y) / var(--bg-h) * 100%);
       width: calc(var(--w) / var(--bg-w) * 100%);
-      height: calc(var(--h) / var(--bg-h) * 100%);
-    }
-
-    .clickable {
-      --rgb: var(--cyan);
-      pointer-events: auto;
+      aspect-ratio: 470 / 586;
+      padding: 0;
       border: 0;
+      background: transparent;
       cursor: pointer;
+      pointer-events: auto;
       outline: none;
+      transform-origin: 50% 66%;
+      transition: transform .22s cubic-bezier(.2,.9,.18,1.25), filter .22s ease;
       -webkit-tap-highlight-color: transparent;
     }
 
-    .glass {
-      color: rgb(var(--white));
-      background:
-        linear-gradient(135deg, rgba(var(--rgb), .08), transparent 28%),
-        linear-gradient(135deg, var(--glass-a), var(--glass-b));
-      border: 1px solid rgba(var(--rgb), .38);
-      box-shadow:
-        0 0 18px rgba(var(--rgb), .13),
-        0 10px 26px rgba(0,0,0,.34),
-        inset 0 0 22px rgba(var(--rgb), .055);
-      backdrop-filter: blur(10px);
-      transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease, filter .18s ease;
-      overflow: hidden;
-    }
-
-    .glass::before {
-      content: "";
+    .capsule-sprite {
       position: absolute;
       inset: 0;
-      background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(var(--rgb), .28), transparent 46%);
-      opacity: 0;
-      transition: opacity .18s ease;
-      pointer-events: none;
-      mix-blend-mode: screen;
-    }
-
-    .glass::after {
-      content: "";
-      position: absolute;
-      inset: -40% -70%;
-      background: linear-gradient(115deg, transparent 42%, rgba(255,255,255,.38) 49%, rgba(var(--rgb), .22) 53%, transparent 62%);
-      opacity: 0;
-      transform: translateX(-35%);
-      pointer-events: none;
-      mix-blend-mode: screen;
-    }
-
-    .clickable:hover,
-    .clickable:focus-visible,
-    .clickable.is-active {
-      transform: translateY(-1px);
-      border-color: rgba(var(--rgb), .95);
-      box-shadow:
-        0 0 7px rgba(var(--rgb), .62),
-        0 0 24px rgba(var(--rgb), .30),
-        0 12px 28px rgba(0,0,0,.42),
-        inset 0 0 24px rgba(var(--rgb), .12);
-      filter: brightness(1.08);
-    }
-
-    .clickable:hover::before,
-    .clickable:focus-visible::before,
-    .clickable.is-active::before { opacity: 1; }
-
-    .clickable:hover::after,
-    .clickable:focus-visible::after,
-    .clickable.is-active::after { animation: scan .9s ease-out infinite; }
-
-    /* ================= OBJECT BUTTONS ================= */
-
-    .object-btn {
-      --x: 0;
-      --y: 0;
-      --w: 200;
-      --rgb: var(--cyan);
-      position: absolute;
-      left: calc(var(--x) / var(--bg-w) * 100%);
-      top: calc(var(--y) / var(--bg-h) * 100%);
-      width: calc(var(--w) / var(--bg-w) * 100%);
-      height: auto;
-      padding: 0;
-      background: transparent;
-      border: 0;
-      z-index: var(--z, 1);
-      transform-origin: 50% 65%;
-      transition: transform .2s cubic-bezier(.2,.9,.18,1.25), filter .2s ease;
-    }
-
-    .object-btn img {
-      display: block;
       width: 100%;
-      height: auto;
+      height: 100%;
+      object-fit: contain;
       pointer-events: none;
-      filter: drop-shadow(0 18px 22px rgba(0,0,0,.55));
-      transition: filter .2s ease;
+      transform: translateZ(0);
+      transition: opacity .18s ease, filter .22s ease, transform .22s ease;
     }
 
-    .object-btn::before {
-      content: "";
-      position: absolute;
-      inset: -5%;
-      opacity: 0;
-      border-radius: 18px;
-      background: radial-gradient(ellipse at 50% 55%, rgba(var(--rgb), .44), transparent 58%);
-      filter: blur(14px);
-      mix-blend-mode: screen;
-      pointer-events: none;
-      transition: opacity .18s ease;
-      z-index: -1;
-    }
-
-    .object-btn:hover,
-    .object-btn:focus-visible,
-    .object-btn.is-active {
-      transform: translateY(-1.2%) scale(1.028);
+    .capsule-static {
+      opacity: 1;
       filter:
-        drop-shadow(0 0 7px rgba(var(--rgb), .94))
-        drop-shadow(0 0 22px rgba(var(--rgb), .54));
+        drop-shadow(0 18px 24px rgba(0,0,0,.60))
+        drop-shadow(0 0 2px rgba(var(--pink), .45));
     }
 
-    .object-btn:hover img,
-    .object-btn:focus-visible img,
-    .object-btn.is-active img {
-      filter: brightness(1.13) saturate(1.18) drop-shadow(0 22px 24px rgba(0,0,0,.58));
+    .capsule-active {
+      opacity: 0;
+      filter:
+        brightness(1.08)
+        saturate(1.18)
+        drop-shadow(0 18px 24px rgba(0,0,0,.60))
+        drop-shadow(0 0 5px rgba(var(--pink), .95))
+        drop-shadow(0 0 18px rgba(var(--pink), .72))
+        drop-shadow(0 0 42px rgba(var(--pink), .34));
     }
 
-    .object-btn:hover::before,
-    .object-btn:focus-visible::before,
-    .object-btn.is-active::before { opacity: 1; }
-
-    .dungeons img { clip-path: polygon(4% 35%, 23% 13%, 62% 3%, 83% 10%, 98% 37%, 93% 67%, 78% 89%, 35% 99%, 6% 84%, 0 58%); }
-    .summon img { clip-path: polygon(25% 3%, 75% 3%, 92% 16%, 97% 54%, 86% 88%, 65% 99%, 28% 96%, 7% 78%, 5% 22%); }
-    .bar img { clip-path: polygon(7% 6%, 96% 2%, 99% 86%, 82% 96%, 10% 92%, 0 55%); }
-    .cyberware img { clip-path: polygon(11% 4%, 96% 1%, 100% 72%, 82% 99%, 15% 94%, 0 68%, 4% 22%); }
-
-    /* ================= PROFILE ================= */
-
-    .profile {
-      --x: 18; --y: 16; --w: 365; --h: 100; --rgb: 255, 43, 222;
-      display: grid;
-      grid-template-columns: 82px 1fr 70px;
-      grid-template-rows: 32px 18px 24px;
-      column-gap: 12px;
-      align-items: center;
-      padding: 9px 12px 9px 10px;
-      text-align: left;
-      clip-path: polygon(0 0, 94% 0, 100% 16%, 100% 100%, 0 100%);
-    }
-
-    .avatar-frame {
-      grid-row: 1 / 4;
-      width: 76px;
-      height: 76px;
-      border: 1px solid rgba(var(--pink), .86);
-      border-radius: 5px;
-      background: rgba(5,4,18,.9);
-      box-shadow: 0 0 18px rgba(var(--pink), .35), inset 0 0 18px rgba(var(--cyan), .12);
-      overflow: hidden;
-    }
-
-    .avatar-frame img {
-      width: 100%;
-      height: 100%;
-      display: block;
-      object-fit: cover;
-    }
-
-    .profile-name {
-      grid-column: 2;
-      align-self: end;
-      font-size: clamp(14px, 1.35vw, 21px);
-      font-weight: 900;
-      line-height: 1;
-      color: #fff;
-      text-shadow: 0 0 8px rgba(255,255,255,.18);
-    }
-
-    .level {
-      grid-column: 3;
-      grid-row: 1;
-      align-self: end;
-      justify-self: end;
-      font-size: clamp(12px, 1.08vw, 17px);
-      font-weight: 900;
-      color: #fff;
-      text-shadow: 0 0 10px rgba(var(--pink), .78);
-      white-space: nowrap;
-    }
-
-    .xp {
-      grid-column: 2 / 4;
-      grid-row: 2;
-      align-self: center;
-      height: 8px;
-      border-radius: 999px;
-      background: rgba(255,255,255,.13);
-      overflow: hidden;
-      border: 1px solid rgba(255,255,255,.10);
-    }
-
-    .xp > i {
-      display: block;
-      width: 73%;
-      height: 100%;
-      background: linear-gradient(90deg, #c800ff, #ff2bde);
-      box-shadow: 0 0 11px rgba(var(--pink), .9);
-    }
-
-    .power {
-      grid-column: 2 / 4;
-      grid-row: 3;
-      align-self: start;
-      color: rgb(var(--gold));
-      font-size: clamp(14px, 1.35vw, 20px);
-      font-weight: 950;
-      text-shadow: 0 0 8px rgba(var(--gold), .35);
-      white-space: nowrap;
-    }
-
-    /* ================= RESOURCES ================= */
-
-    .resource {
-      --h: 39;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-      padding: 0 8px 0 12px;
-      border-radius: 999px;
-      font-weight: 900;
-      letter-spacing: .02em;
-      font-size: clamp(11px, 1.15vw, 16px);
-      white-space: nowrap;
-    }
-
-    .res-left { display: flex; align-items: center; gap: 7px; min-width: 0; }
-    .res-icon {
-      width: 22px; height: 22px;
-      display: grid; place-items: center;
-      color: rgb(var(--rgb));
-      text-shadow: 0 0 10px rgba(var(--rgb), .86);
-      font-size: 18px;
-      flex: 0 0 auto;
-    }
-    .res-plus {
-      width: 25px; height: 25px;
-      display: grid; place-items: center;
-      border: 1px solid rgba(255,255,255,.36);
-      border-radius: 6px;
-      background: rgba(255,255,255,.075);
-      color: #fff;
-      box-shadow: inset 0 0 8px rgba(var(--rgb), .12);
-      flex: 0 0 auto;
-      font-size: 18px;
-      line-height: 1;
-    }
-
-    .energy { --x: 472; --y: 18; --w: 170; --rgb: 0, 229, 255; }
-    .credits { --x: 665; --y: 18; --w: 190; --rgb: 255, 213, 95; }
-    .crystals { --x: 875; --y: 18; --w: 150; --rgb: 156, 81, 255; }
-
-    /* ================= TOP ICONS ================= */
-
-    .top-icon {
-      --w: 46; --h: 46; --rgb: 0, 229, 255;
-      display: grid;
-      place-items: center;
-      border-radius: 12px;
-      background: transparent;
-      border-color: transparent;
-      box-shadow: none;
-      backdrop-filter: none;
-      color: #fff;
-      font-size: clamp(18px, 1.65vw, 26px);
-      text-shadow: 0 0 10px rgba(var(--rgb), .55);
-      overflow: visible;
-    }
-    .top-icon:hover, .top-icon:focus-visible, .top-icon.is-active { background: rgba(4,12,28,.58); }
-    .top-icon.mail { --x: 1110; --y: 16; --rgb: 255, 43, 222; }
-    .top-icon.friends { --x: 1178; --y: 16; }
-    .top-icon.settings { --x: 1248; --y: 16; }
-    .top-icon.network { --x: 1318; --y: 16; }
-    .badge-dot {
-      position: absolute;
-      right: 4px;
-      top: 2px;
-      width: 12px;
-      height: 12px;
-      border-radius: 999px;
-      background: #ff2b76;
-      border: 1px solid #fff;
-      box-shadow: 0 0 9px rgba(255,43,118,.9);
-    }
-
-    /* ================= EVENT ================= */
-
-    .event-card {
-      --x: 18; --y: 154; --w: 278; --h: 112; --rgb: 255, 43, 222;
-      display: grid;
-      grid-template-columns: 1fr 110px;
-      grid-template-rows: 22px 30px 24px;
-      column-gap: 10px;
-      align-items: center;
-      text-align: left;
-      padding: 12px 10px 10px 14px;
-      border-radius: 8px;
-      clip-path: polygon(0 0, 95% 0, 100% 18%, 100% 100%, 0 100%);
-    }
-
-    .event-art {
-      grid-column: 2;
-      grid-row: 1 / 4;
-      align-self: stretch;
-      border-radius: 6px;
-      overflow: hidden;
-      border: 1px solid rgba(var(--pink), .45);
-      box-shadow: inset 0 0 12px rgba(var(--pink), .12), 0 0 12px rgba(var(--pink), .12);
-      opacity: .96;
-    }
-    .event-art img { width: 100%; height: 100%; object-fit: cover; display: block; }
-    .event-kicker {
-      grid-column: 1;
-      color: #ff8cff;
-      text-transform: uppercase;
-      font-weight: 950;
-      font-size: clamp(10px, .95vw, 14px);
-      letter-spacing: .08em;
-      line-height: 1;
-      text-shadow: 0 0 10px rgba(var(--pink), .76);
-      white-space: nowrap;
-    }
-    .event-title {
-      grid-column: 1;
-      color: #fff;
-      font-size: clamp(14px, 1.35vw, 20px);
-      font-weight: 950;
-      line-height: 1.05;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .event-time {
-      grid-column: 1;
-      color: rgba(var(--white), .86);
-      font-size: clamp(10px, .95vw, 13px);
-      font-weight: 750;
-      line-height: 1;
-      white-space: nowrap;
-    }
-
-    /* ================= LEFT NAV ================= */
-
-    .side-btn {
-      --x: 20; --w: 210; --h: 51; --rgb: 0, 229, 255;
-      display: flex;
-      align-items: center;
-      gap: 11px;
-      padding: 0 12px;
-      border-radius: 8px;
-      background: linear-gradient(90deg, rgba(5, 15, 32, .58), rgba(5, 15, 32, .22));
-      border-color: transparent;
-      text-align: left;
-      clip-path: polygon(0 0, 96% 0, 100% 50%, 96% 100%, 0 100%);
-    }
-    .side-icon {
-      width: 31px; height: 31px;
-      display: grid; place-items: center;
-      color: #dffbff;
-      font-size: clamp(16px, 1.45vw, 23px);
-      text-shadow: 0 0 12px rgba(var(--cyan), .85);
-      flex: 0 0 auto;
-    }
-    .side-label {
-      font-weight: 950;
-      text-transform: uppercase;
-      letter-spacing: .02em;
-      font-size: clamp(10px, 1.05vw, 15px);
-      color: #effcff;
-      text-shadow: 0 0 9px rgba(var(--cyan), .25);
-      white-space: nowrap;
-      min-width: 0;
-    }
-    .new-badge {
-      margin-left: auto;
-      color: #ff6ef2;
-      font-size: clamp(8px, .78vw, 11px);
-      font-weight: 950;
-      text-shadow: 0 0 10px rgba(var(--pink), .9);
-      white-space: nowrap;
-    }
-    .missions { --y: 300; }
-    .battle { --y: 362; --w: 225; --rgb: 255, 43, 222; }
-    .store { --y: 424; }
-    .inventory { --y: 486; --w: 225; }
-    .archives { --y: 548; }
-    .pvp { --y: 610; --w: 235; --rgb: 255, 43, 222; }
-
-    /* ================= BOTTOM NAV ================= */
-
-    .bottom-shell {
-      --x: 8; --y: 682; --w: 875; --h: 78;
-      pointer-events: none;
-      background: linear-gradient(90deg, rgba(7, 24, 50, .86), rgba(5, 13, 30, .78));
-      border: 1px solid rgba(var(--cyan), .16);
-      clip-path: polygon(0 0, 100% 0, 97% 100%, 0 100%);
-      box-shadow: 0 -8px 25px rgba(0,0,0,.34), inset 0 0 24px rgba(var(--cyan), .06);
-      z-index: 0;
-    }
-    .nav-btn {
-      --y: 684; --w: 137; --h: 74; --rgb: 0, 229, 255;
-      display: grid;
-      place-items: center;
-      grid-template-rows: 38px 20px;
-      gap: 1px;
-      padding: 7px 4px 6px;
-      border-radius: 0;
-      background: rgba(4, 16, 34, .38);
-      border-color: rgba(var(--cyan), .10);
-      border-top-color: transparent;
-      border-bottom-color: transparent;
-      text-align: center;
-    }
-    .nav-btn.home {
-      --x: 10; --w: 175;
-      background: linear-gradient(135deg, rgba(0, 128, 196, .76), rgba(9, 50, 86, .88));
-      clip-path: polygon(0 0, 80% 0, 100% 100%, 0 100%);
-      border-color: rgba(var(--cyan), .45);
-    }
-    .agents { --x: 190; }
-    .squad { --x: 327; --rgb: 255, 43, 222; }
-    .tech { --x: 464; }
-    .codex { --x: 601; }
-    .corp { --x: 738; }
-    .nav-icon { font-size: clamp(19px, 2vw, 30px); line-height: 1; text-shadow: 0 0 12px rgba(var(--cyan), .72); }
-    .nav-label { font-size: clamp(10px, 1vw, 14px); line-height: 1; font-weight: 950; text-transform: uppercase; color: #f5feff; text-shadow: 0 0 8px rgba(var(--cyan), .45); }
-
-    /* ================= MAIN STORY ================= */
-
-    .story-btn {
-      --x: 1014; --y: 675; --w: 350; --h: 84; --rgb: 255, 43, 222;
-      display: grid;
-      align-content: center;
-      justify-content: start;
-      padding-left: 70px;
-      text-align: left;
-      clip-path: polygon(10% 0, 100% 0, 93% 100%, 0 100%);
-      border-color: rgba(var(--pink), .88);
-      background:
-        radial-gradient(circle at 78% 22%, rgba(255,255,255,.75), transparent 7%),
-        linear-gradient(135deg, rgba(255,43,222,.84), rgba(104,0,170,.74) 52%, rgba(9,16,44,.78));
-      box-shadow:
-        0 0 18px rgba(var(--pink), .52),
-        inset 0 0 28px rgba(255,255,255,.10),
-        0 16px 30px rgba(0,0,0,.42);
-    }
-    .story-btn::before {
+    .capsule-btn::before {
       content: "";
       position: absolute;
-      right: 44px;
-      bottom: 0;
-      width: 132px;
-      height: 44px;
-      background:
-        linear-gradient(to top, rgba(4, 6, 28, .62), transparent),
-        repeating-linear-gradient(90deg, rgba(255,255,255,.20) 0 2px, transparent 2px 13px);
-      clip-path: polygon(0 100%, 0 52%, 10% 52%, 10% 25%, 18% 25%, 18% 44%, 26% 44%, 26% 0, 35% 0, 35% 38%, 44% 38%, 44% 18%, 51% 18%, 51% 60%, 60% 60%, 60% 34%, 69% 34%, 69% 48%, 76% 48%, 76% 15%, 86% 15%, 86% 42%, 100% 42%, 100% 100%);
-      opacity: .65;
+      inset: -10%;
+      z-index: -1;
+      border-radius: 30px;
+      background: radial-gradient(ellipse at 50% 55%, rgba(var(--pink), .46), transparent 62%);
+      filter: blur(18px);
+      opacity: 0;
+      mix-blend-mode: screen;
+      pointer-events: none;
+      transition: opacity .18s ease, transform .18s ease;
+    }
+
+    .capsule-btn::after {
+      content: "";
+      position: absolute;
+      inset: 2% 8%;
+      z-index: 3;
+      background: linear-gradient(115deg, transparent 12%, rgba(255,255,255,0) 34%, rgba(255,255,255,.58) 48%, rgba(var(--pink), .30) 54%, transparent 72%);
+      opacity: 0;
+      transform: translateX(-72%) skewX(-10deg);
+      filter: blur(.4px);
+      mix-blend-mode: screen;
       pointer-events: none;
     }
-    .story-title { position: relative; z-index: 1; font-size: clamp(20px, 2vw, 31px); font-weight: 1000; line-height: 1; color: #fff; text-shadow: 0 0 12px rgba(255,255,255,.28); }
-    .story-sub { position: relative; z-index: 1; margin-top: 8px; font-size: clamp(11px, 1vw, 15px); font-weight: 800; color: rgba(255,255,255,.76); text-transform: uppercase; }
-    .story-arrow { position: absolute; right: 22px; top: 50%; transform: translateY(-50%); font-size: 34px; font-weight: 300; color: #fff; text-shadow: 0 0 10px rgba(var(--pink), .8); }
+
+    .capsule-btn:hover,
+    .capsule-btn:focus-visible,
+    .capsule-btn.is-active {
+      transform: translateY(-1.3%) scale(1.035);
+      filter:
+        drop-shadow(0 0 8px rgba(var(--pink), .95))
+        drop-shadow(0 0 24px rgba(var(--pink), .58));
+    }
+
+    .capsule-btn:hover .capsule-static,
+    .capsule-btn:focus-visible .capsule-static,
+    .capsule-btn.is-active .capsule-static {
+      opacity: 0;
+    }
+
+    .capsule-btn:hover .capsule-active,
+    .capsule-btn:focus-visible .capsule-active,
+    .capsule-btn.is-active .capsule-active {
+      opacity: 1;
+      animation: capsuleFloat 1.12s ease-in-out infinite alternate;
+    }
+
+    .capsule-btn:hover::before,
+    .capsule-btn:focus-visible::before,
+    .capsule-btn.is-active::before {
+      opacity: 1;
+      transform: scale(1.06);
+      animation: auraPulse 1.05s ease-in-out infinite alternate;
+    }
+
+    .capsule-btn:hover::after,
+    .capsule-btn:focus-visible::after,
+    .capsule-btn.is-active::after {
+      animation: scan .95s ease-out infinite;
+    }
+
+    .capsule-label {
+      position: absolute;
+      left: 68%;
+      top: 9%;
+      z-index: 5;
+      transform: translateX(-50%);
+      min-width: max-content;
+      padding: 7px 12px 8px;
+      border: 1px solid rgba(var(--pink), .65);
+      border-radius: 999px;
+      background: linear-gradient(135deg, rgba(7, 9, 30, .82), rgba(34, 5, 48, .70));
+      box-shadow: 0 0 18px rgba(var(--pink), .26), inset 0 0 15px rgba(var(--pink), .10);
+      backdrop-filter: blur(10px);
+      color: #fff;
+      pointer-events: none;
+      text-align: left;
+      opacity: .96;
+      transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+    }
+
+    .capsule-title {
+      display: block;
+      color: #fff;
+      font-size: clamp(13px, 1.15vw, 18px);
+      font-weight: 1000;
+      line-height: 1;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      text-shadow: 0 0 12px rgba(var(--pink), .95);
+    }
+
+    .capsule-subtitle {
+      display: block;
+      margin-top: 4px;
+      color: rgba(var(--white), .78);
+      font-size: clamp(9px, .78vw, 12px);
+      font-weight: 760;
+      line-height: 1;
+      letter-spacing: .01em;
+      text-shadow: 0 0 8px rgba(0,0,0,.70);
+    }
+
+    .capsule-arrow {
+      display: inline-block;
+      margin-left: 8px;
+      color: #fff;
+      text-shadow: 0 0 10px rgba(var(--pink), .95);
+    }
+
+    .capsule-btn:hover .capsule-label,
+    .capsule-btn:focus-visible .capsule-label,
+    .capsule-btn.is-active .capsule-label {
+      transform: translateX(-50%) translateY(-3px);
+      border-color: rgba(var(--pink), .98);
+      box-shadow: 0 0 20px rgba(var(--pink), .44), inset 0 0 18px rgba(var(--pink), .15);
+    }
 
     .ripple {
       position: absolute;
+      z-index: 30;
       width: 24px;
       height: 24px;
       margin: -12px 0 0 -12px;
       border: 2px solid rgba(var(--ripple-rgb), .96);
       border-radius: 999px;
-      z-index: 80;
       pointer-events: none;
       filter: drop-shadow(0 0 12px rgba(var(--ripple-rgb), .95));
-      animation: ripple .76s ease-out forwards;
+      animation: ripple .78s ease-out forwards;
     }
 
-    @keyframes scan { from { transform: translateX(-35%); opacity: 0; } 22% { opacity: .85; } to { transform: translateX(38%); opacity: 0; } }
-    @keyframes ripple { from { transform: scale(.55); opacity: 1; } to { transform: scale(7); opacity: 0; } }
+    @keyframes capsuleFloat {
+      from { transform: translateY(0) rotate(0deg); }
+      to { transform: translateY(-5px) rotate(.2deg); }
+    }
 
-    @media (max-width: 1024px), (max-height: 560px) {
-      .stage { inset: 0; width: 100vw; height: 100dvh; }
-      .top-icon { display: none; }
-      .energy { --x: 410; --y: 10; --w: 160; }
-      .credits { --x: 590; --y: 10; --w: 190; }
-      .crystals { --x: 800; --y: 10; --w: 150; }
-      .profile { --x: 18; --y: 54; --w: 330; --h: 88; }
-      .event-card { --x: 18; --y: 150; --w: 300; --h: 94; }
-      .event-card { grid-template-columns: 1fr 92px; }
-      .event-title { font-size: clamp(11px, 2.3vw, 16px); }
-      .event-kicker, .event-time { font-size: clamp(8px, 1.65vw, 11px); }
-      .side-label { font-size: clamp(8px, 1.9vw, 12px); }
-      .side-btn { --w: 235; }
-      .battle { --w: 250; }
-      .inventory { --w: 250; }
-      .nav-btn { --y: 675; --h: 84; background: rgba(4, 16, 34, .66); }
-      .bottom-shell { --y: 672; --h: 90; background: linear-gradient(90deg, rgba(7, 24, 50, .66), rgba(5, 13, 30, .56)); }
-      .story-btn { --x: 1010; --y: 670; --w: 355; --h: 88; }
+    @keyframes auraPulse {
+      from { opacity: .60; }
+      to { opacity: 1; }
+    }
+
+    @keyframes scan {
+      from { transform: translateX(-72%) skewX(-10deg); opacity: 0; }
+      22% { opacity: .92; }
+      to { transform: translateX(72%) skewX(-10deg); opacity: 0; }
+    }
+
+    @keyframes ripple {
+      from { transform: scale(.55); opacity: 1; }
+      to { transform: scale(7); opacity: 0; }
+    }
+
+    @media (max-width: 860px), (max-height: 560px) {
+      .stage {
+        inset: 0;
+        width: 100vw;
+        height: 100dvh;
+      }
+
+      .capsule-label {
+        left: 70%;
+        top: 8%;
+        padding: 6px 10px 7px;
+      }
     }
   </style>
 </head>
@@ -610,161 +313,79 @@
       id="baseBg"
       src="./cyber_base_sprite_assets/bg_clean_final.jpg"
       data-candidates="./cyber_base_sprite_assets/bg_clean_final.jpg|./cyber_base_sprite_assets/bg_clean_final.jpeg|./cyber_base_sprite_assets/bg_clean_final.png"
-      alt="Фон базы"
+      alt="Чистый фон базы"
       draggable="false"
     />
+
     <div class="ambient"></div>
-    <audio id="menuMusic" src="./assets/audio/music/neon_soul.mp3" loop preload="auto"></audio>
 
     <section class="object-layer" aria-label="Объекты базы">
-      <button class="object-btn clickable dungeons" style="--x: 150; --y: 372; --w: 430; --rgb: 0, 229, 255; --z: 2;" data-name="Dungeons" data-action="Explore. Fight. Ascend." type="button">
-        <img src="./cyber_base_sprite_assets/dungeons.png" alt="Dungeons" draggable="false" />
-      </button>
-      <button class="object-btn clickable summon" style="--x: 605; --y: 130; --w: 310; --rgb: 255, 43, 222; --z: 3;" data-name="Summon" data-action="Clone. Summon. Awaken." type="button">
-        <img src="./cyber_base_sprite_assets/summon.png" alt="Summon" draggable="false" />
-      </button>
-      <button class="object-btn clickable bar" style="--x: 928; --y: 86; --w: 410; --rgb: 255, 43, 222; --z: 2;" data-name="Afterlife Bar" data-action="Drink. Relax. Connect." type="button">
-        <img src="./cyber_base_sprite_assets/bar.png" alt="Afterlife Bar" draggable="false" />
-      </button>
-      <button class="object-btn clickable cyberware" style="--x: 842; --y: 412; --w: 470; --rgb: 0, 229, 255; --z: 4;" data-name="Cyberware" data-action="Enhance. Upgrade. Evolve." type="button">
-        <img src="./cyber_base_sprite_assets/cyberware.png" alt="Cyberware" draggable="false" />
-      </button>
-    </section>
+      <button
+        class="capsule-btn"
+        id="capsuleBtn"
+        type="button"
+        aria-label="Капсула"
+        data-name="Капсула"
+        data-action="Клонировать · Призвать · Пробудить"
+      >
+        <img class="capsule-sprite capsule-static" src="./cyber_base_sprite_assets/capsule_static.png" alt="Капсула" draggable="false" />
+        <img class="capsule-sprite capsule-active" src="./cyber_base_sprite_assets/capsule_active_clean.png" alt="Капсула активна" draggable="false" />
 
-    <section class="ui-layer" aria-label="Интерфейс">
-      <button class="pos clickable glass profile" data-name="Profile" data-action="Nightshade · Lv. 68 · Power 256,800" type="button">
-        <span class="avatar-frame"><img src="./cyber_base_sprite_assets/avatar_nightshade.png" alt="Nightshade" draggable="false" /></span>
-        <span class="profile-name">Nightshade</span>
-        <span class="level">Lv. 68</span>
-        <span class="xp"><i></i></span>
-        <span class="power">◆ 256,800</span>
-      </button>
-
-      <button class="pos clickable glass resource energy" data-name="Energy" data-action="120 / 120" type="button"><span class="res-left"><span class="res-icon">⚡</span><span>120 / 120</span></span><span class="res-plus">＋</span></button>
-      <button class="pos clickable glass resource credits" data-name="Credits" data-action="2,450,790" type="button"><span class="res-left"><span class="res-icon">⬡</span><span>2,450,790</span></span><span class="res-plus">＋</span></button>
-      <button class="pos clickable glass resource crystals" data-name="Crystals" data-action="8,960" type="button"><span class="res-left"><span class="res-icon">⬢</span><span>8,960</span></span><span class="res-plus">＋</span></button>
-
-      <button class="pos clickable glass top-icon mail" data-name="Mail" data-action="Open inbox" type="button">✉<span class="badge-dot"></span></button>
-      <button class="pos clickable glass top-icon friends" data-name="Friends" data-action="Social hub" type="button">♟</button>
-      <button class="pos clickable glass top-icon settings" data-name="Settings" data-action="Game settings" type="button">⚙</button>
-      <button class="pos clickable glass top-icon network" data-name="Network" data-action="Connection status" type="button">⌁</button>
-
-      <button class="pos clickable glass event-card" data-name="Event: Neon Uprising" data-action="8D 12H Left" type="button">
-        <span class="event-kicker">Event</span>
-        <span class="event-title">Neon Uprising</span>
-        <span class="event-time">◷ 8D 12H Left</span>
-        <span class="event-art"><img src="./cyber_base_sprite_assets/event_neon_uprising.png" alt="Neon Uprising" draggable="false" /></span>
-      </button>
-
-      <button class="pos clickable glass side-btn missions" data-name="Missions" data-action="Open missions" type="button"><span class="side-icon">▣</span><span class="side-label">Missions</span></button>
-      <button class="pos clickable glass side-btn battle" data-name="Battle Pass" data-action="Season rewards" type="button"><span class="side-icon">✺</span><span class="side-label">Battle Pass</span><span class="new-badge">NEW</span></button>
-      <button class="pos clickable glass side-btn store" data-name="Store" data-action="Open store" type="button"><span class="side-icon">🛒</span><span class="side-label">Store</span></button>
-      <button class="pos clickable glass side-btn inventory" data-name="Inventory" data-action="Open inventory" type="button"><span class="side-icon">▤</span><span class="side-label">Inventory</span></button>
-      <button class="pos clickable glass side-btn archives" data-name="Archives" data-action="Open archives" type="button"><span class="side-icon">◫</span><span class="side-label">Archives</span></button>
-      <button class="pos clickable glass side-btn pvp" data-name="PVP Arena" data-action="Competitive mode" type="button"><span class="side-icon">⚔</span><span class="side-label">PVP Arena</span><span class="new-badge">NEW</span></button>
-
-      <div class="pos bottom-shell"></div>
-      <button class="pos clickable glass nav-btn home" data-name="Home" data-action="Current section" type="button"><span class="nav-icon">✥</span><span class="nav-label">Home</span></button>
-      <button class="pos clickable glass nav-btn agents" data-name="Agents" data-action="Manage agents" type="button"><span class="nav-icon">☣</span><span class="nav-label">Agents</span></button>
-      <button class="pos clickable glass nav-btn squad" data-name="Squad" data-action="Team setup" type="button"><span class="nav-icon">♟</span><span class="nav-label">Squad</span></button>
-      <button class="pos clickable glass nav-btn tech" data-name="Tech" data-action="Tech upgrades" type="button"><span class="nav-icon">▧</span><span class="nav-label">Tech</span></button>
-      <button class="pos clickable glass nav-btn codex" data-name="Codex" data-action="Game codex" type="button"><span class="nav-icon">◈</span><span class="nav-label">Codex</span></button>
-      <button class="pos clickable glass nav-btn corp" data-name="Corp" data-action="Corporation" type="button"><span class="nav-icon">⌂</span><span class="nav-label">Corp</span></button>
-
-      <button class="pos clickable glass story-btn" data-name="Main Story" data-action="Chapter 12-5" type="button">
-        <span class="story-title">MAIN STORY</span>
-        <span class="story-sub">Chapter 12-5</span>
-        <span class="story-arrow">›</span>
+        <span class="capsule-label">
+          <span class="capsule-title">Капсула <span class="capsule-arrow">›</span></span>
+          <span class="capsule-subtitle">Клонировать · Призвать · Пробудить</span>
+        </span>
       </button>
     </section>
   </main>
 
   <script>
     const stage = document.getElementById('stage');
-    const menuMusic = document.getElementById('menuMusic');
     const baseBg = document.getElementById('baseBg');
-    const clickables = [...document.querySelectorAll('.clickable')];
+    const capsuleBtn = document.getElementById('capsuleBtn');
 
     const bgCandidates = (baseBg.dataset.candidates || '').split('|').filter(Boolean);
     let bgIndex = 0;
+
     baseBg.addEventListener('error', () => {
       bgIndex += 1;
       if (bgCandidates[bgIndex]) baseBg.src = bgCandidates[bgIndex];
     });
 
-    menuMusic.volume = 0.42;
-    async function startMenuMusic() {
-      if (!menuMusic.paused) return;
-      try { await menuMusic.play(); } catch (error) {}
-    }
-    startMenuMusic();
-    ['pointerdown', 'click', 'touchstart', 'keydown'].forEach(eventName => {
-      document.addEventListener(eventName, startMenuMusic, { once: true, passive: true });
-    });
+    function activateCapsule(clientX, clientY) {
+      capsuleBtn.classList.add('is-active');
 
-    try {
-      const tg = window.Telegram && window.Telegram.WebApp;
-      if (tg) {
-        tg.ready();
-        tg.expand();
-        if (typeof tg.requestFullscreen === 'function') tg.requestFullscreen();
-        if (typeof tg.disableVerticalSwipes === 'function') tg.disableVerticalSwipes();
-      }
-    } catch (error) {}
-
-    function rgbOf(el) {
-      const raw = (el.getAttribute('style') || getComputedStyle(el).getPropertyValue('--rgb') || '').match(/([0-9]+\s*,\s*[0-9]+\s*,\s*[0-9]+)/);
-      return raw ? raw[1].trim() : '0, 229, 255';
-    }
-
-    function setMouseVars(el, event) {
-      const rect = el.getBoundingClientRect();
-      const mx = ((event.clientX - rect.left) / rect.width) * 100;
-      const my = ((event.clientY - rect.top) / rect.height) * 100;
-      el.style.setProperty('--mx', `${mx}%`);
-      el.style.setProperty('--my', `${my}%`);
-    }
-
-    function clearActive() {
-      clickables.forEach(el => el.classList.remove('is-active'));
-    }
-
-    function tapFX(el, x, y) {
-      clearActive();
-      el.classList.add('is-active');
-
-      if (Number.isFinite(x) && Number.isFinite(y)) {
+      if (Number.isFinite(clientX) && Number.isFinite(clientY)) {
         const rect = stage.getBoundingClientRect();
         const ripple = document.createElement('i');
         ripple.className = 'ripple';
-        ripple.style.left = `${x - rect.left}px`;
-        ripple.style.top = `${y - rect.top}px`;
-        ripple.style.setProperty('--ripple-rgb', rgbOf(el));
+        ripple.style.left = `${clientX - rect.left}px`;
+        ripple.style.top = `${clientY - rect.top}px`;
+        ripple.style.setProperty('--ripple-rgb', '255, 43, 222');
         stage.appendChild(ripple);
         ripple.addEventListener('animationend', () => ripple.remove());
       }
 
-      clearTimeout(el._timer);
-      el._timer = setTimeout(() => el.classList.remove('is-active'), 1200);
+      clearTimeout(capsuleBtn._timer);
+      capsuleBtn._timer = setTimeout(() => {
+        capsuleBtn.classList.remove('is-active');
+      }, 1400);
     }
 
-    stage.addEventListener('pointerdown', event => {
-      if (!event.target.closest('.clickable')) clearActive();
+    capsuleBtn.addEventListener('pointerdown', event => {
+      event.stopPropagation();
+      activateCapsule(event.clientX, event.clientY);
     });
 
-    clickables.forEach(el => {
-      el.addEventListener('pointerenter', event => setMouseVars(el, event));
-      el.addEventListener('pointermove', event => setMouseVars(el, event));
-      el.addEventListener('pointerdown', event => {
-        setMouseVars(el, event);
-        tapFX(el, event.clientX, event.clientY);
-      });
-      el.addEventListener('keydown', event => {
-        if (event.key === 'Enter' || event.key === ' ') {
-          event.preventDefault();
-          tapFX(el, NaN, NaN);
-        }
-      });
+    capsuleBtn.addEventListener('keydown', event => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        activateCapsule(NaN, NaN);
+      }
+    });
+
+    stage.addEventListener('pointerdown', () => {
+      capsuleBtn.classList.remove('is-active');
     });
   </script>
 </body>
