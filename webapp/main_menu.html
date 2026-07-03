@@ -14,8 +14,8 @@
       --bg-w: 1376;
       --bg-h: 768;
       /* Отступы для мобильного webview, где сверху может быть системная шапка с Close / ⋮ */
-      --mobile-top-gap: 64px;
-      --mobile-bottom-gap: 82px;
+      --mobile-top-gap: 58px;
+      --mobile-bottom-gap: 0px;
       --mobile-side-gap: 0px;
     }
 
@@ -694,14 +694,11 @@
     }
 
     /*
-      MOBILE / WEBVIEW FIX v5
-      В мобильном webview системные кнопки Close / ⋮ лежат поверх страницы.
-      Убрать их из HTML нельзя, поэтому:
-      1) резервируем safe-зону сверху;
-      2) поднимаем нижнее меню выше нижней панели;
-      3) на телефоне сохраняем пропорции игрового экрана 1376×768, чтобы UI не сплющивался.
+      MOBILE / WEBVIEW FIX v6
+      Цель: чёрная системная полоса только сверху, а сама база растянута до низа экрана.
+      Close / ⋮ — это шапка мобильного webview, из HTML её не убрать, поэтому держим игру ниже неё.
     */
-    @media (max-width: 860px), (max-height: 520px) {
+    @media (max-width: 860px), (max-height: 540px) {
       html,
       body {
         width: 100%;
@@ -717,106 +714,100 @@
 
       .stage {
         position: fixed;
+        left: 0;
+        right: 0;
         top: calc(env(safe-area-inset-top, 0px) + var(--mobile-top-gap));
-        left: 50%;
-        bottom: auto;
-        width: min(
-          calc(100vw - var(--mobile-side-gap) * 2),
-          calc((100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - var(--mobile-top-gap) - var(--mobile-bottom-gap)) * 1376 / 768)
-        );
-        height: auto;
-        aspect-ratio: 1376 / 768;
-        transform: translateX(-50%);
-        max-height: calc(100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - var(--mobile-top-gap) - var(--mobile-bottom-gap));
-        box-shadow: 0 0 34px rgba(0,0,0,.72), 0 0 32px rgba(var(--pink), .12);
+        bottom: 0;
+        width: 100vw;
+        height: calc(100dvh - env(safe-area-inset-top, 0px) - var(--mobile-top-gap));
+        max-height: none;
+        transform: none;
+        box-shadow: none;
       }
 
       .bg {
         object-fit: fill;
       }
 
-      /* На телефоне подсказка мешает нижней навигации — скрываем. */
+      /* Подсказку на телефоне полностью убираем, чтобы она не превращалась в полосу у нижнего меню. */
       .hud {
-        display: none;
+        display: none !important;
       }
 
-      /* Делаем нижнюю навигацию заметнее и чуть поднимаем внутри игрового поля. */
+      /* Убираем большую подложку нижнего меню: она визуально закрывала кнопки. */
       .bottom-shell {
-        --y: 646;
-        --h: 108;
-        background: linear-gradient(90deg, rgba(7, 30, 62, .99), rgba(5, 16, 36, .96));
-        border-color: rgba(var(--cyan), .36);
-        box-shadow: 0 -12px 32px rgba(0,0,0,.68), 0 0 28px rgba(var(--cyan), .20), inset 0 0 30px rgba(var(--cyan), .16);
+        display: none !important;
       }
 
+      /* Нижняя навигация остаётся внизу игрового поля, но сама становится читаемее. */
       .bottom-nav {
-        --y: 646;
-        --h: 108;
-        padding: 9px 4px 12px;
-        background: rgba(4, 18, 42, .66);
-        border-color: rgba(var(--cyan), .20);
+        --y: 672;
+        --h: 84;
+        padding: 8px 4px 10px;
+        background: linear-gradient(180deg, rgba(4, 22, 48, .84), rgba(3, 10, 28, .92));
+        border: 1px solid rgba(var(--cyan), .28);
+        box-shadow: 0 0 14px rgba(0,0,0,.58), inset 0 0 18px rgba(var(--cyan), .12);
       }
 
       .bottom-nav.home {
-        background: linear-gradient(135deg, rgba(0, 153, 218, .82), rgba(9, 54, 96, .92));
+        background: linear-gradient(135deg, rgba(0, 153, 218, .88), rgba(9, 54, 96, .95));
+        border-color: rgba(var(--cyan), .55);
       }
 
       .nav-icon {
-        font-size: clamp(20px, 4.6vw, 32px);
-        filter: drop-shadow(0 0 8px rgba(var(--cyan), .75));
+        font-size: clamp(18px, 4.8vw, 31px);
+        filter: drop-shadow(0 0 8px rgba(var(--cyan), .82));
       }
 
       .nav-label {
-        font-size: clamp(10px, 2.7vw, 15px);
+        font-size: clamp(9px, 2.8vw, 14px);
         color: #ffffff;
-        text-shadow: 0 0 10px rgba(var(--cyan), .65), 0 1px 2px rgba(0,0,0,.8);
+        text-shadow: 0 0 10px rgba(var(--cyan), .65), 0 1px 2px rgba(0,0,0,.9);
       }
 
       .profile-card { --y: 12; }
       .event-card { --y: 112; }
     }
 
-    /* Узкий телефон в портрете: игра остаётся ландшафтной и не ломает пропорции.
-       Если нужно крупнее — лучше попросить игрока повернуть телефон. */
+    /* Портрет: оставляем верхний safe-gap, но не добавляем нижнюю чёрную полосу. */
     @media (max-width: 600px) and (orientation: portrait) {
       :root {
-        --mobile-top-gap: 74px;
-        --mobile-bottom-gap: 96px;
-        --mobile-side-gap: 8px;
+        --mobile-top-gap: 68px;
+        --mobile-bottom-gap: 0px;
+        --mobile-side-gap: 0px;
       }
 
       .stage {
         top: calc(env(safe-area-inset-top, 0px) + var(--mobile-top-gap));
+        bottom: 0;
+        height: calc(100dvh - env(safe-area-inset-top, 0px) - var(--mobile-top-gap));
       }
     }
 
-    /* Landscape в мобильном webview: оставляем место под Close / ⋮, но не съедаем слишком много высоты. */
-    @media (max-height: 520px) and (orientation: landscape) {
+    /* Landscape: самый частый режим для игры. Делаем максимум полезной высоты. */
+    @media (max-height: 540px) and (orientation: landscape) {
       :root {
-        --mobile-top-gap: 46px;
-        --mobile-bottom-gap: 34px;
-        --mobile-side-gap: 6px;
+        --mobile-top-gap: 44px;
+        --mobile-bottom-gap: 0px;
+        --mobile-side-gap: 0px;
       }
 
-      .bottom-shell,
+      .stage {
+        top: calc(env(safe-area-inset-top, 0px) + var(--mobile-top-gap));
+        bottom: 0;
+        height: calc(100dvh - env(safe-area-inset-top, 0px) - var(--mobile-top-gap));
+      }
+
       .bottom-nav {
-        --y: 642;
-        --h: 112;
-      }
-
-      .profile-card {
-        --y: 10;
-      }
-
-      .event-card {
-        --y: 108;
+        --y: 668;
+        --h: 88;
       }
     }
 
-    /* Если шапка webview особенно высокая, добавь класс body.mobile-safe-plus или просто увеличь значения ниже. */
+    /* Если шапка webview особенно высокая — увеличь только эту переменную. */
     body.mobile-safe-plus {
-      --mobile-top-gap: 86px;
-      --mobile-bottom-gap: 96px;
+      --mobile-top-gap: 78px;
+      --mobile-bottom-gap: 0px;
     }
   </style>
 </head>
@@ -824,7 +815,7 @@
 <body>
   <main class="stage" id="stage" aria-label="Главная база">
     <!-- main_menu.html лежит внутри webapp, поэтому пути относительные: ./cyber_base_sprite_assets/... -->
-    <img class="bg" src="./cyber_base_sprite_assets/bg_clean_final.png" alt="Очищенный фон базы" draggable="false" />
+    <img class="bg" src="./cyber_base_sprite_assets/bg_clean_final.jpg" onerror="this.onerror=null; this.src='./cyber_base_sprite_assets/bg_clean_final.png';" alt="Очищенный фон базы" draggable="false" />
     <div class="ambient"></div>
 
     <audio id="menuMusic" src="./assets/audio/music/neon_soul.mp3" loop preload="auto"></audio>
@@ -909,7 +900,7 @@
 
     <div class="hud" id="hud">
       <strong>Главная база.</strong>
-      <span> Мобильная версия: добавлены safe-отступы сверху/снизу, нижние кнопки усилены, музыка включается после первого тапа при блокировке autoplay.</span>
+      <span> Мобильная версия v6: верхняя safe-полоса сохранена, низ растянут до края экрана, нижние кнопки усилены, большой фон-подложка меню убран.</span>
     </div>
   </main>
 
@@ -1022,5 +1013,5 @@
       });
     });
   </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a1566ba40cd5485b',t:'MTc4MzA4NzI2OA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a15676aadb57485b',t:'MTc4MzA4NzcyMA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
