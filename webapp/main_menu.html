@@ -1,415 +1,201 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Главная база — Призыв redrawn</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Интерактивная База</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #050505;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+        }
 
-  <style>
-    :root {
-      /* Новый чистый фон: bg_clean_final.jpg = 1536×1024 */
-      --bg-w: 1536;
-      --bg-h: 1024;
-      --pink: 255, 43, 222;
-      --cyan: 0, 229, 255;
-      --white: 236, 251, 255;
-    }
+        #game-screen {
+            position: relative;
+            /* Размеры скриншота 1280x853, сохраняем пропорции */
+            width: 100%;
+            max-width: 1280px;
+            aspect-ratio: 1280 / 853;
+            /* ВНИМАНИЕ: Замените путь ниже на вашу картинку, когда загрузите на GitHub */
+            background-image: url('IMG_4870.jpeg');
+            background-size: cover;
+            background-position: center;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.2);
+        }
 
-    * { box-sizing: border-box; }
+        /* SVG слой для интерактивных зон */
+        #interaction-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+        }
 
-    html,
-    body {
-      margin: 0;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      background: #020611;
-      color: rgb(var(--white));
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
-      overscroll-behavior: none;
-    }
+        /* Базовые стили для кликабельных зон */
+        .zone {
+            fill: rgba(0, 255, 255, 0.0);
+            stroke: rgba(0, 255, 255, 0.0);
+            stroke-width: 3;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            /* Отключаем выделение при тапах на мобильных */
+            -webkit-tap-highlight-color: transparent; 
+        }
 
-    button { font: inherit; }
+        /* Эффект при наведении (hover) / тапе */
+        .zone:hover, .zone:active {
+            fill: rgba(0, 255, 255, 0.2);
+            stroke: rgba(0, 255, 255, 0.8);
+            filter: drop-shadow(0 0 10px rgba(0, 255, 255, 0.8));
+        }
 
-    .stage {
-      position: fixed;
-      inset: 0;
-      width: 100vw;
-      height: 100vh;
-      height: 100dvh;
-      overflow: hidden;
-      background: #050712;
-      isolation: isolate;
-      user-select: none;
-      touch-action: manipulation;
-    }
+        /* Всплывающая подсказка (Tooltip) */
+        #tooltip {
+            position: absolute;
+            background: rgba(10, 10, 20, 0.9);
+            color: #0ff;
+            border: 1px solid #0ff;
+            padding: 8px 15px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: bold;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+            z-index: 20;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.4);
+            white-space: nowrap;
+        }
 
-    .bg {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: fill;
-      pointer-events: none;
-      z-index: 0;
-      filter: saturate(1.04) contrast(1.02);
-    }
-
-    .ambient {
-      position: absolute;
-      inset: 0;
-      z-index: 1;
-      pointer-events: none;
-      background:
-        radial-gradient(ellipse at 56% 50%, rgba(var(--pink), .13), transparent 24%),
-        radial-gradient(ellipse at 38% 74%, rgba(var(--cyan), .11), transparent 24%),
-        linear-gradient(to bottom, rgba(0,0,0,.10), transparent 35%, rgba(0,0,0,.20));
-      mix-blend-mode: screen;
-    }
-
-    .object-layer {
-      position: absolute;
-      inset: 0;
-      z-index: 10;
-      pointer-events: none;
-    }
-
-    /*
-      ПРИЗЫВ — двигать здесь:
-      --x: вправо/влево
-      --y: вверх/вниз
-      --w: размер
-
-      Пример:
-      --x: 690;  правее
-      --y: 220;  ниже
-      --w: 360;  крупнее
-    */
-    .capsule-btn {
-      --x: 650;
-      --y: 208;
-      --w: 355;
-      --rgb: var(--pink);
-
-      position: absolute;
-      left: calc(var(--x) / var(--bg-w) * 100%);
-      top: calc(var(--y) / var(--bg-h) * 100%);
-      width: calc(var(--w) / var(--bg-w) * 100%);
-      aspect-ratio: 470 / 586;
-      padding: 0;
-      border: 0;
-      background: transparent;
-      cursor: pointer;
-      pointer-events: auto;
-      outline: none;
-      transform-origin: 50% 66%;
-      transition: transform .22s cubic-bezier(.2,.9,.18,1.25), filter .22s ease;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    .capsule-sprite {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      pointer-events: none;
-      transform: translateZ(0);
-      transition: opacity .18s ease, filter .22s ease, transform .22s ease;
-    }
-
-    .capsule-static {
-      opacity: 1;
-      z-index: 1;
-      filter:
-        drop-shadow(0 18px 24px rgba(0,0,0,.60))
-        drop-shadow(0 0 2px rgba(var(--pink), .45));
-    }
-
-    .capsule-active {
-      opacity: 0;
-      z-index: 2;
-      filter:
-        brightness(1.08)
-        saturate(1.18)
-        drop-shadow(0 18px 24px rgba(0,0,0,.60))
-        drop-shadow(0 0 5px rgba(var(--pink), .95))
-        drop-shadow(0 0 18px rgba(var(--pink), .72))
-        drop-shadow(0 0 42px rgba(var(--pink), .34));
-    }
-
-    .capsule-btn::before {
-      content: "";
-      position: absolute;
-      inset: -10%;
-      z-index: -1;
-      border-radius: 30px;
-      background: radial-gradient(ellipse at 50% 55%, rgba(var(--pink), .46), transparent 62%);
-      filter: blur(18px);
-      opacity: 0;
-      mix-blend-mode: screen;
-      pointer-events: none;
-      transition: opacity .18s ease, transform .18s ease;
-    }
-
-    .capsule-btn::after {
-      content: "";
-      position: absolute;
-      /* Полоса теперь ограничена областью самой капсулы, а не всей кнопкой. */
-      left: 16%;
-      top: 3%;
-      width: 68%;
-      height: 86%;
-      z-index: 3;
-      border-radius: 42% / 12%;
-      clip-path: polygon(10% 0, 90% 0, 100% 100%, 0 100%);
-      background: linear-gradient(115deg, transparent 16%, rgba(255,255,255,0) 38%, rgba(255,255,255,.54) 49%, rgba(var(--pink), .26) 55%, transparent 70%);
-      opacity: 0;
-      transform: translateX(-62%) skewX(-10deg);
-      filter: blur(.35px);
-      mix-blend-mode: screen;
-      pointer-events: none;
-      overflow: hidden;
-    }
-
-    .capsule-btn:hover,
-    .capsule-btn:focus-visible,
-    .capsule-btn.is-active {
-      transform: translateY(-1.3%) scale(1.035);
-      filter:
-        drop-shadow(0 0 8px rgba(var(--pink), .95))
-        drop-shadow(0 0 24px rgba(var(--pink), .58));
-    }
-
-    .capsule-btn:hover .capsule-static,
-    .capsule-btn:focus-visible .capsule-static,
-    .capsule-btn.is-hover .capsule-static,
-    .capsule-btn.is-active .capsule-static {
-      opacity: 0;
-    }
-
-    .capsule-btn:hover .capsule-active,
-    .capsule-btn:focus-visible .capsule-active,
-    .capsule-btn.is-hover .capsule-active,
-    .capsule-btn.is-active .capsule-active {
-      opacity: 1;
-      animation: capsuleFloat 1.12s ease-in-out infinite alternate;
-    }
-
-    .capsule-btn:hover::before,
-    .capsule-btn:focus-visible::before,
-    .capsule-btn.is-hover::before,
-    .capsule-btn.is-active::before {
-      opacity: 1;
-      transform: scale(1.06);
-      animation: auraPulse 1.05s ease-in-out infinite alternate;
-    }
-
-    .capsule-btn:hover::after,
-    .capsule-btn:focus-visible::after,
-    .capsule-btn.is-hover::after,
-    .capsule-btn.is-active::after {
-      animation: scan .95s ease-out infinite;
-    }
-
-    .capsule-label {
-      position: absolute;
-      left: 50%;
-      top: -54px;
-      z-index: 5;
-      transform: translateX(-50%);
-      min-width: max-content;
-      padding: 8px 14px 9px;
-      border: 1px solid rgba(var(--pink), .68);
-      border-radius: 999px;
-      background: linear-gradient(135deg, rgba(7, 9, 30, .86), rgba(34, 5, 48, .76));
-      box-shadow: 0 0 18px rgba(var(--pink), .28), inset 0 0 15px rgba(var(--pink), .10);
-      backdrop-filter: blur(10px);
-      color: #fff;
-      pointer-events: none;
-      text-align: center;
-      opacity: .98;
-      transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
-    }
-
-    .capsule-title {
-      display: block;
-      color: #fff;
-      font-size: clamp(13px, 1.15vw, 18px);
-      font-weight: 1000;
-      line-height: 1;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      text-shadow: 0 0 12px rgba(var(--pink), .95);
-    }
-
-    .capsule-subtitle {
-      display: block;
-      margin-top: 4px;
-      color: rgba(var(--white), .78);
-      font-size: clamp(9px, .78vw, 12px);
-      font-weight: 760;
-      line-height: 1;
-      letter-spacing: .01em;
-      text-shadow: 0 0 8px rgba(0,0,0,.70);
-    }
-
-    .capsule-arrow {
-      display: inline-block;
-      margin-left: 8px;
-      color: #fff;
-      text-shadow: 0 0 10px rgba(var(--pink), .95);
-    }
-
-    .capsule-btn:hover .capsule-label,
-    .capsule-btn:focus-visible .capsule-label,
-    .capsule-btn.is-hover .capsule-label,
-    .capsule-btn.is-active .capsule-label {
-      transform: translateX(-50%) translateY(-3px);
-      border-color: rgba(var(--pink), .98);
-      box-shadow: 0 0 20px rgba(var(--pink), .44), inset 0 0 18px rgba(var(--pink), .15);
-    }
-
-    .ripple {
-      position: absolute;
-      z-index: 30;
-      width: 24px;
-      height: 24px;
-      margin: -12px 0 0 -12px;
-      border: 2px solid rgba(var(--ripple-rgb), .96);
-      border-radius: 999px;
-      pointer-events: none;
-      filter: drop-shadow(0 0 12px rgba(var(--ripple-rgb), .95));
-      animation: ripple .78s ease-out forwards;
-    }
-
-    @keyframes capsuleFloat {
-      from { transform: translateY(0) rotate(0deg); }
-      to { transform: translateY(-5px) rotate(.2deg); }
-    }
-
-    @keyframes auraPulse {
-      from { opacity: .60; }
-      to { opacity: 1; }
-    }
-
-    @keyframes scan {
-      from { transform: translateX(-58%) skewX(-10deg); opacity: 0; }
-      22% { opacity: .82; }
-      to { transform: translateX(58%) skewX(-10deg); opacity: 0; }
-    }
-
-    @keyframes ripple {
-      from { transform: scale(.55); opacity: 1; }
-      to { transform: scale(7); opacity: 0; }
-    }
-
-    @media (max-width: 860px), (max-height: 560px) {
-      .stage {
-        inset: 0;
-        width: 100vw;
-        height: 100dvh;
-      }
-
-      .capsule-label {
-        left: 50%;
-        top: -44px;
-        padding: 6px 10px 7px;
-      }
-    }
-  </style>
+        /* Стили для UI уведомлений */
+        #notification {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 0, 100, 0.9);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 30;
+            pointer-events: none;
+            text-align: center;
+            font-size: clamp(14px, 3vw, 18px); /* Адаптивный шрифт */
+        }
+    </style>
 </head>
-
 <body>
-  <main class="stage" id="stage" aria-label="Главная база">
-    <img
-      class="bg"
-      id="baseBg"
-      src="./cyber_base_sprite_assets/bg_clean_final.jpg"
-      data-candidates="./cyber_base_sprite_assets/bg_clean_final.jpg|./cyber_base_sprite_assets/bg_clean_final.jpeg|./cyber_base_sprite_assets/bg_clean_final.png"
-      alt="Чистый фон базы"
-      draggable="false"
-    />
 
-    <div class="ambient"></div>
+    <div id="game-screen">
+        <div id="notification">Открытие...</div>
+        
+        <!-- SVG Canvas: viewBox совпадает с реальным разрешением картинки (1280x853) -->
+        <svg id="interaction-layer" viewBox="0 0 1280 853" preserveAspectRatio="none">
+            
+            <!-- 1. Dungeons (Голографический стол) -->
+            <polygon class="zone" data-name="Вход в Dungeons (Подземелья)" 
+                     points="190,470 510,480 620,680 470,780 180,810 50,680" />
+                     
+            <!-- 2. Summon (Капсула с девушкой по центру) -->
+            <polygon class="zone" data-name="Summon (Призыв агентов)" 
+                     points="550,220 730,220 770,550 770,680 520,680 520,550" />
 
-    <section class="object-layer" aria-label="Объекты базы">
-      <button
-        class="capsule-btn"
-        id="capsuleBtn"
-        type="button"
-        aria-label="Призыв"
-        data-name="Призыв"
-        data-action="Клонировать · Призвать · Пробудить"
-      >
-        <!-- Перерисованные clean-спрайты без шашечек. Шахматка в preview означает прозрачность, не фон. -->
-        <img class="capsule-sprite capsule-static" src="./cyber_base_sprite_assets/capsule_static_redrawn_clean_v2.png" alt="Призыв" draggable="false" />
-        <img class="capsule-sprite capsule-active" src="./cyber_base_sprite_assets/capsule_active_redrawn_clean_v2.png" onerror="this.onerror=null; this.src='./cyber_base_sprite_assets/capsule_active_glassfill.png';" alt="Призыв активен" draggable="false" />
+            <!-- 3. Afterlife Bar (Бар справа сверху) -->
+            <polygon class="zone" data-name="Afterlife Bar (Зона отдыха)" 
+                     points="850,150 1260,150 1260,440 850,440" />
 
-        <span class="capsule-label">
-          <span class="capsule-title">Призыв <span class="capsule-arrow">›</span></span>
-          <span class="capsule-subtitle">Клонировать · Призвать · Пробудить</span>
-        </span>
-      </button>
-    </section>
-  </main>
+            <!-- 4. Cyberware (Верстак с механической рукой) -->
+            <polygon class="zone" data-name="Cyberware (Улучшения)" 
+                     points="850,480 1150,480 1260,780 850,780" />
 
-  <script>
-    const stage = document.getElementById('stage');
-    const baseBg = document.getElementById('baseBg');
-    const capsuleBtn = document.getElementById('capsuleBtn');
+            <!-- 5. Main Story (Кнопка в правом нижнем углу) -->
+            <polygon class="zone" data-name="Main Story (Сюжетная кампания)" 
+                     points="940,760 1280,760 1280,853 900,853" />
 
-    const bgCandidates = (baseBg.dataset.candidates || '').split('|').filter(Boolean);
-    let bgIndex = 0;
+            <!-- 6. Профиль Игрока (Левый верхний угол) -->
+            <rect class="zone" data-name="Профиль Игрока (Nightshade)" 
+                  x="10" y="10" width="280" height="110" />
 
-    baseBg.addEventListener('error', () => {
-      bgIndex += 1;
-      if (bgCandidates[bgIndex]) baseBg.src = bgCandidates[bgIndex];
-    });
+            <!-- 7. Ивент (Neon Uprising) -->
+            <rect class="zone" data-name="Событие: Neon Uprising" 
+                  x="10" y="140" width="230" height="100" />
 
-    function activateCapsule(clientX, clientY) {
-      capsuleBtn.classList.add('is-active');
+            <!-- 8. Боковое меню (Missions, Store и т.д.) -->
+            <rect class="zone" data-name="Боковое меню навигации" 
+                  x="10" y="270" width="180" height="380" />
 
-      if (Number.isFinite(clientX) && Number.isFinite(clientY)) {
-        const rect = stage.getBoundingClientRect();
-        const ripple = document.createElement('i');
-        ripple.className = 'ripple';
-        ripple.style.left = `${clientX - rect.left}px`;
-        ripple.style.top = `${clientY - rect.top}px`;
-        ripple.style.setProperty('--ripple-rgb', '255, 43, 222');
-        stage.appendChild(ripple);
-        ripple.addEventListener('animationend', () => ripple.remove());
-      }
+            <!-- 9. Нижняя панель (Home, Agents, Squad...) -->
+            <rect class="zone" data-name="Управление отрядом и технологиями" 
+                  x="10" y="780" width="800" height="70" />
 
-      clearTimeout(capsuleBtn._timer);
-      capsuleBtn._timer = setTimeout(() => {
-        capsuleBtn.classList.remove('is-active');
-      }, 1400);
-    }
+            <!-- 10. Ресурсы (Верхняя панель) -->
+            <rect class="zone" data-name="Ресурсы и Валюта" 
+                  x="400" y="10" width="500" height="60" />
 
-    capsuleBtn.addEventListener('pointerenter', () => {
-      capsuleBtn.classList.add('is-hover');
-    });
+        </svg>
 
-    capsuleBtn.addEventListener('pointerleave', () => {
-      capsuleBtn.classList.remove('is-hover');
-    });
+        <div id="tooltip"></div>
+    </div>
 
-    capsuleBtn.addEventListener('pointerdown', event => {
-      event.stopPropagation();
-      activateCapsule(event.clientX, event.clientY);
-    });
+    <script>
+        const zones = document.querySelectorAll('.zone');
+        const tooltip = document.getElementById('tooltip');
+        const gameScreen = document.getElementById('game-screen');
+        const notification = document.getElementById('notification');
+        let notifyTimeout;
 
-    capsuleBtn.addEventListener('keydown', event => {
-      if (event.key === 'Enter' || event.key === ' ') {
-        event.preventDefault();
-        activateCapsule(NaN, NaN);
-      }
-    });
+        // Определяем, мобильное ли устройство (поддержка touch)
+        const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
 
-    stage.addEventListener('pointerdown', () => {
-      capsuleBtn.classList.remove('is-active');
-    });
-  </script>
+        zones.forEach(zone => {
+            
+            // На ПК показываем тултип при наведении
+            if (!isTouchDevice) {
+                zone.addEventListener('mousemove', (e) => {
+                    const rect = gameScreen.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+
+                    tooltip.style.left = (x + 15) + 'px';
+                    tooltip.style.top = (y + 15) + 'px';
+                    tooltip.style.opacity = '1';
+                    tooltip.textContent = zone.getAttribute('data-name');
+                });
+
+                zone.addEventListener('mouseleave', () => {
+                    tooltip.style.opacity = '0';
+                });
+            }
+
+            // Обработка клика / тапа
+            zone.addEventListener('click', (e) => {
+                const name = zone.getAttribute('data-name');
+                
+                // Показываем UI уведомление
+                notification.textContent = `Загрузка модуля: ${name}...`;
+                notification.style.opacity = '1';
+                
+                clearTimeout(notifyTimeout);
+                notifyTimeout = setTimeout(() => {
+                    notification.style.opacity = '0';
+                }, 2000);
+            });
+        });
+    </script>
 </body>
 </html>
