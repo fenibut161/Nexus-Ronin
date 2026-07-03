@@ -501,6 +501,47 @@
       flex: 0 0 auto;
     }
 
+
+    /* v10: валюта без овалов, иконок и плюсов — оставляем только цифры. */
+    .resource {
+      background: transparent !important;
+      border-color: transparent !important;
+      box-shadow: none !important;
+      backdrop-filter: none !important;
+      justify-content: center;
+      padding: 0;
+      overflow: visible;
+      color: #ffffff;
+      text-shadow: 0 0 9px rgba(var(--rgb), .72), 0 1px 2px rgba(0,0,0,.75);
+      font-size: clamp(12px, 1.22vw, 17px);
+    }
+
+    .resource:hover,
+    .resource:focus-visible,
+    .resource.is-active {
+      background: transparent !important;
+      border-color: transparent !important;
+      box-shadow: none !important;
+      filter: none !important;
+      transform: none !important;
+    }
+
+    .resource::before,
+    .resource::after {
+      display: none !important;
+    }
+
+    .resource .res-icon,
+    .resource .plus {
+      display: none !important;
+    }
+
+    .resource .res-left {
+      justify-content: center;
+      gap: 0;
+      overflow: visible;
+    }
+
     .top-icon {
       border-radius: 11px;
       display: grid;
@@ -526,42 +567,62 @@
     }
 
     .event-card {
-      border-radius: 9px;
-      padding: 10px 12px;
+      border-radius: 8px;
+      padding: 9px 12px;
       text-align: left;
-      white-space: nowrap;
-      clip-path: polygon(0 0, 96% 0, 100% 18%, 100% 100%, 0 100%);
+      white-space: normal;
+      clip-path: polygon(0 0, 94% 0, 100% 20%, 100% 100%, 0 100%);
+      background: linear-gradient(135deg, rgba(20, 5, 42, .62), rgba(4, 14, 32, .54)) !important;
+      border-color: rgba(var(--pink), .48) !important;
+      box-shadow: 0 0 18px rgba(var(--pink), .16), inset 0 0 18px rgba(var(--pink), .06) !important;
+    }
+
+    .event-card::after {
+      display: none !important;
+    }
+
+    .event-kicker,
+    .event-title,
+    .event-time {
+      display: block;
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .event-kicker {
       color: #ff8cff;
       text-transform: uppercase;
       font-weight: 900;
-      font-size: clamp(10px, 1vw, 14px);
+      font-size: clamp(8px, .76vw, 11px);
       letter-spacing: .08em;
       text-shadow: 0 0 10px rgba(var(--pink), .72);
+      line-height: 1;
     }
 
     .event-title {
-      margin-top: 4px;
-      font-size: clamp(12px, 1.18vw, 17px);
+      margin-top: 5px;
+      color: #ffffff;
+      font-size: clamp(11px, 1.04vw, 15px);
       font-weight: 900;
-      line-height: 1.05;
+      line-height: 1.1;
+      white-space: nowrap;
     }
 
     .event-time {
-      margin-top: 8px;
+      margin-top: 6px;
       color: rgba(236,251,255,.82);
-      font-size: clamp(10px, 1vw, 13px);
-      font-weight: 700;
+      font-size: clamp(7px, .68vw, 10px);
+      font-weight: 750;
+      white-space: nowrap;
     }
 
     .side-btn {
       border-radius: 9px;
       display: flex;
       align-items: center;
-      gap: 12px;
-      padding: 0 12px;
+      gap: 9px;
+      padding: 0 11px;
       background: rgba(2, 8, 20, .28);
       border-color: transparent;
       text-align: left;
@@ -573,7 +634,7 @@
       display: grid;
       place-items: center;
       color: #dffbff;
-      font-size: clamp(17px, 1.6vw, 24px);
+      font-size: clamp(15px, 1.35vw, 21px);
       text-shadow: 0 0 12px rgba(var(--cyan), .8);
       flex: 0 0 auto;
     }
@@ -582,7 +643,7 @@
       font-weight: 900;
       text-transform: uppercase;
       letter-spacing: .025em;
-      font-size: clamp(11px, 1.15vw, 16px);
+      font-size: clamp(9px, .95vw, 13px);
       color: #effcff;
       text-shadow: 0 0 9px rgba(var(--cyan), .25);
     }
@@ -590,7 +651,7 @@
     .new-badge {
       margin-left: 8px;
       color: #ff6ef2;
-      font-size: clamp(8px, .78vw, 11px);
+      font-size: clamp(7px, .68vw, 10px);
       font-weight: 900;
       text-shadow: 0 0 10px rgba(var(--pink), .85);
     }
@@ -782,17 +843,58 @@
       .resource[data-name="Credits"] { --x: 590 !important; --y: 10 !important; --w: 190 !important; --h: 38 !important; }
       .resource[data-name="Crystals"]{ --x: 795 !important; --y: 10 !important; --w: 150 !important; --h: 38 !important; }
 
-      .top-icon { display: none !important; }
+  
+    /* v10: валюта без овалов, иконок и плюсов — оставляем только цифры. */
+    .resource {
+      background: transparent !important;
+      border-color: transparent !important;
+      box-shadow: none !important;
+      backdrop-filter: none !important;
+      justify-content: center;
+      padding: 0;
+      overflow: visible;
+      color: #ffffff;
+      text-shadow: 0 0 9px rgba(var(--rgb), .72), 0 1px 2px rgba(0,0,0,.75);
+      font-size: clamp(12px, 1.22vw, 17px);
+    }
+
+    .resource:hover,
+    .resource:focus-visible,
+    .resource.is-active {
+      background: transparent !important;
+      border-color: transparent !important;
+      box-shadow: none !important;
+      filter: none !important;
+      transform: none !important;
+    }
+
+    .resource::before,
+    .resource::after {
+      display: none !important;
+    }
+
+    .resource .res-icon,
+    .resource .plus {
+      display: none !important;
+    }
+
+    .resource .res-left {
+      justify-content: center;
+      gap: 0;
+      overflow: visible;
+    }
+
+    .top-icon { display: none !important; }
 
       .profile-card { --x: 18 !important; --y: 54 !important; --w: 300 !important; --h: 76 !important; }
-      .event-card { --x: 18 !important; --y: 138 !important; --w: 330 !important; --h: 76 !important; }
+      .event-card { --x: 18 !important; --y: 138 !important; --w: 300 !important; --h: 82 !important; }
 
-      .event-title { font-size: clamp(10px, 2.2vw, 15px); }
-      .event-kicker, .event-time { font-size: clamp(8px, 1.8vw, 11px); }
+      .event-title { font-size: clamp(9px, 2vw, 14px); }
+      .event-kicker, .event-time { font-size: clamp(7px, 1.55vw, 10px); }
 
       .side-btn { --w: 260 !important; }
-      .side-label { font-size: clamp(9px, 2.1vw, 14px); }
-      .new-badge { font-size: clamp(8px, 1.8vw, 10px); margin-left: 6px; }
+      .side-label { font-size: clamp(8px, 1.85vw, 12px); }
+      .new-badge { font-size: clamp(7px, 1.45vw, 9px); margin-left: 5px; }
 
       .bottom-shell {
         --y: 670 !important;
@@ -811,7 +913,7 @@
       .nav-icon { font-size: clamp(17px, 4vw, 28px); }
       .nav-label { font-size: clamp(8px, 2vw, 13px); color: #fff; }
 
-      .sprite-btn.main-story { --x: 976 !important; --y: 636 !important; --w: 390 !important; }
+      .sprite-btn.main-story { --x: 1010 !important; --y: 640 !important; --w: 390 !important; }
     }
 
     body.mobile-safe-plus {
@@ -857,7 +959,7 @@
       <span class="sprite-label">Cyberware</span>
     </button>
 
-    <button class="sprite-btn main-story" style="--x: 976; --y: 636; --w: 390; --rgb: 255, 43, 222; --z: 7;" data-name="Main Story" data-action="Chapter 12-5" aria-label="Main Story" type="button">
+    <button class="sprite-btn main-story" style="--x: 1010; --y: 640; --w: 390; --rgb: 255, 43, 222; --z: 7;" data-name="Main Story" data-action="Chapter 12-5" aria-label="Main Story" type="button">
       <img class="sprite-art" src="./cyber_base_sprite_assets/main_story.png" alt="Main Story" draggable="false" />
       <span class="sprite-label">Main Story</span>
     </button>
@@ -892,7 +994,7 @@
       <button class="ui-hot top-icon" style="--x: 1320; --y: 16; --w: 44; --h: 44; --rgb: 0, 229, 255;" data-name="Network" data-action="Connection status" aria-label="Network" type="button">⌁</button>
 
       <!-- Event card -->
-      <button class="ui-hot event-card" style="--x: 18; --y: 112; --w: 285; --h: 86; --rgb: 255, 43, 222;" data-name="Event: Neon Uprising" data-action="8D 12H Left" aria-label="Event Neon Uprising" type="button">
+      <button class="ui-hot event-card" style="--x: 18; --y: 112; --w: 275; --h: 88; --rgb: 255, 43, 222;" data-name="Event: Neon Uprising" data-action="8D 12H Left" aria-label="Event Neon Uprising" type="button">
         <span class="event-kicker">Event</span>
         <span class="event-title">Neon Uprising</span>
         <span class="event-time">◷ 8D 12H Left</span>
@@ -916,7 +1018,7 @@
 
     <div class="hud" id="hud">
       <strong>Главная база.</strong>
-      <span> v9: профиль упрощён, mobile снова full-screen, валюты подняты в верхний центр, нижние кнопки контрастнее.</span>
+      <span> v10: валюта без овалов/плюсов, event и левое меню ужаты, Main Story прижата к нижнему правому углу, тап по фону снимает active.</span>
     </div>
   </main>
 
@@ -1017,6 +1119,18 @@
       }, 1100);
     }
 
+
+
+    function clearActiveSelection() {
+      hotElements.forEach(item => item.classList.remove('is-active'));
+    }
+
+    // Mobile/desktop: тап по фону снимает выделение с активной кнопки.
+    stage.addEventListener('pointerdown', event => {
+      if (!event.target.closest('.sprite-btn, .ui-hot')) {
+        clearActiveSelection();
+      }
+    });
     hotElements.forEach(el => {
       el.addEventListener('pointerenter', event => {
         updateMouseVars(el, event);
