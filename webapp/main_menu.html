@@ -42,12 +42,14 @@
     }
 
     .stage {
-      position: relative;
-      width: min(100vw, 1376px);
-      aspect-ratio: 1376 / 768;
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      height: 100dvh;
       overflow: hidden;
       background: #050712;
-      box-shadow: 0 28px 90px rgba(0,0,0,.74), 0 0 70px rgba(var(--pink), .18);
+      box-shadow: none;
       isolation: isolate;
       user-select: none;
       touch-action: manipulation;
@@ -58,7 +60,7 @@
       inset: 0;
       width: 100%;
       height: 100%;
-      object-fit: cover;
+      object-fit: fill;
       pointer-events: none;
       filter: saturate(1.04) contrast(1.02);
       z-index: 0;
@@ -402,7 +404,7 @@
       align-items: center;
       justify-content: space-between;
       gap: 8px;
-      padding: 0 8px 0 13px;
+      padding: 0 7px 0 12px;
       font-weight: 900;
       letter-spacing: .02em;
       font-size: clamp(11px, 1.2vw, 16px);
@@ -412,8 +414,10 @@
     .res-left {
       display: flex;
       align-items: center;
-      gap: 7px;
+      gap: 6px;
       min-width: 0;
+      flex: 1 1 auto;
+      overflow: hidden;
     }
 
     .res-icon {
@@ -428,8 +432,8 @@
     }
 
     .plus {
-      width: 27px;
-      height: 27px;
+      width: 24px;
+      height: 24px;
       display: grid;
       place-items: center;
       border: 1px solid rgba(255,255,255,.35);
@@ -691,7 +695,7 @@
         place-items: start center;
       }
 
-      .stage { width: 100vw; }
+      .stage { width: 100vw; height: 100dvh; }
 
       .hud {
         left: 10px;
@@ -714,6 +718,8 @@
     <!-- main_menu.html лежит внутри webapp, поэтому пути относительные: ./cyber_base_sprite_assets/... -->
     <img class="bg" src="./cyber_base_sprite_assets/bg_clean_final.png" alt="Очищенный фон базы" draggable="false" />
     <div class="ambient"></div>
+
+    <audio id="menuMusic" src="./assets/audio/music/neon_soul.mp3" loop preload="auto"></audio>
 
     <!-- Main interactive base objects -->
     <button class="sprite-btn dungeons" style="--x: 150; --y: 390; --w: 440; --rgb: 0, 229, 255; --z: 4;" data-name="Dungeons" data-action="Explore. Fight. Ascend." aria-label="Dungeons" type="button">
@@ -752,15 +758,15 @@
       </button>
 
       <!-- Resources -->
-      <button class="ui-hot resource" style="--x: 470; --y: 18; --w: 146; --h: 38; --rgb: 0, 229, 255;" data-name="Energy" data-action="120 / 120" aria-label="Energy" type="button">
+      <button class="ui-hot resource" style="--x: 470; --y: 18; --w: 170; --h: 38; --rgb: 0, 229, 255;" data-name="Energy" data-action="120 / 120" aria-label="Energy" type="button">
         <span class="res-left"><span class="res-icon">⚡</span><span>120 / 120</span></span><span class="plus">＋</span>
       </button>
 
-      <button class="ui-hot resource" style="--x: 640; --y: 18; --w: 190; --h: 38; --rgb: 255, 213, 95;" data-name="Credits" data-action="2,450,790" aria-label="Credits" type="button">
+      <button class="ui-hot resource" style="--x: 655; --y: 18; --w: 190; --h: 38; --rgb: 255, 213, 95;" data-name="Credits" data-action="2,450,790" aria-label="Credits" type="button">
         <span class="res-left"><span class="res-icon">⬡</span><span>2,450,790</span></span><span class="plus">＋</span>
       </button>
 
-      <button class="ui-hot resource" style="--x: 850; --y: 18; --w: 150; --h: 38; --rgb: 156, 81, 255;" data-name="Crystals" data-action="8,960" aria-label="Crystals" type="button">
+      <button class="ui-hot resource" style="--x: 865; --y: 18; --w: 150; --h: 38; --rgb: 156, 81, 255;" data-name="Crystals" data-action="8,960" aria-label="Crystals" type="button">
         <span class="res-left"><span class="res-icon">⬢</span><span>8,960</span></span><span class="plus">＋</span>
       </button>
 
@@ -782,8 +788,6 @@
       <button class="ui-hot side-btn" style="--x: 20; --y: 290; --w: 210; --h: 48; --rgb: 0, 229, 255;" data-name="Battle Pass" data-action="Season rewards" aria-label="Battle Pass" type="button"><span class="side-icon">✺</span><span class="side-label">Battle Pass</span><span class="new-badge">NEW</span></button>
       <button class="ui-hot side-btn" style="--x: 20; --y: 345; --w: 210; --h: 48; --rgb: 0, 229, 255;" data-name="Store" data-action="Open store" aria-label="Store" type="button"><span class="side-icon">🛒</span><span class="side-label">Store</span></button>
       <button class="ui-hot side-btn" style="--x: 20; --y: 400; --w: 210; --h: 48; --rgb: 0, 229, 255;" data-name="Inventory" data-action="Open inventory" aria-label="Inventory" type="button"><span class="side-icon">▤</span><span class="side-label">Inventory</span></button>
-      <button class="ui-hot side-btn" style="--x: 20; --y: 455; --w: 210; --h: 48; --rgb: 0, 229, 255;" data-name="Archives" data-action="Open archives" aria-label="Archives" type="button"><span class="side-icon">◫</span><span class="side-label">Archives</span></button>
-      <button class="ui-hot side-btn" style="--x: 20; --y: 510; --w: 210; --h: 48; --rgb: 255, 43, 222;" data-name="PVP Arena" data-action="Competitive mode" aria-label="PVP Arena" type="button"><span class="side-icon">⚔</span><span class="side-label">PVP Arena</span><span class="new-badge">NEW</span></button>
 
       <!-- Bottom nav shell + buttons -->
       <div class="bottom-shell" aria-hidden="true"></div>
@@ -795,21 +799,39 @@
       <button class="ui-hot bottom-nav" style="--x: 734; --y: 682; --w: 135; --h: 76; --rgb: 0, 229, 255;" data-name="Corp" data-action="Corporation" aria-label="Corp" type="button"><span class="nav-icon">⌂</span><span class="nav-label">Corp</span></button>
     </section>
 
-    <div class="debug">
-      <button id="toggleLabels" type="button">Labels</button>
-      <button id="toggleEditor" type="button">Editor</button>
-    </div>
-
     <div class="hud" id="hud">
       <strong>Главная база.</strong>
-      <span> Все старые кнопки вернулись: профиль, валюта, меню слева, нижняя навигация и системные иконки.</span>
+      <span> Вернул музыку, профиль, валюту, меню слева, нижнюю навигацию и системные иконки. Архивы/PVP убраны.</span>
     </div>
   </main>
 
   <script>
     const stage = document.getElementById('stage');
     const hud = document.getElementById('hud');
+    const menuMusic = document.getElementById('menuMusic');
     const hotElements = [...document.querySelectorAll('.sprite-btn, .ui-hot')];
+
+    // Музыка меню. Браузеры часто блокируют autoplay, поэтому
+    // сначала пробуем запустить сразу, а если нельзя — запускаем после первого клика/тапа/клавиши.
+    menuMusic.volume = 0.42;
+
+    async function startMenuMusic() {
+      if (!menuMusic.paused) return;
+      try {
+        await menuMusic.play();
+      } catch (error) {
+        // Autoplay blocked. Нормально: музыка стартанёт после первого взаимодействия.
+      }
+    }
+
+    startMenuMusic();
+    ['pointerdown', 'click', 'touchstart', 'keydown'].forEach(eventName => {
+      document.addEventListener(eventName, startMenuMusic, { once: true, passive: true });
+    });
+
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) startMenuMusic();
+    });
 
     function rgbOf(el) {
       const raw = (el.getAttribute('style') || '').match(/--rgb:\s*([^;]+)/);
@@ -871,14 +893,6 @@
           tapFX(el, NaN, NaN);
         }
       });
-    });
-
-    document.getElementById('toggleLabels').addEventListener('click', () => {
-      stage.classList.toggle('hide-labels');
-    });
-
-    document.getElementById('toggleEditor').addEventListener('click', () => {
-      stage.classList.toggle('editor');
     });
   </script>
 </body>
