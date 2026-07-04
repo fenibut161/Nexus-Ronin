@@ -1,1 +1,319 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Select Character</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#03050c;
+    --cyan:#74ebff;
+    --pink:#ff66df;
+    --text:#eef5ff;
+    --muted:#9ab0d0;
+    --shadow:0 20px 50px rgba(0,0,0,.42);
+  }
+  *{box-sizing:border-box}
+  html,body{
+    margin:0;width:100%;height:100%;overflow:hidden;
+    background:#000;color:var(--text);font-family:'Rajdhani',sans-serif;
+    user-select:none;-webkit-user-select:none;
+  }
+  body{display:grid;place-items:center}
+  .screen{
+    position:relative;
+    width:min(100vw,calc(100vh * 1376 / 768));
+    height:min(100vh,calc(100vw * 768 / 1376));
+    aspect-ratio:1376/768;overflow:hidden;background:#02040a;
+    box-shadow:0 24px 70px rgba(0,0,0,.56);
+  }
+  .bg,.shade,.glow,.scan{position:absolute;inset:0;pointer-events:none}
+  .bg{width:100%;height:100%;object-fit:cover}
+  .shade{background:linear-gradient(180deg, rgba(0,0,0,.14), rgba(0,0,0,.04) 30%, rgba(0,0,0,.32) 100%)}
+  .glow{background:radial-gradient(circle at 50% 20%, rgba(255,102,223,.12), transparent 20%),radial-gradient(circle at 30% 75%, rgba(116,235,255,.10), transparent 18%);mix-blend-mode:screen}
+  .scan{background:repeating-linear-gradient(to bottom, rgba(255,255,255,.018) 0, rgba(255,255,255,.018) 1px, transparent 2px, transparent 4px);opacity:.14}
 
+  .topbar{
+    position:absolute;left:50%;top:4.2%;transform:translateX(-50%);
+    width:min(940px,84%);text-align:center;z-index:4;
+  }
+  .kicker{margin:0 0 8px;color:var(--cyan);font-size:12px;font-weight:700;letter-spacing:.24em;text-transform:uppercase;text-shadow:0 0 12px rgba(116,235,255,.28)}
+  .title{margin:0;font-size:clamp(38px,4vw,64px);line-height:.92;text-transform:uppercase;text-shadow:0 0 20px rgba(255,255,255,.10)}
+  .subtitle{margin:12px auto 0;max-width:58ch;color:#dbe7ff;font-size:15px;line-height:1.45}
+
+  .hero-zone{position:absolute;inset:0;z-index:3}
+  .hero-card{position:absolute;border:0;background:transparent;padding:0;cursor:pointer;transition:transform .22s ease, filter .22s ease}
+  .hero-card:hover,.hero-card:focus-visible{transform:translateY(-6px);filter:brightness(1.04);outline:none}
+  .hero-card.selected{transform:translateY(-10px) scale(1.03)}
+  .hero-card::after{content:"";position:absolute;inset:0;border-radius:28px;opacity:0;transition:opacity .2s ease;pointer-events:none;box-shadow:0 0 36px rgba(255,102,223,.20), 0 0 20px rgba(116,235,255,.14)}
+  .hero-card.selected::after{opacity:1}
+
+  .hero-satori{left:7.8%;top:15%;width:27.2%;height:67%}
+  .hero-neon{left:36.4%;top:12.2%;width:26.2%;height:69.8%}
+  .hero-behemoth{left:63.4%;top:12.6%;width:28.7%;height:69.2%}
+
+  .plate{position:absolute;left:50%;bottom:3.2%;transform:translateX(-50%);width:82%;pointer-events:none;filter:drop-shadow(0 0 14px rgba(116,235,255,.20))}
+  .render-static,.render-selected{position:absolute;left:50%;bottom:11%;transform:translateX(-50%);max-width:100%;max-height:79%;pointer-events:none;transition:opacity .2s ease, transform .2s ease}
+  .render-selected{opacity:0}
+  .hero-card.selected .render-static{opacity:0}
+  .hero-card.selected .render-selected{opacity:1}
+  .hero-satori .render-static,.hero-satori .render-selected{height:74%}
+  .hero-neon .render-static,.hero-neon .render-selected{height:82%}
+  .hero-behemoth .render-static,.hero-behemoth .render-selected{height:80%}
+
+  .rarity{position:absolute;left:13%;top:7.5%;padding:6px 10px;border-radius:999px;background:rgba(255,102,223,.14);border:1px solid rgba(255,102,223,.34);color:#ffe1fb;font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;box-shadow:0 0 14px rgba(255,102,223,.12);pointer-events:none}
+  .hero-name{position:absolute;left:50%;bottom:15.8%;transform:translateX(-50%);font-size:clamp(24px,2.5vw,40px);font-weight:700;letter-spacing:.03em;text-transform:uppercase;text-shadow:0 0 18px rgba(255,255,255,.10);pointer-events:none}
+  .hero-role{position:absolute;left:50%;bottom:11.1%;transform:translateX(-50%);font-size:clamp(11px,1vw,15px);font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:#93e1f3;pointer-events:none}
+  .hero-card.selected .hero-name{color:#ffe8fb;text-shadow:0 0 18px rgba(255,102,223,.22)}
+
+  .detail{
+    position:absolute;right:2.4%;top:16.4%;z-index:4;width:300px;
+    padding:16px 16px 14px;border-radius:20px;
+    background:linear-gradient(180deg, rgba(8,13,24,.84), rgba(6,10,18,.86));
+    border:1px solid rgba(116,235,255,.12);box-shadow:var(--shadow)
+  }
+  .detail-eyebrow{font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--cyan);margin-bottom:6px}
+  .detail-name{font-size:28px;font-weight:700;line-height:1;margin-bottom:8px}
+  .detail-desc{color:#d5e3ff;font-size:13px;line-height:1.45;margin-bottom:12px}
+  .detail-grid{display:grid;gap:8px}
+  .detail-item{padding:8px 10px;border-radius:14px;background:rgba(255,255,255,.03);border:1px solid rgba(116,235,255,.08)}
+  .detail-item span{display:block;margin-bottom:4px;font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#8fa9cd}
+  .detail-item b{display:block;font-size:13px;font-weight:700;line-height:1.35;color:#f3f8ff}
+
+  .footer{
+    position:absolute;left:50%;bottom:4.2%;transform:translateX(-50%);width:min(980px,84%);
+    display:flex;align-items:center;justify-content:space-between;gap:18px;z-index:4;
+  }
+  .meta{max-width:56ch;padding:10px 12px;border-radius:14px;background:rgba(7,12,22,.56);border:1px solid rgba(116,235,255,.10);color:#abc1df;font-size:12px;line-height:1.45}
+  .selection{display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:flex-end}
+  .selection-text{color:#eaf7ff;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;text-shadow:0 0 12px rgba(116,235,255,.16)}
+  .confirm-btn{
+    min-width:250px;min-height:56px;padding:0 18px;border-radius:16px;border:1px solid rgba(255,102,223,.34);
+    background:linear-gradient(135deg, rgba(118,24,115,.94), rgba(255,82,203,.98) 52%, rgba(114,53,175,.92));
+    color:#fff;font-family:inherit;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;
+    box-shadow:0 0 26px rgba(255,102,223,.18);transition:transform .18s ease,opacity .18s ease,filter .18s ease
+  }
+  .confirm-btn:hover:not(:disabled){transform:translateY(-2px);filter:brightness(1.05)}
+  .confirm-btn:disabled{opacity:.45;cursor:not-allowed;filter:saturate(.7)}
+
+  .build-tag{position:absolute;left:14px;bottom:14px;z-index:5;padding:6px 10px;border-radius:999px;background:rgba(7,12,22,.72);border:1px solid rgba(116,235,255,.14);color:#9eb0d1;font-size:10px;font-weight:700;letter-spacing:.10em;text-transform:uppercase;box-shadow:var(--shadow)}
+
+  @media (max-width: 900px){
+    .topbar{top:3%;width:92%}
+    .title{font-size:34px}
+    .subtitle{font-size:12px;max-width:46ch}
+    .hero-satori{left:3%;width:31.5%;height:62%}
+    .hero-neon{left:34.8%;width:30.7%;height:65%}
+    .hero-behemoth{left:65.3%;width:32.2%;height:65%}
+    .rarity{left:9%;font-size:8px;padding:5px 7px}
+    .hero-name{font-size:20px;bottom:16.5%}
+    .hero-role{font-size:10px;bottom:12%}
+    .detail{right:2%;top:15.5%;width:250px;padding:14px}
+    .detail-name{font-size:24px}
+    .footer{width:92%;bottom:3%;align-items:flex-start;flex-direction:column}
+    .selection{width:100%;justify-content:space-between}
+    .confirm-btn{min-width:190px;min-height:50px}
+  }
+
+  @media (max-width: 760px){
+    .detail{display:none}
+    .topbar{top:2.2%}
+    .kicker{font-size:10px}
+    .title{font-size:28px}
+    .subtitle{font-size:11px}
+    .hero-satori{left:2.5%;top:19%;width:31.5%;height:56%}
+    .hero-neon{left:34.5%;top:16.5%;width:31%;height:59%}
+    .hero-behemoth{left:65.5%;top:17.2%;width:32%;height:59%}
+    .hero-name{font-size:18px;bottom:16.7%}
+    .hero-role{font-size:9px;bottom:12.2%}
+    .meta{font-size:11px}
+    .selection-text{font-size:11px}
+    .confirm-btn{min-width:100%;font-size:12px}
+    .build-tag{font-size:8px;padding:5px 8px}
+  }
+</style>
+</head>
+<body>
+<div class="screen">
+  <img class="bg" src="cyber_base_sprite_assets/hero_pick_bg_legendary.png" alt="Hero select background">
+  <div class="shade"></div>
+  <div class="glow"></div>
+  <div class="scan"></div>
+
+  <div class="topbar">
+    <p class="kicker">Initiation Sequence</p>
+    <h1 class="title">Выбор первого героя</h1>
+    <p class="subtitle">Выбери легендарного стартового бойца, с которым начнётся путь по Неон-Сити. После подтверждения выбор сохранится в локальный аккаунт и откроет главную базу.</p>
+  </div>
+
+  <div class="hero-zone">
+    <button class="hero-card hero-satori" data-hero="satori">
+      <span class="rarity">Legendary</span>
+      <img class="plate" src="cyber_base_sprite_assets/hero_plate.png" alt="Hero plate">
+      <img class="render-static" src="cyber_base_sprite_assets/hero_satori_static.png" alt="Satori static">
+      <img class="render-selected" src="cyber_base_sprite_assets/satori_transparent.png" alt="Satori selected">
+      <span class="hero-name">Satori</span>
+      <span class="hero-role">Street Samurai</span>
+    </button>
+
+    <button class="hero-card hero-neon" data-hero="neon">
+      <span class="rarity">Legendary</span>
+      <img class="plate" src="cyber_base_sprite_assets/hero_plate.png" alt="Hero plate">
+      <img class="render-static" src="cyber_base_sprite_assets/hero_neon_static.png" alt="Neon static">
+      <img class="render-selected" src="cyber_base_sprite_assets/hero_neon_selected.png" alt="Neon selected">
+      <span class="hero-name">Neon</span>
+      <span class="hero-role">Tech Hacker</span>
+    </button>
+
+    <button class="hero-card hero-behemoth" data-hero="behemoth">
+      <span class="rarity">Legendary</span>
+      <img class="plate" src="cyber_base_sprite_assets/hero_plate.png" alt="Hero plate">
+      <img class="render-static" src="cyber_base_sprite_assets/hero_behemoth_static.png" alt="Behemoth static">
+      <img class="render-selected" src="cyber_base_sprite_assets/behemoth_active.png" alt="Behemoth selected">
+      <span class="hero-name">Behemoth</span>
+      <span class="hero-role">Cyber Gunner</span>
+    </button>
+  </div>
+
+  <aside class="detail">
+    <div class="detail-eyebrow">Starter Candidate</div>
+    <div class="detail-name" id="detailName">—</div>
+    <div class="detail-desc" id="detailDesc">Выбери одного из трёх легендарных бойцов, чтобы увидеть его профиль и подтвердить стартовый выбор.</div>
+    <div class="detail-grid">
+      <div class="detail-item"><span>Фракция</span><b id="detailFaction">—</b></div>
+      <div class="detail-item"><span>Роль</span><b id="detailRole">—</b></div>
+      <div class="detail-item"><span>Стартовый скилл</span><b id="detailSkill">—</b></div>
+      <div class="detail-item"><span>Стиль</span><b id="detailStyle">—</b></div>
+    </div>
+  </aside>
+
+  <div class="footer">
+    <div class="meta">Демо-экран выбора персонажа. После подтверждения герой будет записан в локальный аккаунт и игрок вернётся на главную базу. Позже сюда можно добавить вступительную анимацию, озвучку и полноценные карточки редкости.</div>
+    <div class="selection">
+      <div class="selection-text" id="selectionText">Выбери легендарного героя</div>
+      <button class="confirm-btn" id="confirmBtn" disabled>Подтвердить героя</button>
+    </div>
+  </div>
+
+  <div class="build-tag">Prototype Build v0.1</div>
+</div>
+
+<script>
+  const STORAGE_KEY = 'nexus_ronin_local_account_v01';
+  const cards = [...document.querySelectorAll('[data-hero]')];
+  const confirmBtn = document.getElementById('confirmBtn');
+  const selectionText = document.getElementById('selectionText');
+  const detailName = document.getElementById('detailName');
+  const detailDesc = document.getElementById('detailDesc');
+  const detailFaction = document.getElementById('detailFaction');
+  const detailRole = document.getElementById('detailRole');
+  const detailSkill = document.getElementById('detailSkill');
+  const detailStyle = document.getElementById('detailStyle');
+
+  const heroProfiles = {
+    satori: {
+      label: 'Satori',
+      desc: 'Уличный самурай с высоким темпом боя, рывками и акцентом на ближний burst-урон.',
+      faction: 'Neon Ronin Cell',
+      role: 'Street Samurai',
+      skill: 'Crimson Slash — рывок с кровотечением',
+      style: 'Blade / Rush / Bleed'
+    },
+    neon: {
+      label: 'Neon',
+      desc: 'Техно-хакер, управляющая полем боя через цифровые дебаффы, контроль и взлом.',
+      faction: 'Ghostwire Protocol',
+      role: 'Tech Hacker',
+      skill: 'Neural Glitch — цифровой сбой и контроль',
+      style: 'Hack / Control / Debuff'
+    },
+    behemoth: {
+      label: 'Behemoth',
+      desc: 'Тяжёлый киберганнер, который держит фронт и раздаёт стабильный массовый урон.',
+      faction: 'Iron Bastion',
+      role: 'Cyber Gunner',
+      skill: 'Overclock Barrage — шквал огня по фронту',
+      style: 'Armor / Heavy / Frontline'
+    }
+  };
+
+  let currentAccount = null;
+  let selectedHero = '';
+
+  function loadAccount(){
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function saveAccount(account){
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(account));
+    currentAccount = account;
+  }
+
+  function updateDetail(heroId){
+    const hero = heroProfiles[heroId];
+    if(!hero){
+      detailName.textContent = '—';
+      detailDesc.textContent = 'Выбери одного из трёх легендарных бойцов, чтобы увидеть его профиль и подтвердить стартовый выбор.';
+      detailFaction.textContent = '—';
+      detailRole.textContent = '—';
+      detailSkill.textContent = '—';
+      detailStyle.textContent = '—';
+      selectionText.textContent = 'Выбери легендарного героя';
+      confirmBtn.disabled = true;
+      confirmBtn.textContent = 'Подтвердить героя';
+      return;
+    }
+    detailName.textContent = hero.label;
+    detailDesc.textContent = hero.desc;
+    detailFaction.textContent = hero.faction;
+    detailRole.textContent = hero.role;
+    detailSkill.textContent = hero.skill;
+    detailStyle.textContent = hero.style;
+    selectionText.textContent = `Выбран: ${hero.label} — ${hero.role}`;
+    confirmBtn.disabled = false;
+    confirmBtn.textContent = `Подтвердить: ${hero.label}`;
+  }
+
+  function syncSelection(){
+    cards.forEach((card)=>{
+      card.classList.toggle('selected', card.dataset.hero === selectedHero);
+    });
+    updateDetail(selectedHero);
+  }
+
+  cards.forEach((card)=>{
+    card.addEventListener('click', ()=>{
+      selectedHero = card.dataset.hero;
+      syncSelection();
+    });
+  });
+
+  confirmBtn.addEventListener('click', ()=>{
+    if(!currentAccount || !selectedHero) return;
+    currentAccount.starterHero = selectedHero;
+    currentAccount.power = 0;
+    saveAccount(currentAccount);
+    window.location.href = 'main_menu.html';
+  });
+
+  window.addEventListener('load', ()=>{
+    currentAccount = loadAccount();
+    if(!currentAccount){
+      window.location.href = 'main_menu.html';
+      return;
+    }
+    if(typeof currentAccount.power !== 'number') currentAccount.power = 0;
+    if(typeof currentAccount.starterHero !== 'string') currentAccount.starterHero = '';
+    saveAccount(currentAccount);
+    selectedHero = currentAccount.starterHero || '';
+    syncSelection();
+  });
+</script>
+</body>
+</html>
