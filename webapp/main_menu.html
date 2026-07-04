@@ -1,134 +1,451 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Интерактивная База - Telegram WebApp</title>
-    
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    
-    <style>
-        body, html {
-            margin: 0; padding: 0; width: 100%; height: 100%;
-            background-color: var(--tg-theme-bg-color, #050505);
-            color: var(--tg-theme-text-color, #ffffff);
-            overflow: hidden;
-            display: flex; justify-content: center; align-items: center;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            overscroll-behavior-y: none;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>Cyber Base — Precise Fit</title>
+  <style>
+    :root{
+      --bg:#03050c;
+      --panel:rgba(7,12,22,.74);
+      --panel2:rgba(10,16,28,.90);
+      --line:rgba(95,223,255,.28);
+      --line-strong:rgba(95,223,255,.58);
+      --cyan:#67e7ff;
+      --pink:#ff61e3;
+      --pink2:#c68eff;
+      --gold:#eac76d;
+      --text:#edf4ff;
+      --muted:#9eb0d1;
+      --danger:#ff4d78;
+      --shadow:0 18px 38px rgba(0,0,0,.42);
+      --glow-cyan:0 0 20px rgba(103,231,255,.20);
+      --glow-pink:0 0 22px rgba(255,97,227,.24);
+    }
 
-        #scene-wrapper {
-            position: relative;
-            display: flex; justify-content: center; align-items: center;
-            width: 100vw; height: 100vh;
-        }
+    *{box-sizing:border-box}
+    html,body{
+      margin:0;
+      width:100%;
+      height:100%;
+      background:radial-gradient(circle at 50% 24%, #121633 0%, #070b16 38%, #010206 74%, #000 100%);
+      color:var(--text);
+      font-family:Inter,Segoe UI,Arial,sans-serif;
+      overflow:hidden;
+      user-select:none;
+      -webkit-user-select:none;
+    }
+    body{display:grid;place-items:center}
 
-        #game-container {
-            position: relative;
-            width: 100%; height: 100%;
-            max-width: calc(100vh * (1280 / 853));
-            max-height: calc(100vw * (853 / 1280));
-        }
+    .scene{
+      position:relative;
+      width:min(100vw,calc(100vh * 1376 / 768));
+      height:min(100vh,calc(100vw * 768 / 1376));
+      aspect-ratio:1376/768;
+      background:#02040a;
+      overflow:hidden;
+      box-shadow:0 24px 70px rgba(0,0,0,.56);
+    }
 
-        #bg-image {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background-image: url('IMG_4870.jpeg'); 
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center;
-        }
+    .bg,.fx,.scan,.vig{position:absolute;inset:0;pointer-events:none}
+    .bg{width:100%;height:100%;object-fit:cover}
+    .fx{
+      background:
+        radial-gradient(circle at 52% 50%, rgba(255,72,225,.18), transparent 18%),
+        radial-gradient(circle at 24% 71%, rgba(84,223,255,.15), transparent 16%),
+        radial-gradient(circle at 83% 76%, rgba(84,223,255,.12), transparent 16%),
+        linear-gradient(180deg, rgba(0,0,0,.22), transparent 24%, transparent 74%, rgba(0,0,0,.12));
+      mix-blend-mode:screen;
+      animation:glow 5.5s ease-in-out infinite alternate;
+    }
+    .scan{
+      background:repeating-linear-gradient(to bottom, rgba(255,255,255,.018) 0, rgba(255,255,255,.018) 1px, transparent 2px, transparent 4px);
+      opacity:.18;
+    }
+    .vig{box-shadow:inset 0 0 100px rgba(0,0,0,.24)}
 
-        #interaction-layer {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 10;
-        }
+    button{font:inherit;color:inherit}
+    .btn,.poi,.chip,.icon-btn,.nav-btn,.story-btn,.event-card,.menu-btn,.profile{
+      border:0;cursor:pointer;-webkit-tap-highlight-color:transparent;
+      transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease,filter .18s ease,opacity .18s ease;
+    }
+    .btn:hover,.poi:hover,.chip:hover,.icon-btn:hover,.nav-btn:hover,.story-btn:hover,.event-card:hover,.menu-btn:hover,.profile:hover,
+    .btn:focus-visible,.poi:focus-visible,.chip:focus-visible,.icon-btn:focus-visible,.nav-btn:focus-visible,.story-btn:focus-visible,.event-card:focus-visible,.menu-btn:focus-visible,.profile:focus-visible{
+      transform:translateY(-1px);
+      outline:none;
+    }
 
-        .zone {
-            fill: rgba(0, 255, 255, 0.0);
-            stroke: rgba(0, 255, 255, 0.0);
-            stroke-width: 3;
-            cursor: pointer;
-            -webkit-tap-highlight-color: transparent;
-        }
+    /* top ui */
+    .profile{
+      position:absolute;left:1.2%;top:1.5%;width:28.5%;height:10.5%;z-index:20;
+      display:flex;align-items:center;gap:12px;padding:8px 10px;
+      background:linear-gradient(180deg, rgba(10,14,26,.78), rgba(7,11,20,.38));
+      border:1px solid rgba(198,126,255,.18);border-radius:14px;box-shadow:var(--shadow);
+      backdrop-filter:blur(6px);text-align:left;
+    }
+    .avatar{
+      width:63px;height:63px;border-radius:12px;flex:0 0 auto;position:relative;overflow:hidden;
+      background:radial-gradient(circle at 35% 25%, rgba(186,108,255,.85), transparent 32%),linear-gradient(180deg, #493b76, #1b1c35 62%, #0b0f18 100%);
+      border:1px solid rgba(198,126,255,.56);box-shadow:inset 0 0 22px rgba(255,255,255,.08),0 0 14px rgba(198,126,255,.16);
+    }
+    .avatar:before{content:"N";position:absolute;inset:0;display:grid;place-items:center;font-size:34px;font-weight:900;color:#f4f6ff;text-shadow:0 0 16px rgba(255,97,227,.40)}
+    .meta{min-width:0;flex:1}
+    .row{display:flex;justify-content:space-between;align-items:center;gap:10px}
+    .name{font-size:17px;font-weight:800;white-space:nowrap}
+    .lvl{font-size:14px;font-weight:800;color:#e9d5ff;white-space:nowrap}
+    .xp{height:7px;margin:6px 0 5px;border-radius:999px;background:rgba(255,255,255,.10);overflow:hidden}
+    .xp>span{display:block;width:72.8%;height:100%;background:linear-gradient(90deg,#ff2ecf,#cf69ff 62%,#8572ff);box-shadow:0 0 18px rgba(255,97,227,.45)}
+    .xp-txt{font-size:11px;color:#d9e2ff;text-align:right}
+    .power{margin-top:5px;color:var(--gold);font-size:12px;font-weight:900}
 
-        @keyframes tapFlash {
-            0% { fill: rgba(0, 255, 255, 0.4); stroke: rgba(0, 255, 255, 1); filter: drop-shadow(0 0 10px #0ff); }
-            100% { fill: rgba(0, 255, 255, 0.0); stroke: rgba(0, 255, 255, 0); filter: none; }
-        }
+    .chip{
+      position:absolute;top:1.5%;height:5.8%;z-index:20;padding:0 10px;display:flex;align-items:center;gap:8px;
+      background:linear-gradient(180deg, rgba(9,13,24,.80), rgba(7,11,20,.46));border:1px solid rgba(255,255,255,.08);
+      border-radius:12px;box-shadow:var(--shadow);backdrop-filter:blur(6px);text-align:left;
+    }
+    .energy{left:33.7%;width:12.2%}
+    .gold{left:46.5%;width:16.4%}
+    .gems{left:63.7%;width:12.4%}
+    .ci{width:18px;height:18px;display:grid;place-items:center;font-size:16px;font-weight:900;flex:0 0 auto}
+    .ci.energy{color:var(--cyan);text-shadow:0 0 12px rgba(103,231,255,.42)}
+    .ci.gold{color:var(--gold);text-shadow:0 0 12px rgba(234,199,109,.35)}
+    .ci.gems{color:#b68eff;text-shadow:0 0 12px rgba(182,142,255,.40)}
+    .cv{font-size:13px;font-weight:800;letter-spacing:.02em}
+    .plus{margin-left:auto;width:20px;height:20px;border-radius:6px;display:grid;place-items:center;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.05);font-weight:900}
 
-        .zone.active {
-            animation: tapFlash 0.5s ease-out forwards;
-        }
+    .icon-btn{
+      position:absolute;top:1.3%;height:5.4%;z-index:20;width:3.8%;display:grid;place-items:center;
+      background:rgba(10,16,30,.76);border:1px solid rgba(255,255,255,.10);border-radius:11px;box-shadow:var(--shadow);backdrop-filter:blur(6px)
+    }
+    .mail{left:79.5%}.social{left:84.7%;width:4.6%}.settings{left:90.7%}.net{left:95.1%;width:3.2%}
+    .glyph{font-size:17px;opacity:.96}
+    .dot{position:absolute;top:4px;right:4px;width:9px;height:9px;border-radius:50%;background:radial-gradient(circle at 35% 35%, #ffe3f0, #ff2e66);box-shadow:0 0 10px rgba(255,46,102,.70)}
 
-        #notification {
-            position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
-            background: var(--tg-theme-button-color, #2ecc71);
-            color: var(--tg-theme-button-text-color, #ffffff);
-            padding: 10px 20px; border-radius: 8px; font-weight: bold; font-size: 16px;
-            opacity: 0; transition: opacity 0.3s; z-index: 100;
-            pointer-events: none; box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-            white-space: nowrap;
-        }
-    </style>
+    /* left rail */
+    .event-card{
+      position:absolute;left:1.6%;top:15.2%;width:17.9%;height:10.8%;z-index:18;padding:12px 14px;
+      border-radius:16px;border:1px solid rgba(193,111,255,.42);
+      background:linear-gradient(135deg, rgba(52,21,86,.94), rgba(10,16,35,.92) 60%),radial-gradient(circle at 78% 34%, rgba(108,181,255,.28), transparent 26%);
+      box-shadow:var(--shadow),0 0 22px rgba(193,111,255,.16);text-align:left;overflow:hidden
+    }
+    .event-card:after{content:"";position:absolute;right:-3%;bottom:-5%;width:34%;height:120%;background:linear-gradient(180deg, rgba(104,145,255,.62), rgba(169,97,255,.18));opacity:.88;border-radius:20px 0 16px 0;transform:skewX(-7deg)}
+    .ek{position:relative;z-index:1;color:#cf7bff;font-size:12px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;margin-bottom:5px}
+    .et{position:relative;z-index:1;font-size:18px;font-weight:900;line-height:1.02;text-transform:uppercase;margin-bottom:8px;text-shadow:0 0 16px rgba(255,97,227,.22)}
+    .etime{position:relative;z-index:1;font-size:13px;opacity:.94}
+
+    .menu{position:absolute;left:1.6%;top:28.8%;width:16.8%;z-index:18;display:flex;flex-direction:column;gap:7px}
+    .menu-btn{
+      position:relative;min-height:52px;padding:0 13px;display:flex;align-items:center;gap:12px;text-align:left;
+      border-radius:14px;background:linear-gradient(180deg, rgba(6,12,22,.82), rgba(4,9,18,.42));border:1px solid rgba(103,163,255,.12);
+      box-shadow:var(--shadow);backdrop-filter:blur(6px);overflow:hidden
+    }
+    .menu-btn:before,.nav-btn:before,.story-btn:before,.poi:before{content:"";position:absolute;inset:0;background:linear-gradient(135deg, rgba(103,231,255,.10), rgba(255,97,227,.08));opacity:0;transition:opacity .18s ease;pointer-events:none}
+    .menu-btn:hover:before,.menu-btn:focus-visible:before,.nav-btn:hover:before,.nav-btn:focus-visible:before,.story-btn:hover:before,.story-btn:focus-visible:before,.poi:hover:before,.poi:focus-visible:before,body.debug .poi:before{opacity:1}
+    .mi{width:28px;height:28px;border-radius:8px;display:grid;place-items:center;flex:0 0 auto;background:rgba(255,255,255,.04);border:1px solid rgba(103,231,255,.14);color:var(--cyan);font-weight:900}
+    .mt{font-size:12.8px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;line-height:1.04}
+    .new{margin-left:auto;padding:4px 7px;border-radius:999px;background:linear-gradient(180deg,#ff609d,#ff315f);box-shadow:0 0 12px rgba(255,49,95,.36);font-size:10px;font-weight:900;letter-spacing:.08em}
+
+    /* scene poi */
+    .poi{position:absolute;z-index:14;background:transparent;padding:0;border-radius:18px;text-align:left}
+    .poi:hover,.poi:focus-visible{filter:brightness(1.05)}
+    .touching{transform:translateY(-2px) scale(1.012)!important}
+    .stack{position:absolute;inset:0}
+    .stack img{position:absolute;display:block;transition:opacity .20s ease,filter .20s ease,transform .20s ease;pointer-events:none}
+    .active-img{opacity:0}
+    .poi:hover .active-img,.poi:focus-visible .active-img,.touching .active-img{opacity:1}
+    .poi:hover .idle-img,.poi:focus-visible .idle-img,.touching .idle-img{opacity:.24}
+
+    .plabel{position:absolute;pointer-events:none;text-transform:uppercase;letter-spacing:.03em}
+    .ptitle{display:block;font-weight:900;line-height:.95}
+    .psub{display:block;margin-top:5px;color:#eff6ff;font-size:14px;font-weight:500;text-transform:none;letter-spacing:0;opacity:.96}
+    .cyan .ptitle{color:var(--cyan);text-shadow:0 0 18px rgba(103,231,255,.44),0 0 30px rgba(103,231,255,.22)}
+    .pink .ptitle{color:#ff85ec;text-shadow:0 0 18px rgba(255,97,227,.50),0 0 30px rgba(255,97,227,.22)}
+
+    .dungeons{left:12.1%;bottom:12.4%;width:31.8%;height:29.8%}
+    .dungeons .stack{display:flex;align-items:flex-end;justify-content:flex-start}
+    .dungeons .stack img{left:0;bottom:0;width:73.6%}
+    .dungeons .plabel{left:47.6%;top:33.4%;width:52%}
+    .dungeons .ptitle{font-size:clamp(28px,2.75vw,52px)}
+    .dtags{position:absolute;left:13%;right:25%;bottom:11.3%;display:flex;justify-content:space-between;gap:8px;pointer-events:none}
+    .dtags span{font-size:clamp(9px,.78vw,13px);font-weight:700;color:#f5fbff;text-shadow:0 0 10px rgba(103,231,255,.36);opacity:.9}
+
+    .summon{left:45.2%;top:14.4%;width:22.2%;height:60.6%}
+    .summon .stack{display:flex;align-items:flex-end;justify-content:center}
+    .summon .stack img{left:0;right:0;bottom:0;margin:auto;width:97.5%}
+    .summon .plabel{left:54.7%;top:4.3%;width:42%}
+    .summon .ptitle{font-size:clamp(28px,2.75vw,50px)}
+
+    .afterlife{right:2.9%;top:11.4%;width:29.2%;height:42.9%;overflow:hidden;border-radius:14px}
+    .afterlife .stack img{inset:0;width:100%;height:100%;object-fit:contain}
+
+    .cyberware{right:2.0%;bottom:8.2%;width:31.6%;height:32.9%}
+    .cyberware .stack{display:flex;align-items:flex-end;justify-content:flex-end}
+    .cyberware .stack img{right:0;bottom:0;width:100%}
+    .cyberware .plabel{left:3.6%;top:25.4%;width:45%}
+    .cyberware .ptitle{font-size:clamp(24px,2.35vw,46px)}
+
+    /* bottom nav + story */
+    .nav{
+      position:absolute;left:0;bottom:0;right:20.5%;height:10.3%;z-index:18;display:flex;align-items:stretch
+    }
+    .nav-btn{
+      position:relative;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;
+      background:linear-gradient(180deg, rgba(4,9,18,.94), rgba(2,6,14,.97));border-top:1px solid rgba(110,175,255,.10);border-right:1px solid rgba(110,175,255,.05);overflow:hidden
+    }
+    .nav-btn.active{flex:1.18;align-items:flex-start;padding-left:31px;clip-path:polygon(0 0,84% 0,100% 50%,84% 100%,0 100%);background:linear-gradient(135deg, rgba(22,61,108,.96), rgba(10,27,58,.96));box-shadow:inset 0 0 0 1px rgba(106,211,255,.22),0 0 18px rgba(106,211,255,.12)}
+    .ni{width:30px;height:30px;display:grid;place-items:center;border-radius:10px;border:1px solid rgba(255,255,255,.06);background:rgba(255,255,255,.03);font-size:15px}
+    .nl{font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+    .ndot{position:absolute;top:16px;right:calc(50% - 22px);width:9px;height:9px;border-radius:50%;background:#ff3d75;box-shadow:0 0 10px rgba(255,61,117,.72)}
+
+    .story-wrap{position:absolute;right:.8%;bottom:1.1%;z-index:19}
+    .story-btn{
+      position:relative;min-width:24.6vw;min-height:8.7vh;padding:18px 26px 18px 28px;text-align:left;color:#fff;
+      border-radius:18px 18px 2px 18px;clip-path:polygon(12% 0,100% 0,100% 74%,96% 100%,0 100%,4% 30%);
+      background:linear-gradient(135deg, rgba(122,31,122,.84), rgba(255,78,205,.94) 54%, rgba(88,38,122,.86));
+      box-shadow:0 0 28px rgba(255,97,227,.28),var(--shadow);overflow:hidden
+    }
+    .story-btn:after{content:"›";position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:34px;line-height:1;opacity:.92}
+    .st1{position:relative;z-index:1;font-size:clamp(28px,2.55vw,44px);font-weight:900;line-height:.95;text-transform:uppercase}
+    .st2{position:relative;z-index:1;margin-top:6px;font-size:20px;opacity:.97}
+
+    /* debug + note */
+    .tools{position:absolute;right:14px;top:8.2%;z-index:26;display:flex;gap:8px}
+    .btn{
+      padding:8px 12px;border-radius:12px;background:rgba(8,13,24,.82);border:1px solid rgba(103,231,255,.20);
+      box-shadow:var(--shadow);font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase
+    }
+    .note{
+      position:absolute;left:18px;bottom:116px;z-index:18;max-width:266px;padding:11px 12px;border-radius:12px;
+      background:rgba(7,12,22,.74);border:1px solid rgba(103,231,255,.14);color:var(--muted);font-size:12px;line-height:1.36;box-shadow:var(--shadow)
+    }
+
+    .modal{position:absolute;inset:0;display:none;place-items:center;background:rgba(1,3,10,.72);backdrop-filter:blur(8px);z-index:50;padding:20px}
+    .modal.open{display:grid}
+    .card{width:min(540px,92vw);background:linear-gradient(180deg, rgba(11,16,31,.96), rgba(7,11,20,.97));border:1px solid rgba(103,231,255,.42);border-radius:22px;padding:22px 22px 18px;box-shadow:0 0 30px rgba(103,231,255,.14),0 0 34px rgba(255,97,227,.10),0 16px 50px rgba(0,0,0,.52)}
+    .ck{color:var(--cyan);font-size:12px;font-weight:900;letter-spacing:.18em;text-transform:uppercase;margin-bottom:8px}
+    .ct{margin:0;font-size:clamp(24px,2.8vw,36px);font-weight:900;text-transform:uppercase;line-height:.96}
+    .cd{margin:12px 0 14px;color:#dae5ff;font-size:15px;line-height:1.45}
+    .cr{font-size:12px;color:#96b4df;margin-bottom:18px;word-break:break-word}
+    .actions{display:flex;gap:10px;flex-wrap:wrap}
+    .a1,.a2{border:0;border-radius:12px;padding:12px 16px;color:#fff;font-size:13px;font-weight:900;text-transform:uppercase;letter-spacing:.07em;cursor:pointer}
+    .a1{background:linear-gradient(135deg, rgba(255,97,227,.96), rgba(129,95,255,.94));box-shadow:var(--glow-pink)}
+    .a2{background:rgba(18,28,44,.96);border:1px solid rgba(103,231,255,.22);box-shadow:var(--glow-cyan)}
+
+    body.debug .poi{outline:1px dashed rgba(97,243,255,.75);outline-offset:-1px;background:rgba(92,224,255,.04)}
+    body.debug .profile,body.debug .chip,body.debug .icon-btn,body.debug .event-card,body.debug .menu-btn,body.debug .nav-btn,body.debug .story-btn{box-shadow:inset 0 0 0 1px rgba(255,255,255,.08),var(--shadow)}
+
+    @keyframes glow{from{opacity:.80}to{opacity:1}}
+    @keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+    @keyframes pulsePink{0%,100%{filter:drop-shadow(0 0 0 rgba(255,97,227,0))}50%{filter:drop-shadow(0 0 16px rgba(255,97,227,.18))}}
+    .dungeons .stack,.summon .stack,.cyberware .stack{animation:floatY 4.9s ease-in-out infinite}
+    .afterlife .active-img,.dungeons .active-img,.summon .active-img,.cyberware .active-img{animation:pulsePink 2.8s ease-in-out infinite}
+
+    @media (max-width:900px){
+      .menu-btn{min-height:46px}.mi{width:25px;height:25px}.mt{font-size:11px}.profile{gap:10px}.avatar{width:56px;height:56px}.name{font-size:15px}.nav{right:18.4%}.story-btn{padding:14px 22px}.st2{font-size:16px}.note{display:none}
+    }
+    @media (max-width:760px){
+      .tools{top:auto;bottom:114px}.btn{padding:7px 10px;font-size:10px}.profile{padding:7px 8px}.chip{padding:0 8px}.cv{font-size:11px}.plus{width:18px;height:18px}.nl{font-size:10px}.psub{font-size:11px}
+    }
+  </style>
 </head>
 <body>
+  <div class="scene">
+    <img class="bg" src="assets/bg_clean_final.png" alt="background" />
+    <div class="fx"></div>
+    <div class="scan"></div>
+    <div class="vig"></div>
 
-    <div id="notification">Модуль запущен</div>
+    <button class="profile" data-action="profile" data-route="/profile">
+      <div class="avatar"></div>
+      <div class="meta">
+        <div class="row"><div class="name">Nightshade</div><div class="lvl">Lv. 68</div></div>
+        <div class="xp"><span></span></div>
+        <div class="xp-txt">26,230 / 36,000</div>
+        <div class="power">⚜ 256,800</div>
+      </div>
+    </button>
 
-    <div id="scene-wrapper">
-        <div id="game-container">
-            <div id="bg-image"></div>
-            
-            <svg id="interaction-layer" viewBox="0 0 1280 853" preserveAspectRatio="xMidYMid meet">
-                <!-- Dungeons -->
-                <polygon class="zone" data-name="DUNGEONS" points="100,750 280,810 460,750 510,650 500,560 380,470 270,470 170,500 70,580" />
-                <!-- Summon -->
-                <polygon class="zone" data-name="SUMMON" points="530,660 640,690 740,660 770,580 750,260 720,180 640,150 550,180 530,260 510,580" />
-                <!-- Afterlife Bar -->
-                <polygon class="zone" data-name="AFTERLIFE BAR" points="840,440 1280,440 1280,110 940,110 890,180 840,300" />
-                <!-- Cyberware -->
-                <polygon class="zone" data-name="CYBERWARE" points="830,600 840,800 1210,800 1260,700 1250,480 1180,410 1090,410 970,480 860,490" />
-                <!-- Main Story -->
-                <polygon class="zone" data-name="MAIN STORY" points="810,853 1280,853 1280,750 860,750" />
-                <!-- Menu -->
-                <rect class="zone" data-name="МЕНЮ" x="10" y="270" width="180" height="380" />
-                <!-- Profile -->
-                <rect class="zone" data-name="ПРОФИЛЬ" x="10" y="10" width="280" height="110" />
-            </svg>
-        </div>
+    <button class="chip energy" data-action="energy" data-route="/resources/energy"><span class="ci energy">⚡</span><span class="cv">120 / 120</span><span class="plus">+</span></button>
+    <button class="chip gold" data-action="gold" data-route="/resources/gold"><span class="ci gold">⬢</span><span class="cv">2,450,790</span><span class="plus">+</span></button>
+    <button class="chip gems" data-action="gems" data-route="/resources/gems"><span class="ci gems">◈</span><span class="cv">8,960</span><span class="plus">+</span></button>
+
+    <button class="icon-btn mail" data-action="mail" data-route="/mail" aria-label="Mail"><span class="glyph">✉</span></button>
+    <button class="icon-btn social" data-action="social" data-route="/social" aria-label="Social"><span class="glyph">👥</span><span class="dot"></span></button>
+    <button class="icon-btn settings" data-action="settings" data-route="/settings" aria-label="Settings"><span class="glyph">⚙</span></button>
+    <button class="icon-btn net" data-action="network" data-route="/network" aria-label="Network"><span class="glyph">⌁</span></button>
+
+    <button class="event-card" data-action="event" data-route="/event/neon-uprising">
+      <div class="ek">Event</div>
+      <div class="et">Neon Uprising</div>
+      <div class="etime">◔ 3D 12H Left</div>
+    </button>
+
+    <div class="menu">
+      <button class="menu-btn" data-action="missions" data-route="/missions"><span class="mi">☰</span><span class="mt">Missions</span></button>
+      <button class="menu-btn" data-action="battlepass" data-route="/battlepass"><span class="mi">✪</span><span class="mt">Battle Pass</span><span class="new">New</span></button>
+      <button class="menu-btn" data-action="store" data-route="/store"><span class="mi">🛒</span><span class="mt">Store</span></button>
+      <button class="menu-btn" data-action="inventory" data-route="/inventory"><span class="mi">▣</span><span class="mt">Inventory</span></button>
+      <button class="menu-btn" data-action="archives" data-route="/archives"><span class="mi">⌘</span><span class="mt">Archives</span></button>
+      <button class="menu-btn" data-action="arena" data-route="/pvp-arena"><span class="mi">⚔</span><span class="mt">PVP Arena</span><span class="new">New</span></button>
     </div>
 
-    <script>
-        const tg = window.Telegram.WebApp;
-        tg.ready();
-        tg.expand(); 
-        tg.setHeaderColor('bg_color');
+    <button class="poi dungeons" data-action="dungeons" data-route="/dungeons">
+      <div class="stack">
+        <img class="idle-img" src="assets/dungeons_static_clean.png" alt="dungeons" />
+        <img class="active-img" src="assets/dungeons_active_clean.png" alt="dungeons active" />
+      </div>
+      <div class="plabel cyan">
+        <span class="ptitle">Dungeons</span>
+        <span class="psub">Explore. Fight. Ascend.</span>
+      </div>
+      <div class="dtags"><span>VOID CORE</span><span>DATA SPIRE</span><span>RED GRID</span></div>
+    </button>
 
-        const zones = document.querySelectorAll('.zone');
-        const notify = document.getElementById('notification');
-        let notifyTimeout;
+    <button class="poi summon" data-action="summon" data-route="/summon">
+      <div class="stack">
+        <img class="idle-img" src="assets/capsule_static_redrawn_clean_v2.png" alt="summon" />
+        <img class="active-img" src="assets/capsule_active_redrawn_clean_v2.png" alt="summon active" />
+      </div>
+      <div class="plabel pink">
+        <span class="ptitle">Summon</span>
+        <span class="psub">Clone. Summon. Awaken.</span>
+      </div>
+    </button>
 
-        zones.forEach(zone => {
-            zone.addEventListener('click', () => {
-                zone.classList.remove('active');
-                void zone.offsetWidth; 
-                zone.classList.add('active');
-                
-                if (tg.HapticFeedback) {
-                    tg.HapticFeedback.impactOccurred('medium');
-                }
+    <button class="poi afterlife" data-action="afterlife" data-route="/afterlife-bar">
+      <div class="stack">
+        <img class="idle-img" src="assets/afterlife_bar_noframe_inactive_raw.png" alt="afterlife" />
+        <img class="active-img" src="assets/afterlife_bar_ACTIVE_noframe_final.png" alt="afterlife active" />
+      </div>
+    </button>
 
-                const name = zone.getAttribute('data-name');
-                notify.textContent = `Открытие: ${name}...`;
-                notify.style.opacity = '1';
-                
-                clearTimeout(notifyTimeout);
-                notifyTimeout = setTimeout(() => {
-                    notify.style.opacity = '0';
-                }, 1500);
-            });
-        });
-    </script>
+    <button class="poi cyberware" data-action="cyberware" data-route="/cyberware">
+      <div class="stack">
+        <img class="idle-img" src="assets/cyberware_static_clean.png" alt="cyberware" />
+        <img class="active-img" src="assets/cyberware_active_clean.png" alt="cyberware active" />
+      </div>
+      <div class="plabel cyan">
+        <span class="ptitle">Cyberware</span>
+        <span class="psub">Enhance. Upgrade. Evolve.</span>
+      </div>
+    </button>
+
+    <div class="nav">
+      <button class="nav-btn active" data-action="home" data-route="/home"><span class="ni">⌂</span><span class="nl">Home</span></button>
+      <button class="nav-btn" data-action="agents" data-route="/agents"><span class="ni">◉</span><span class="nl">Agents</span></button>
+      <button class="nav-btn" data-action="squad" data-route="/squad"><span class="ndot"></span><span class="ni">👥</span><span class="nl">Squad</span></button>
+      <button class="nav-btn" data-action="tech" data-route="/tech"><span class="ni">⌗</span><span class="nl">Tech</span></button>
+      <button class="nav-btn" data-action="codex" data-route="/codex"><span class="ni">✦</span><span class="nl">Codex</span></button>
+      <button class="nav-btn" data-action="corp" data-route="/corp"><span class="ni">⬒</span><span class="nl">Corp</span></button>
+    </div>
+
+    <div class="story-wrap">
+      <button class="story-btn" data-action="mainstory" data-route="/story/chapter-12-5">
+        <div class="st1">Main Story</div>
+        <div class="st2">Chapter 12-5</div>
+      </button>
+    </div>
+
+    <div class="tools">
+      <button class="btn" id="debugBtn">Debug Layout</button>
+      <button class="btn" id="noteBtn">Hide Guide</button>
+    </div>
+
+    <div class="note" id="note">Это версия с более жёсткой привязкой по координатам под референс. Нажми <b>Debug Layout</b>, чтобы увидеть зоны и быстро подкрутить значения прямо в конструкторе.</div>
+
+    <div class="modal" id="modal">
+      <div class="card">
+        <div class="ck">Scene Action</div>
+        <h2 class="ct" id="mtitle">Section</h2>
+        <div class="cd" id="mdesc">Подключи сюда свой реальный экран, роутер или модалку.</div>
+        <div class="cr" id="mroute">route: /home</div>
+        <div class="actions">
+          <button class="a1" id="goBtn">Открыть маршрут</button>
+          <button class="a2" id="closeBtn">Закрыть</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const meta = {
+      profile:['Профиль','Профиль игрока, уровень, опыт и карточка аккаунта.'],
+      energy:['Энергия','Сюда логично добавить реген-таймер и быстрый докуп.'],
+      gold:['Кредиты','Основная soft-валюта для улучшений и крафта.'],
+      gems:['Премиум валюта','Офферы, покупки, battle pass и специальные наборы.'],
+      mail:['Почта','Награды, письма, компенсации и системные уведомления.'],
+      social:['Социальный блок','Друзья, клан, подарки, инвайты и корпорация.'],
+      settings:['Настройки','Графика, звук, вибрация, язык, привязка аккаунта.'],
+      network:['Сеть','Статус сервера, пинг, связка аккаунта и служебные данные.'],
+      event:['Neon Uprising','Ивент. Добавь progress, магазин события и таймеры этапов.'],
+      missions:['Missions','Ежедневки, недельки и отдельную кнопку Claim All.'],
+      battlepass:['Battle Pass','Сезонный прогресс, premium-дорожка, preview наград.'],
+      store:['Store','Персональные офферы, валюты и стартовые паки.'],
+      inventory:['Inventory','Материалы, осколки, расходники и удобные фильтры.'],
+      archives:['Archives','Лор, файлы, записи, фракции и кодекс мира.'],
+      arena:['PVP Arena','Лиги, защита, реванш и награды сезона.'],
+      dungeons:['Dungeons','PvE-фарм. Вставь recommended power и preview лута.'],
+      summon:['Summon','Обязательно pity-counter, шансы и отдельную анимацию SSR.'],
+      afterlife:['Afterlife Bar','NPC-диалоги, слухи, ежедневные баффы и сайд-квесты.'],
+      cyberware:['Cyberware','Импланты, слоты, сравнение статов и синергии сетов.'],
+      home:['Home','Главная база. Можно добавить лёгкий camera drift и неоновый idle.'],
+      agents:['Agents','Ростер персонажей, роли, редкость и прокачка.'],
+      squad:['Squad','Сбор пачки, пресеты и power preview перед боем.'],
+      tech:['Tech','Дерево технологий и долгий мета-прогресс.'],
+      codex:['Codex','Справочник терминов, врагов и механик.'],
+      corp:['Corp','Гильдия, общий прогресс, чат и рейды.'],
+      mainstory:['Main Story','Под этой кнопкой хорошо смотрятся recommended power и % главы.']
+    };
+
+    const modal = document.getElementById('modal');
+    const mtitle = document.getElementById('mtitle');
+    const mdesc = document.getElementById('mdesc');
+    const mroute = document.getElementById('mroute');
+    const note = document.getElementById('note');
+    const debugBtn = document.getElementById('debugBtn');
+    const noteBtn = document.getElementById('noteBtn');
+    let route = '/home';
+
+    function haptic(){
+      try{ if(window.Telegram && Telegram.WebApp && Telegram.WebApp.HapticFeedback){ Telegram.WebApp.HapticFeedback.impactOccurred('light'); } }catch(e){}
+    }
+    function touchFx(el){ el.classList.add('touching'); setTimeout(()=>el.classList.remove('touching'),180); }
+    function openAction(action, nextRoute){
+      const data = meta[action] || ['Section','Подключи сюда нужный экран.'];
+      route = nextRoute || '/home';
+      mtitle.textContent = data[0];
+      mdesc.textContent = data[1];
+      mroute.textContent = 'route: ' + route;
+      modal.classList.add('open');
+    }
+
+    document.querySelectorAll('[data-action]').forEach(el=>{
+      el.addEventListener('click',()=>{ haptic(); touchFx(el); openAction(el.dataset.action, el.dataset.route); });
+    });
+    document.getElementById('closeBtn').addEventListener('click',()=>modal.classList.remove('open'));
+    modal.addEventListener('click',e=>{ if(e.target===modal) modal.classList.remove('open'); });
+    document.getElementById('goBtn').addEventListener('click',()=>{
+      haptic();
+      console.log('Open route:', route);
+      mdesc.textContent = 'Сейчас это демо. Следующий шаг — подцепить твой router / window.location / sendData / обработчик конструктора.';
+    });
+
+    debugBtn.addEventListener('click',()=>{
+      document.body.classList.toggle('debug');
+      debugBtn.textContent = document.body.classList.contains('debug') ? 'Debug Off' : 'Debug Layout';
+    });
+    noteBtn.addEventListener('click',()=>{
+      const hidden = note.style.display === 'none';
+      note.style.display = hidden ? 'block' : 'none';
+      noteBtn.textContent = hidden ? 'Hide Guide' : 'Show Guide';
+    });
+    document.addEventListener('keydown',e=>{
+      if(e.key==='Escape') modal.classList.remove('open');
+      if(e.key.toLowerCase()==='d'){
+        document.body.classList.toggle('debug');
+        debugBtn.textContent = document.body.classList.contains('debug') ? 'Debug Off' : 'Debug Layout';
+      }
+    });
+  </script>
 </body>
 </html>
