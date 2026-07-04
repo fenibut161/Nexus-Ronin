@@ -85,10 +85,13 @@
     }
     .avatar{
       width:63px;height:63px;border-radius:12px;flex:0 0 auto;position:relative;overflow:hidden;
-      background:radial-gradient(circle at 35% 25%, rgba(186,108,255,.85), transparent 32%),linear-gradient(180deg, #493b76, #1b1c35 62%, #0b0f18 100%);
+      background:
+        radial-gradient(circle at 35% 25%, rgba(186,108,255,.28), transparent 32%),
+        url('cyber_base_sprite_assets/avatar_nightshade.png') center/cover no-repeat,
+        linear-gradient(180deg, #493b76, #1b1c35 62%, #0b0f18 100%);
       border:1px solid rgba(198,126,255,.56);box-shadow:inset 0 0 22px rgba(255,255,255,.08),0 0 14px rgba(198,126,255,.16);
     }
-    .avatar:before{content:"N";position:absolute;inset:0;display:grid;place-items:center;font-size:34px;font-weight:900;color:#f4f6ff;text-shadow:0 0 16px rgba(255,97,227,.40)}
+    .avatar:before{content:"";position:absolute;inset:0;box-shadow:inset 0 0 0 1px rgba(255,255,255,.03)}
     .meta{min-width:0;flex:1}
     .row{display:flex;justify-content:space-between;align-items:center;gap:10px}
     .name{font-size:17px;font-weight:800;white-space:nowrap}
@@ -117,7 +120,8 @@
       position:absolute;top:1.3%;height:5.4%;z-index:20;width:3.8%;display:grid;place-items:center;
       background:rgba(10,16,30,.76);border:1px solid rgba(255,255,255,.10);border-radius:11px;box-shadow:var(--shadow);backdrop-filter:blur(6px)
     }
-    .mail{left:79.5%}.social{left:84.7%;width:4.6%}.settings{left:90.7%}.net{left:95.1%;width:3.2%}
+    .mail{left:79.5%}.social{left:84.7%;width:4.6%}.settings{left:90.7%}.net{left:95.1%;width:3.2%}.music-toggle{top:8.2%;right:1.1%;width:4.1%;height:5.2%;z-index:26}
+    .music-toggle.on{border-color:rgba(103,231,255,.34);box-shadow:var(--shadow),0 0 16px rgba(103,231,255,.14)}
     .glyph{font-size:17px;opacity:.96}
     .dot{position:absolute;top:4px;right:4px;width:9px;height:9px;border-radius:50%;background:radial-gradient(circle at 35% 35%, #ffe3f0, #ff2e66);box-shadow:0 0 10px rgba(255,46,102,.70)}
 
@@ -250,7 +254,7 @@
 </head>
 <body>
   <div class="scene">
-    <img class="bg" src="assets/bg_clean_final.png" alt="background" />
+    <img class="bg" src="cyber_base_sprite_assets/bg_clean_final.png" alt="background" />
     <div class="fx"></div>
     <div class="scan"></div>
     <div class="vig"></div>
@@ -273,6 +277,7 @@
     <button class="icon-btn social" data-action="social" data-route="/social" aria-label="Social"><span class="glyph">👥</span><span class="dot"></span></button>
     <button class="icon-btn settings" data-action="settings" data-route="/settings" aria-label="Settings"><span class="glyph">⚙</span></button>
     <button class="icon-btn net" data-action="network" data-route="/network" aria-label="Network"><span class="glyph">⌁</span></button>
+    <button class="icon-btn music-toggle on" id="musicToggle" aria-label="Music toggle"><span class="glyph">♫</span></button>
 
     <button class="event-card" data-action="event" data-route="/event/neon-uprising">
       <div class="ek">Event</div>
@@ -291,8 +296,8 @@
 
     <button class="poi dungeons" data-action="dungeons" data-route="/dungeons">
       <div class="stack">
-        <img class="idle-img" src="assets/dungeons_static_clean.png" alt="dungeons" />
-        <img class="active-img" src="assets/dungeons_active_clean.png" alt="dungeons active" />
+        <img class="idle-img" src="cyber_base_sprite_assets/dungeons_static_clean.png" alt="dungeons" />
+        <img class="active-img" src="cyber_base_sprite_assets/dungeons_active_clean.png" alt="dungeons active" />
       </div>
       <div class="plabel cyan">
         <span class="ptitle">Dungeons</span>
@@ -303,8 +308,8 @@
 
     <button class="poi summon" data-action="summon" data-route="/summon">
       <div class="stack">
-        <img class="idle-img" src="assets/capsule_static_redrawn_clean_v2.png" alt="summon" />
-        <img class="active-img" src="assets/capsule_active_redrawn_clean_v2.png" alt="summon active" />
+        <img class="idle-img" src="cyber_base_sprite_assets/capsule_static_redrawn_clean_v2.png" alt="summon" />
+        <img class="active-img" src="cyber_base_sprite_assets/capsule_active_redrawn_clean_v2.png" alt="summon active" />
       </div>
       <div class="plabel pink">
         <span class="ptitle">Summon</span>
@@ -314,15 +319,15 @@
 
     <button class="poi afterlife" data-action="afterlife" data-route="/afterlife-bar">
       <div class="stack">
-        <img class="idle-img" src="assets/afterlife_bar_noframe_inactive_raw.png" alt="afterlife" />
-        <img class="active-img" src="assets/afterlife_bar_ACTIVE_noframe_final.png" alt="afterlife active" />
+        <img class="idle-img" src="cyber_base_sprite_assets/afterlife_bar_noframe_inactive_raw.png" alt="afterlife" />
+        <img class="active-img" src="cyber_base_sprite_assets/afterlife_bar_ACTIVE_noframe_final.png" alt="afterlife active" />
       </div>
     </button>
 
     <button class="poi cyberware" data-action="cyberware" data-route="/cyberware">
       <div class="stack">
-        <img class="idle-img" src="assets/cyberware_static_clean.png" alt="cyberware" />
-        <img class="active-img" src="assets/cyberware_active_clean.png" alt="cyberware active" />
+        <img class="idle-img" src="cyber_base_sprite_assets/cyberware_static_clean.png" alt="cyberware" />
+        <img class="active-img" src="cyber_base_sprite_assets/cyberware_active_clean.png" alt="cyberware active" />
       </div>
       <div class="plabel cyan">
         <span class="ptitle">Cyberware</span>
@@ -352,6 +357,10 @@
     </div>
 
     <div class="note" id="note">Это версия с более жёсткой привязкой по координатам под референс. Нажми <b>Debug Layout</b>, чтобы увидеть зоны и быстро подкрутить значения прямо в конструкторе.</div>
+
+    <audio id="bgMusic" preload="auto" loop playsinline>
+      <source src="assets/audio/music/neon_soul.mp3" type="audio/mpeg" />
+    </audio>
 
     <div class="modal" id="modal">
       <div class="card">
@@ -404,7 +413,31 @@
     const note = document.getElementById('note');
     const debugBtn = document.getElementById('debugBtn');
     const noteBtn = document.getElementById('noteBtn');
+    const musicToggle = document.getElementById('musicToggle');
+    const bgMusic = document.getElementById('bgMusic');
     let route = '/home';
+    let musicEnabled = true;
+
+    function updateMusicUi(){
+      musicToggle.classList.toggle('on', musicEnabled);
+      musicToggle.querySelector('.glyph').textContent = musicEnabled ? '♫' : '♪';
+      musicToggle.title = musicEnabled ? 'Music On' : 'Music Off';
+    }
+
+    async function startMusic(){
+      if(!bgMusic || !musicEnabled) return;
+      try{
+        bgMusic.volume = 0.42;
+        await bgMusic.play();
+      }catch(e){
+        console.debug('Autoplay blocked until user interaction');
+      }
+    }
+
+    function stopMusic(){
+      if(!bgMusic) return;
+      bgMusic.pause();
+    }
 
     function haptic(){
       try{ if(window.Telegram && Telegram.WebApp && Telegram.WebApp.HapticFeedback){ Telegram.WebApp.HapticFeedback.impactOccurred('light'); } }catch(e){}
@@ -430,6 +463,25 @@
       mdesc.textContent = 'Сейчас это демо. Следующий шаг — подцепить твой router / window.location / sendData / обработчик конструктора.';
     });
 
+    musicToggle.addEventListener('click', async ()=>{
+      musicEnabled = !musicEnabled;
+      updateMusicUi();
+      if(musicEnabled){
+        await startMusic();
+      }else{
+        stopMusic();
+      }
+    });
+
+    ['pointerdown','touchstart','keydown'].forEach(evt=>{
+      window.addEventListener(evt, ()=>{ if(musicEnabled) startMusic(); }, { once:true });
+    });
+
+    window.addEventListener('load', ()=>{
+      updateMusicUi();
+      startMusic();
+    });
+
     debugBtn.addEventListener('click',()=>{
       document.body.classList.toggle('debug');
       debugBtn.textContent = document.body.classList.contains('debug') ? 'Debug Off' : 'Debug Layout';
@@ -447,5 +499,5 @@
       }
     });
   </script>
-</body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a15ebcfb5d992c8f',t:'MTc4MzE3NDQ4Ng=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
