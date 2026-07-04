@@ -46,29 +46,27 @@
   .hero-card{position:absolute;border:0;background:transparent;padding:0;cursor:pointer;transition:transform .22s ease, filter .22s ease}
   .hero-card:hover,.hero-card:focus-visible{transform:translateY(-6px);filter:brightness(1.04);outline:none}
   .hero-card.selected{transform:translateY(-10px) scale(1.03)}
-  .hero-card::after{content:"";position:absolute;inset:0;border-radius:28px;opacity:0;transition:opacity .2s ease;pointer-events:none;box-shadow:0 0 36px rgba(255,102,223,.20), 0 0 20px rgba(116,235,255,.14)}
-  .hero-card.selected::after{opacity:1}
 
-  .hero-satori{left:10.5%;top:16.5%;width:24.8%;height:67.5%}
-  .hero-neon{left:38.2%;top:13.3%;width:24.8%;height:70%}
-  .hero-behemoth{left:66%;top:13.8%;width:26.8%;height:69%}
+  .hero-satori{left:9.8%;top:17.8%;width:25.4%;height:68.5%}
+  .hero-neon{left:37.9%;top:14.4%;width:25.6%;height:71.2%}
+  .hero-behemoth{left:65.4%;top:14.4%;width:28.2%;height:71.2%}
 
-  .plate{position:absolute;left:50%;bottom:0.8%;transform:translateX(-50%);width:88%;pointer-events:none;filter:drop-shadow(0 0 14px rgba(116,235,255,.20))}
-  .render-static,.render-selected{position:absolute;left:50%;bottom:4.8%;transform:translateX(-50%);max-width:100%;max-height:81%;pointer-events:none;transition:opacity .2s ease, transform .2s ease}
+  .plate{position:absolute;left:50%;bottom:-2.2%;transform:translateX(-50%);width:92%;pointer-events:none;filter:drop-shadow(0 0 14px rgba(116,235,255,.20))}
+  .render-static,.render-selected{position:absolute;left:50%;bottom:1.4%;transform:translateX(-50%);max-width:100%;max-height:84%;pointer-events:none;transition:opacity .2s ease, transform .2s ease}
   .render-selected{opacity:0}
   .hero-card.selected .render-static{opacity:0}
   .hero-card.selected .render-selected{opacity:1}
-  .hero-satori .render-static,.hero-satori .render-selected{height:77%}
-  .hero-neon .render-static,.hero-neon .render-selected{height:84%}
-  .hero-behemoth .render-static,.hero-behemoth .render-selected{height:83%}
+  .hero-satori .render-static,.hero-satori .render-selected{height:81%}
+  .hero-neon .render-static,.hero-neon .render-selected{height:88%}
+  .hero-behemoth .render-static,.hero-behemoth .render-selected{height:86%}
 
-  .rarity{position:absolute;left:13%;top:7.5%;padding:6px 10px;border-radius:999px;background:rgba(255,102,223,.14);border:1px solid rgba(255,102,223,.34);color:#ffe1fb;font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;box-shadow:0 0 14px rgba(255,102,223,.12);pointer-events:none}
-  .hero-name{position:absolute;left:50%;bottom:15.8%;transform:translateX(-50%);font-size:clamp(24px,2.5vw,40px);font-weight:700;letter-spacing:.03em;text-transform:uppercase;text-shadow:0 0 18px rgba(255,255,255,.10);pointer-events:none}
-  .hero-role{position:absolute;left:50%;bottom:11.1%;transform:translateX(-50%);font-size:clamp(11px,1vw,15px);font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:#93e1f3;pointer-events:none}
+  .rarity{position:absolute;left:13%;top:7.5%;padding:6px 10px;border-radius:999px;background:rgba(255,209,93,.18);border:1px solid rgba(255,209,93,.42);color:#ffe9a8;font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;box-shadow:0 0 14px rgba(255,209,93,.14);pointer-events:none}
+  .hero-name{position:absolute;left:50%;bottom:11.6%;transform:translateX(-50%);font-size:clamp(24px,2.5vw,40px);font-weight:700;letter-spacing:.03em;text-transform:uppercase;text-shadow:0 0 18px rgba(255,255,255,.10);pointer-events:none}
+  .hero-role{position:absolute;left:50%;bottom:7.3%;transform:translateX(-50%);font-size:clamp(11px,1vw,15px);font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:#93e1f3;pointer-events:none}
   .hero-card.selected .hero-name{color:#ffe8fb;text-shadow:0 0 18px rgba(255,102,223,.22)}
 
   .detail{
-    position:absolute;left:2.2%;top:16.8%;z-index:4;width:300px;
+    position:absolute;left:1.2%;top:9.2%;z-index:4;width:300px;
     padding:16px 16px 14px;border-radius:20px;
     background:linear-gradient(180deg, rgba(8,13,24,.84), rgba(6,10,18,.86));
     border:1px solid rgba(116,235,255,.12);box-shadow:var(--shadow)
@@ -83,9 +81,8 @@
 
   .footer{
     position:absolute;left:50%;bottom:4.2%;transform:translateX(-50%);width:min(980px,84%);
-    display:flex;align-items:center;justify-content:space-between;gap:18px;z-index:4;
+    display:flex;align-items:center;justify-content:flex-end;gap:18px;z-index:4;
   }
-  .meta{max-width:56ch;padding:10px 12px;border-radius:14px;background:rgba(7,12,22,.56);border:1px solid rgba(116,235,255,.10);color:#abc1df;font-size:12px;line-height:1.45}
   .selection{display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:flex-end}
   .selection-text{color:#eaf7ff;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;text-shadow:0 0 12px rgba(116,235,255,.16)}
   .confirm-btn{
@@ -105,34 +102,33 @@
     .topbar{top:3%;width:92%}
     .title{font-size:34px}
     .subtitle{font-size:12px;max-width:46ch}
-    .hero-satori{left:7%;width:28%;height:62%}
-    .hero-neon{left:36.2%;width:28.5%;height:65%}
-    .hero-behemoth{left:65.6%;width:29.5%;height:65%}
+    .hero-satori{left:8%;top:18.2%;width:28%;height:64%}
+    .hero-neon{left:36.6%;top:15.4%;width:28.6%;height:66.5%}
+    .hero-behemoth{left:65.3%;top:15.6%;width:29.6%;height:66.5%}
     .rarity{left:9%;font-size:8px;padding:5px 7px}
-    .hero-name{font-size:20px;bottom:16.5%}
-    .hero-role{font-size:10px;bottom:12%}
-    .detail{left:2%;top:15.5%;width:250px;padding:14px}
+    .hero-name{font-size:20px;bottom:11.8%}
+    .hero-role{font-size:10px;bottom:7.6%}
+    .detail{left:1.2%;top:8.6%;width:250px;padding:14px}
     .detail-name{font-size:24px}
-    .footer{width:92%;bottom:3%;align-items:flex-start;flex-direction:column}
+    .footer{width:92%;bottom:3%;justify-content:flex-end}
     .selection{width:100%;justify-content:space-between}
     .confirm-btn{min-width:190px;min-height:50px}
   }
 
   @media (max-width: 760px){
-    .detail{left:2%;top:14%;width:220px;padding:12px}
+    .detail{left:1%;top:8%;width:220px;padding:12px}
     .topbar{top:2.2%}
     .kicker{font-size:10px}
     .title{font-size:28px}
     .subtitle{font-size:11px}
-    .hero-satori{left:5%;top:19%;width:28.5%;height:56%}
-    .hero-neon{left:35.8%;top:16.5%;width:29%;height:59%}
-    .hero-behemoth{left:66.2%;top:17.2%;width:30%;height:59%}
-    .hero-name{font-size:18px;bottom:16.7%}
-    .hero-role{font-size:9px;bottom:12.2%}
-    .meta{font-size:11px}
+    .hero-satori{left:6%;top:19.6%;width:28%;height:58%}
+    .hero-neon{left:35.6%;top:17%;width:28.8%;height:60.5%}
+    .hero-behemoth{left:65.8%;top:17.6%;width:29.6%;height:60.5%}
+    .hero-name{font-size:18px;bottom:12%}
+    .hero-role{font-size:9px;bottom:7.8%}
     .selection-text{font-size:11px}
     .confirm-btn{min-width:100%;font-size:12px}
-    .build-tag{font-size:8px;padding:5px 8px}
+    .build-tag,.demo-tag{font-size:8px;padding:5px 8px}
   }
 </style>
 </head>
@@ -162,7 +158,7 @@
     <button class="hero-card hero-neon" data-hero="neon">
       <span class="rarity">Legendary</span>
       <img class="plate" src="cyber_base_sprite_assets/hero_plate.png" alt="Hero plate">
-      <img class="render-static" src="cyber_base_sprite_assets/hero_neon_static.png" alt="Neon static">
+      <img class="render-static" src="cyber_base_sprite_assets/hero_neon_static_transparent.png" alt="Neon static">
       <img class="render-selected" src="cyber_base_sprite_assets/hero_neon_active.png" alt="Neon selected">
       <span class="hero-name">Neon</span>
       <span class="hero-role">Tech Hacker</span>
@@ -171,7 +167,7 @@
     <button class="hero-card hero-behemoth" data-hero="behemoth">
       <span class="rarity">Legendary</span>
       <img class="plate" src="cyber_base_sprite_assets/hero_plate.png" alt="Hero plate">
-      <img class="render-static" src="cyber_base_sprite_assets/hero_behemoth_static.png" alt="Behemoth static">
+      <img class="render-static" src="cyber_base_sprite_assets/hero_behemoth_static_transparent.png" alt="Behemoth static">
       <img class="render-selected" src="cyber_base_sprite_assets/behemoth_active.png" alt="Behemoth selected">
       <span class="hero-name">Behemoth</span>
       <span class="hero-role">Cyber Gunner</span>
@@ -191,7 +187,6 @@
   </aside>
 
   <div class="footer">
-    <div class="meta">Демо-экран выбора персонажа. После подтверждения герой будет записан в локальный аккаунт и игрок вернётся на главную базу. Позже сюда можно добавить вступительную анимацию, озвучку и полноценные карточки редкости.</div>
     <div class="selection">
       <div class="selection-text" id="selectionText">Выбери легендарного героя</div>
       <button class="confirm-btn" id="confirmBtn" disabled>Подтвердить героя</button>
@@ -318,5 +313,5 @@
     syncSelection();
   });
 </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a161097b6fe046c8',t:'MTc4MzE5ODU5MQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a1612dcb3a1be8f5',t:'MTc4MzIwMDA3OA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
