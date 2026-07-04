@@ -49,18 +49,18 @@
   .hero-card::after{content:"";position:absolute;inset:0;border-radius:28px;opacity:0;transition:opacity .2s ease;pointer-events:none;box-shadow:0 0 36px rgba(255,102,223,.20), 0 0 20px rgba(116,235,255,.14)}
   .hero-card.selected::after{opacity:1}
 
-  .hero-satori{left:7.8%;top:15%;width:27.2%;height:67%}
-  .hero-neon{left:36.4%;top:12.2%;width:26.2%;height:69.8%}
-  .hero-behemoth{left:63.4%;top:12.6%;width:28.7%;height:69.2%}
+  .hero-satori{left:10.5%;top:16.5%;width:24.8%;height:67.5%}
+  .hero-neon{left:38.2%;top:13.3%;width:24.8%;height:70%}
+  .hero-behemoth{left:66%;top:13.8%;width:26.8%;height:69%}
 
-  .plate{position:absolute;left:50%;bottom:3.2%;transform:translateX(-50%);width:82%;pointer-events:none;filter:drop-shadow(0 0 14px rgba(116,235,255,.20))}
-  .render-static,.render-selected{position:absolute;left:50%;bottom:11%;transform:translateX(-50%);max-width:100%;max-height:79%;pointer-events:none;transition:opacity .2s ease, transform .2s ease}
+  .plate{position:absolute;left:50%;bottom:0.8%;transform:translateX(-50%);width:88%;pointer-events:none;filter:drop-shadow(0 0 14px rgba(116,235,255,.20))}
+  .render-static,.render-selected{position:absolute;left:50%;bottom:4.8%;transform:translateX(-50%);max-width:100%;max-height:81%;pointer-events:none;transition:opacity .2s ease, transform .2s ease}
   .render-selected{opacity:0}
   .hero-card.selected .render-static{opacity:0}
   .hero-card.selected .render-selected{opacity:1}
-  .hero-satori .render-static,.hero-satori .render-selected{height:74%}
-  .hero-neon .render-static,.hero-neon .render-selected{height:82%}
-  .hero-behemoth .render-static,.hero-behemoth .render-selected{height:80%}
+  .hero-satori .render-static,.hero-satori .render-selected{height:77%}
+  .hero-neon .render-static,.hero-neon .render-selected{height:84%}
+  .hero-behemoth .render-static,.hero-behemoth .render-selected{height:83%}
 
   .rarity{position:absolute;left:13%;top:7.5%;padding:6px 10px;border-radius:999px;background:rgba(255,102,223,.14);border:1px solid rgba(255,102,223,.34);color:#ffe1fb;font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;box-shadow:0 0 14px rgba(255,102,223,.12);pointer-events:none}
   .hero-name{position:absolute;left:50%;bottom:15.8%;transform:translateX(-50%);font-size:clamp(24px,2.5vw,40px);font-weight:700;letter-spacing:.03em;text-transform:uppercase;text-shadow:0 0 18px rgba(255,255,255,.10);pointer-events:none}
@@ -68,7 +68,7 @@
   .hero-card.selected .hero-name{color:#ffe8fb;text-shadow:0 0 18px rgba(255,102,223,.22)}
 
   .detail{
-    position:absolute;right:2.4%;top:16.4%;z-index:4;width:300px;
+    position:absolute;left:2.2%;top:16.8%;z-index:4;width:300px;
     padding:16px 16px 14px;border-radius:20px;
     background:linear-gradient(180deg, rgba(8,13,24,.84), rgba(6,10,18,.86));
     border:1px solid rgba(116,235,255,.12);box-shadow:var(--shadow)
@@ -97,19 +97,21 @@
   .confirm-btn:hover:not(:disabled){transform:translateY(-2px);filter:brightness(1.05)}
   .confirm-btn:disabled{opacity:.45;cursor:not-allowed;filter:saturate(.7)}
 
-  .build-tag{position:absolute;left:14px;bottom:14px;z-index:5;padding:6px 10px;border-radius:999px;background:rgba(7,12,22,.72);border:1px solid rgba(116,235,255,.14);color:#9eb0d1;font-size:10px;font-weight:700;letter-spacing:.10em;text-transform:uppercase;box-shadow:var(--shadow)}
+  .demo-tag,.build-tag{position:absolute;left:14px;z-index:5;padding:6px 10px;border-radius:999px;background:rgba(7,12,22,.72);border:1px solid rgba(116,235,255,.14);color:#9eb0d1;font-size:10px;font-weight:700;letter-spacing:.10em;text-transform:uppercase;box-shadow:var(--shadow)}
+  .demo-tag{bottom:44px}
+  .build-tag{bottom:14px}
 
   @media (max-width: 900px){
     .topbar{top:3%;width:92%}
     .title{font-size:34px}
     .subtitle{font-size:12px;max-width:46ch}
-    .hero-satori{left:3%;width:31.5%;height:62%}
-    .hero-neon{left:34.8%;width:30.7%;height:65%}
-    .hero-behemoth{left:65.3%;width:32.2%;height:65%}
+    .hero-satori{left:7%;width:28%;height:62%}
+    .hero-neon{left:36.2%;width:28.5%;height:65%}
+    .hero-behemoth{left:65.6%;width:29.5%;height:65%}
     .rarity{left:9%;font-size:8px;padding:5px 7px}
     .hero-name{font-size:20px;bottom:16.5%}
     .hero-role{font-size:10px;bottom:12%}
-    .detail{right:2%;top:15.5%;width:250px;padding:14px}
+    .detail{left:2%;top:15.5%;width:250px;padding:14px}
     .detail-name{font-size:24px}
     .footer{width:92%;bottom:3%;align-items:flex-start;flex-direction:column}
     .selection{width:100%;justify-content:space-between}
@@ -117,14 +119,14 @@
   }
 
   @media (max-width: 760px){
-    .detail{display:none}
+    .detail{left:2%;top:14%;width:220px;padding:12px}
     .topbar{top:2.2%}
     .kicker{font-size:10px}
     .title{font-size:28px}
     .subtitle{font-size:11px}
-    .hero-satori{left:2.5%;top:19%;width:31.5%;height:56%}
-    .hero-neon{left:34.5%;top:16.5%;width:31%;height:59%}
-    .hero-behemoth{left:65.5%;top:17.2%;width:32%;height:59%}
+    .hero-satori{left:5%;top:19%;width:28.5%;height:56%}
+    .hero-neon{left:35.8%;top:16.5%;width:29%;height:59%}
+    .hero-behemoth{left:66.2%;top:17.2%;width:30%;height:59%}
     .hero-name{font-size:18px;bottom:16.7%}
     .hero-role{font-size:9px;bottom:12.2%}
     .meta{font-size:11px}
@@ -160,7 +162,7 @@
     <button class="hero-card hero-neon" data-hero="neon">
       <span class="rarity">Legendary</span>
       <img class="plate" src="cyber_base_sprite_assets/hero_plate.png" alt="Hero plate">
-      <img class="render-static" src="cyber_base_sprite_assets/hero_neon_static.png" alt="Neon static">
+      <img class="render-static" src="cyber_base_sprite_assets/hero_neon_static_transparent.png" alt="Neon static">
       <img class="render-selected" src="cyber_base_sprite_assets/hero_neon_selected.png" alt="Neon selected">
       <span class="hero-name">Neon</span>
       <span class="hero-role">Tech Hacker</span>
@@ -169,7 +171,7 @@
     <button class="hero-card hero-behemoth" data-hero="behemoth">
       <span class="rarity">Legendary</span>
       <img class="plate" src="cyber_base_sprite_assets/hero_plate.png" alt="Hero plate">
-      <img class="render-static" src="cyber_base_sprite_assets/hero_behemoth_static.png" alt="Behemoth static">
+      <img class="render-static" src="cyber_base_sprite_assets/hero_behemoth_static_transparent.png" alt="Behemoth static">
       <img class="render-selected" src="cyber_base_sprite_assets/behemoth_active.png" alt="Behemoth selected">
       <span class="hero-name">Behemoth</span>
       <span class="hero-role">Cyber Gunner</span>
@@ -196,6 +198,7 @@
     </div>
   </div>
 
+  <div class="demo-tag">Демо экран выбора персонажа</div>
   <div class="build-tag">Prototype Build v0.1</div>
 </div>
 
@@ -315,5 +318,5 @@
     syncSelection();
   });
 </script>
-</body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a161097b6fe046c8',t:'MTc4MzE5ODU5MQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
