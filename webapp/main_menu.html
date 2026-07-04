@@ -78,11 +78,13 @@
     /* top ui */
     .profile{
       position:absolute;left:1.2%;top:1.5%;width:28.5%;height:10.5%;z-index:20;
-      display:flex;align-items:center;gap:12px;padding:8px 10px;
-      background:linear-gradient(180deg, rgba(10,14,26,.78), rgba(7,11,20,.38));
+      display:flex;align-items:center;gap:12px;padding:8px 12px 8px 10px;
+      background:linear-gradient(180deg, rgba(10,14,26,.84), rgba(7,11,20,.46));
       border:1px solid rgba(198,126,255,.18);border-radius:14px;box-shadow:var(--shadow);
-      backdrop-filter:blur(6px);text-align:left;
+      backdrop-filter:blur(6px);text-align:left;overflow:hidden;
     }
+    .profile:before{content:"";position:absolute;inset:0;background:linear-gradient(90deg, rgba(255,255,255,.04), transparent 34%, transparent 72%, rgba(103,231,255,.05));pointer-events:none}
+    .profile:after{content:"";position:absolute;left:76px;right:14px;bottom:0;height:1px;background:linear-gradient(90deg, rgba(255,97,227,.35), rgba(103,231,255,.16), transparent)}
     .avatar{
       width:63px;height:63px;border-radius:12px;flex:0 0 auto;position:relative;overflow:hidden;
       background:
@@ -99,34 +101,39 @@
     .xp{height:7px;margin:6px 0 5px;border-radius:999px;background:rgba(255,255,255,.10);overflow:hidden}
     .xp>span{display:block;width:72.8%;height:100%;background:linear-gradient(90deg,#ff2ecf,#cf69ff 62%,#8572ff);box-shadow:0 0 18px rgba(255,97,227,.45)}
     .xp-txt{font-size:11px;color:#d9e2ff;text-align:right}
-    .power{margin-top:5px;color:var(--gold);font-size:12px;font-weight:900}
+    .power{margin-top:2px;color:var(--gold);font-size:12px;font-weight:900;display:flex;align-items:center;gap:6px}
+    .power b{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#f3d98d;opacity:.84}
 
     .chip{
-      position:absolute;top:1.5%;height:5.8%;z-index:20;padding:0 10px;display:flex;align-items:center;gap:8px;
-      background:linear-gradient(180deg, rgba(9,13,24,.80), rgba(7,11,20,.46));border:1px solid rgba(255,255,255,.08);
-      border-radius:12px;box-shadow:var(--shadow);backdrop-filter:blur(6px);text-align:left;
+      position:absolute;top:1.55%;height:5.25%;z-index:20;padding:0 8px 0 9px;display:flex;align-items:center;gap:8px;
+      background:linear-gradient(180deg, rgba(9,13,24,.88), rgba(7,11,20,.54));border:1px solid rgba(255,255,255,.12);
+      border-radius:999px;box-shadow:var(--shadow);backdrop-filter:blur(6px);text-align:left;overflow:hidden;white-space:nowrap;flex-wrap:nowrap;
     }
-    .energy{left:33.7%;width:12.2%}
-    .gold{left:46.5%;width:16.4%}
-    .gems{left:63.7%;width:12.4%}
-    .ci{width:18px;height:18px;display:grid;place-items:center;font-size:16px;font-weight:900;flex:0 0 auto}
-    .ci.energy{color:var(--cyan);text-shadow:0 0 12px rgba(103,231,255,.42)}
-    .ci.gold{color:var(--gold);text-shadow:0 0 12px rgba(234,199,109,.35)}
-    .ci.gems{color:#b68eff;text-shadow:0 0 12px rgba(182,142,255,.40)}
-    .cv{font-size:13px;font-weight:800;letter-spacing:.02em}
-    .plus{margin-left:auto;width:20px;height:20px;border-radius:6px;display:grid;place-items:center;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.05);font-weight:900}
+    .chip:before{content:"";position:absolute;inset:1px;background:linear-gradient(90deg, rgba(255,255,255,.05), transparent 40%, transparent 78%, rgba(103,231,255,.05));border-radius:inherit;pointer-events:none}
+    .energy{left:33.6%;width:12.9%}
+    .gold{left:46.9%;width:15.9%}
+    .gems{left:63.3%;width:12.3%}
+    .ci{width:23px;height:23px;display:grid;place-items:center;flex:0 0 auto;position:relative;z-index:1}
+    .ci svg{width:23px;height:23px;display:block;filter:drop-shadow(0 0 10px rgba(255,255,255,.12))}
+    .cv{font-size:15px;font-weight:900;letter-spacing:.01em;line-height:1;white-space:nowrap;position:relative;z-index:1}
+    .plus{margin-left:auto;width:24px;height:24px;flex:0 0 24px;border-radius:999px;display:grid;place-items:center;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);font-weight:900;font-size:16px;line-height:1;padding:0;text-align:center;position:relative;z-index:1}
 
     .icon-btn{
       position:absolute;top:1.3%;height:5.4%;z-index:20;width:3.8%;display:grid;place-items:center;
       background:rgba(10,16,30,.76);border:1px solid rgba(255,255,255,.10);border-radius:11px;box-shadow:var(--shadow);backdrop-filter:blur(6px)
     }
-    .mail{right:18.2%;width:3.8%}
-    .social{right:13.0%;width:4.6%}
-    .settings{right:8.3%;width:3.8%}
-    .music-toggle{top:1.3%;right:4.4%;width:3.2%;height:5.4%;z-index:20}
-    .net{right:.7%;width:3.2%;padding:2px}
+    .mail{right:18.6%;width:3.9%}
+    .social{right:13.5%;width:4.8%}
+    .settings{right:8.8%;width:3.8%}
+    .music-toggle{top:1.3%;right:4.8%;width:3.5%;height:5.4%;z-index:20}
+    .net{right:.8%;width:3.4%;padding:2px}
     .music-toggle.on{border-color:rgba(103,231,255,.34);box-shadow:var(--shadow),0 0 16px rgba(103,231,255,.14)}
+    .music-toggle:not(.on) .icon-svg svg{opacity:.48;filter:none}
     .glyph{font-size:17px;opacity:.96}
+    .icon-svg{display:grid;place-items:center;width:100%;height:100%}
+    .icon-svg svg{width:21px;height:21px;display:block;filter:drop-shadow(0 0 10px rgba(103,231,255,.15))}
+    .social .icon-svg svg{width:24px;height:24px}
+    .music-toggle .icon-svg svg{width:22px;height:22px}
     .dot{position:absolute;top:4px;right:4px;width:9px;height:9px;border-radius:50%;background:radial-gradient(circle at 35% 35%, #ffe3f0, #ff2e66);box-shadow:0 0 10px rgba(255,46,102,.70)}
     .net-ui{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;line-height:1;width:100%}
     .net-bars{display:flex;align-items:flex-end;gap:2px;height:10px}
@@ -153,23 +160,26 @@
     .event-card{
       position:absolute;left:1.6%;top:15.2%;width:17.9%;height:10.8%;z-index:18;padding:12px 14px;
       border-radius:16px;border:1px solid rgba(193,111,255,.42);
-      background:linear-gradient(135deg, rgba(52,21,86,.94), rgba(10,16,35,.92) 60%),radial-gradient(circle at 78% 34%, rgba(108,181,255,.28), transparent 26%);
-      box-shadow:var(--shadow),0 0 22px rgba(193,111,255,.16);text-align:left;overflow:hidden
+      background:linear-gradient(135deg, rgba(52,21,86,.95), rgba(10,16,35,.94) 60%),radial-gradient(circle at 78% 34%, rgba(108,181,255,.28), transparent 26%);
+      box-shadow:var(--shadow),0 0 22px rgba(193,111,255,.16);text-align:left;overflow:hidden;
+      clip-path:polygon(0 0, 92% 0, 100% 22%, 100% 100%, 0 100%, 0 10%)
     }
     .event-card:after{content:"";position:absolute;right:-3%;bottom:-5%;width:34%;height:120%;background:linear-gradient(180deg, rgba(104,145,255,.62), rgba(169,97,255,.18));opacity:.88;border-radius:20px 0 16px 0;transform:skewX(-7deg)}
     .ek{position:relative;z-index:1;color:#cf7bff;font-size:12px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;margin-bottom:5px}
     .et{position:relative;z-index:1;font-size:18px;font-weight:900;line-height:1.02;text-transform:uppercase;margin-bottom:8px;text-shadow:0 0 16px rgba(255,97,227,.22)}
     .etime{position:relative;z-index:1;font-size:13px;opacity:.94}
 
-    .menu{position:absolute;left:1.6%;top:28.8%;width:16.8%;z-index:18;display:flex;flex-direction:column;gap:7px}
+    .menu{position:absolute;left:1.6%;top:28.8%;width:16.8%;z-index:18;display:flex;flex-direction:column;gap:8px}
     .menu-btn{
-      position:relative;min-height:52px;padding:0 13px;display:flex;align-items:center;gap:12px;text-align:left;
-      border-radius:14px;background:linear-gradient(180deg, rgba(6,12,22,.82), rgba(4,9,18,.42));border:1px solid rgba(103,163,255,.12);
-      box-shadow:var(--shadow);backdrop-filter:blur(6px);overflow:hidden
+      position:relative;min-height:52px;padding:0 15px 0 13px;display:flex;align-items:center;gap:12px;text-align:left;
+      border-radius:14px;background:linear-gradient(180deg, rgba(7,14,26,.88), rgba(4,9,18,.54));border:1px solid rgba(103,163,255,.14);
+      box-shadow:var(--shadow);backdrop-filter:blur(6px);overflow:hidden;clip-path:polygon(0 0, 96% 0, 100% 50%, 96% 100%, 0 100%, 0 12%)
     }
+    .menu-btn:after{content:"";position:absolute;left:0;top:10%;bottom:10%;width:3px;background:linear-gradient(180deg, rgba(103,231,255,.72), rgba(255,97,227,.36));border-radius:0 3px 3px 0;opacity:.78}
     .menu-btn:before,.nav-btn:before,.story-btn:before{content:"";position:absolute;inset:0;background:linear-gradient(135deg, rgba(103,231,255,.10), rgba(255,97,227,.08));opacity:0;transition:opacity .18s ease;pointer-events:none}
     .menu-btn:hover:before,.menu-btn:focus-visible:before,.nav-btn:hover:before,.nav-btn:focus-visible:before,.story-btn:hover:before,.story-btn:focus-visible:before{opacity:1}
-    .mi{width:28px;height:28px;border-radius:8px;display:grid;place-items:center;flex:0 0 auto;background:rgba(255,255,255,.04);border:1px solid rgba(103,231,255,.14);color:var(--cyan);font-weight:900}
+    .mi{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;flex:0 0 auto;background:linear-gradient(180deg, rgba(20,34,52,.84), rgba(8,14,24,.72));border:1px solid rgba(103,231,255,.18);color:var(--cyan);box-shadow:inset 0 0 18px rgba(103,231,255,.06)}
+    .mi svg{width:17px;height:17px;display:block;filter:drop-shadow(0 0 8px rgba(103,231,255,.16))}
     .mt{font-size:12.8px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;line-height:1.04}
     .new{margin-left:auto;padding:4px 7px;border-radius:999px;background:linear-gradient(180deg,#ff609d,#ff315f);box-shadow:0 0 12px rgba(255,49,95,.36);font-size:10px;font-weight:900;letter-spacing:.08em}
 
@@ -192,7 +202,7 @@
     .dungeons{left:12.1%;bottom:12.4%;width:31.8%;height:29.8%}
     .dungeons .stack{display:flex;align-items:flex-end;justify-content:flex-start}
     .dungeons .stack img{left:0;bottom:0;width:73.6%}
-    .dungeons .plabel{left:47.6%;top:33.4%;width:52%}
+    .dungeons .plabel{left:30.8%;top:2.8%;width:60%;text-align:center}
     .dungeons .ptitle{font-size:clamp(28px,2.75vw,52px)}
     .dtags{display:none}
     .dtags span{display:none}
@@ -200,7 +210,7 @@
     .summon{left:45.2%;top:14.4%;width:22.2%;height:60.6%}
     .summon .stack{display:flex;align-items:flex-end;justify-content:center}
     .summon .stack img{left:0;right:0;bottom:0;margin:auto;width:97.5%}
-    .summon .plabel{left:47.8%;top:14.5%;width:39%}
+    .summon .plabel{left:46.8%;top:5.1%;width:58%;transform:translateX(-50%);text-align:center}
     .summon .ptitle{font-size:clamp(28px,2.75vw,50px)}
 
     .afterlife{right:2.9%;top:11.4%;width:29.2%;height:42.9%;overflow:hidden;border-radius:14px}
@@ -243,7 +253,7 @@
       box-shadow:var(--shadow);font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase
     }
     .note{
-      position:absolute;left:18.6%;top:43.5%;z-index:18;width:390px;max-height:40%;overflow:auto;padding:14px 15px 12px;border-radius:14px;
+      position:absolute;left:18.2%;top:23.2%;z-index:18;width:410px;max-height:33%;overflow:auto;padding:14px 15px 12px;border-radius:14px;
       background:rgba(7,12,22,.80);border:1px solid rgba(103,231,255,.14);color:var(--muted);font-size:12px;line-height:1.42;box-shadow:var(--shadow)
     }
     .note::-webkit-scrollbar{width:8px}
@@ -271,10 +281,10 @@
     .afterlife .active-img,.dungeons .active-img,.summon .active-img,.cyberware .active-img{animation:pulsePink 2.8s ease-in-out infinite}
 
     @media (max-width:900px){
-      .menu-btn{min-height:46px}.mi{width:25px;height:25px}.mt{font-size:11px}.profile{gap:10px}.avatar{width:56px;height:56px}.name{font-size:15px}.nav{right:18.4%}.story-btn{padding:14px 22px}.st2{font-size:16px}.note{left:17%;top:42%;width:320px;max-height:34%;font-size:10.5px}
+      .menu-btn{min-height:46px}.mi{width:26px;height:26px}.mi svg{width:15px;height:15px}.mt{font-size:11px}.profile{gap:10px}.avatar{width:56px;height:56px}.name{font-size:15px}.nav{right:18.4%}.story-btn{padding:14px 22px}.st2{font-size:16px}.note{left:16%;top:22%;width:330px;max-height:28%;font-size:10.5px}.cv{font-size:13px}.ci{width:20px;height:20px}.ci svg{width:20px;height:20px}.icon-svg svg{width:18px;height:18px}.social .icon-svg svg{width:20px;height:20px}.energy{width:13.8%}.gold{width:16.8%}.gems{width:13.2%}
     }
     @media (max-width:760px){
-      .tools{top:auto;bottom:114px}.btn{padding:7px 10px;font-size:10px}.profile{padding:7px 8px}.chip{padding:0 8px}.cv{font-size:11px}.plus{width:18px;height:18px}.nl{font-size:10px}.psub{font-size:11px}
+      .tools{top:auto;bottom:114px}.btn{padding:7px 10px;font-size:10px}.profile{padding:7px 8px}.chip{padding:0 8px}.cv{font-size:11px}.plus{width:18px;height:18px;flex-basis:18px;font-size:13px}.nl{font-size:10px}.psub{font-size:11px}.energy{width:15.5%}.gold{width:18.5%}.gems{width:14.8%}
     }
   </style>
 </head>
@@ -291,18 +301,45 @@
         <div class="row"><div class="name">Nightshade</div><div class="lvl">Lv. 68</div></div>
         <div class="xp"><span></span></div>
         <div class="xp-txt">26,230 / 36,000</div>
-        <div class="power">⚜ 256,800</div>
+        <div class="power"><b>Power</b> 256,800</div>
       </div>
     </button>
 
-    <button class="chip energy" data-action="energy" data-route="/resources/energy"><span class="ci energy">⚡</span><span class="cv">120 / 120</span><span class="plus">+</span></button>
-    <button class="chip gold" data-action="gold" data-route="/resources/gold"><span class="ci gold">⬢</span><span class="cv">2,450,790</span><span class="plus">+</span></button>
-    <button class="chip gems" data-action="gems" data-route="/resources/gems"><span class="ci gems">◈</span><span class="cv">8,960</span><span class="plus">+</span></button>
+    <button class="chip energy" data-action="energy" data-route="/resources/energy">
+      <span class="ci energy" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M13.5 2 6 13h5l-1 9 8-11h-5.5L13.5 2Z" fill="#62E6FF" stroke="#D8FBFF" stroke-width="0.8"/></svg>
+      </span>
+      <span class="cv">120 / 120</span><span class="plus">+</span>
+    </button>
+    <button class="chip gold" data-action="gold" data-route="/resources/gold">
+      <span class="ci gold" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M12 2.5 19 6.5v8L12 21.5 5 14.5v-8l7-4Z" fill="#F1C86A" stroke="#FFF1B8" stroke-width="0.8"/><path d="M12 6.3 15.8 8.5v4L12 14.8 8.2 12.5v-4L12 6.3Z" fill="#9C6D00" opacity=".35"/></svg>
+      </span>
+      <span class="cv">2,450,790</span><span class="plus">+</span>
+    </button>
+    <button class="chip gems" data-action="gems" data-route="/resources/gems">
+      <span class="ci gems" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M12 2.5 20 9l-8 12.5L4 9l8-6.5Z" fill="#A56CFF" stroke="#E8D8FF" stroke-width="0.8"/><path d="M12 2.5V21.5M4 9h16" stroke="#F3ECFF" stroke-opacity=".5" stroke-width="0.8"/></svg>
+      </span>
+      <span class="cv">8,960</span><span class="plus">+</span>
+    </button>
 
-    <button class="icon-btn mail" data-action="mail" data-route="/mail" aria-label="Mail"><span class="glyph">✉</span></button>
-    <button class="icon-btn social" data-action="social" data-route="/social" aria-label="Social"><span class="glyph">👥</span><span class="dot"></span></button>
+    <button class="icon-btn mail" data-action="mail" data-route="/mail" aria-label="Mail">
+      <span class="icon-svg" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="3" fill="#0F1728" stroke="#DCEFFF" stroke-width="1.1"/><path d="m5 8 6.2 4.7a1.3 1.3 0 0 0 1.6 0L19 8" stroke="#6CE8FF" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+    </button>
+    <button class="icon-btn social" data-action="social" data-route="/social" aria-label="Social">
+      <span class="icon-svg" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none"><circle cx="9" cy="10" r="3.2" fill="#71E8FF"/><circle cx="16.4" cy="9" r="2.5" fill="#C798FF"/><path d="M4.5 18.5c.7-2.9 3-4.4 5.9-4.4 2.7 0 4.8 1.2 5.8 4.4" stroke="#E8F9FF" stroke-width="1.2" stroke-linecap="round"/><path d="M14.3 18.1c.5-1.8 1.8-2.8 3.7-2.8 1.2 0 2.2.4 3 1.3" stroke="#E8D7FF" stroke-width="1" stroke-linecap="round"/></svg>
+      </span><span class="dot"></span>
+    </button>
     <button class="icon-btn settings" data-action="settings" data-route="/settings" aria-label="Settings"><span class="glyph">⚙</span></button>
-    <button class="icon-btn music-toggle on" id="musicToggle" aria-label="Music toggle"><span class="glyph">♫</span></button>
+    <button class="icon-btn music-toggle on" id="musicToggle" aria-label="Music toggle">
+      <span class="icon-svg" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M9 18.5V6.4l10-2.1v12" stroke="#E8F6FF" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="7.2" cy="18.6" r="2.4" fill="#67E7FF"/><circle cx="17.2" cy="16.5" r="2.4" fill="#FF78E6"/></svg>
+      </span>
+    </button>
     <button class="icon-btn net quality-good" data-action="network" data-route="/network" aria-label="Network">
       <span class="net-ui">
         <span class="net-bars"><i></i><i></i><i></i><i></i></span>
@@ -318,12 +355,11 @@
     </button>
 
     <div class="menu">
-      <button class="menu-btn" data-action="missions" data-route="/missions"><span class="mi">☰</span><span class="mt">Missions</span></button>
-      <button class="menu-btn" data-action="battlepass" data-route="/battlepass"><span class="mi">✪</span><span class="mt">Battle Pass</span><span class="new">New</span></button>
-      <button class="menu-btn" data-action="store" data-route="/store"><span class="mi">🛒</span><span class="mt">Store</span></button>
-      <button class="menu-btn" data-action="inventory" data-route="/inventory"><span class="mi">▣</span><span class="mt">Inventory</span></button>
-      <button class="menu-btn" data-action="archives" data-route="/archives"><span class="mi">⌘</span><span class="mt">Archives</span></button>
-      <button class="menu-btn" data-action="arena" data-route="/pvp-arena"><span class="mi">⚔</span><span class="mt">PVP Arena</span><span class="new">New</span></button>
+      <button class="menu-btn" data-action="missions" data-route="/missions"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M7 6h10M7 12h10M7 18h10" stroke="#69E7FF" stroke-width="1.7" stroke-linecap="round"/><circle cx="4.7" cy="6" r="1.2" fill="#69E7FF"/><circle cx="4.7" cy="12" r="1.2" fill="#69E7FF"/><circle cx="4.7" cy="18" r="1.2" fill="#69E7FF"/></svg></span><span class="mt">Missions</span></button>
+      <button class="menu-btn" data-action="battlepass" data-route="/battlepass"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="m12 3 2.6 5.3 5.9.9-4.2 4.1 1 5.8L12 16.8 6.7 19.1l1-5.8L3.5 9.2l5.9-.9L12 3Z" fill="#69E7FF" stroke="#DFF9FF" stroke-width="0.8"/></svg></span><span class="mt">Battle Pass</span><span class="new">New</span></button>
+      <button class="menu-btn" data-action="store" data-route="/store"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M6 7h13l-1.3 6.2a2 2 0 0 1-2 1.6H9a2 2 0 0 1-2-1.6L6 7Zm0 0-.6-2H3" stroke="#69E7FF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="10" cy="18.3" r="1.2" fill="#69E7FF"/><circle cx="16.5" cy="18.3" r="1.2" fill="#69E7FF"/></svg></span><span class="mt">Store</span></button>
+      <button class="menu-btn" data-action="inventory" data-route="/inventory"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><rect x="4.5" y="5" width="15" height="14" rx="2.5" stroke="#69E7FF" stroke-width="1.5"/><path d="M8 9h8M8 13h8" stroke="#69E7FF" stroke-width="1.5" stroke-linecap="round"/></svg></span><span class="mt">Inventory</span></button>
+      <button class="menu-btn" data-action="archives" data-route="/archives"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M6 5.5h8.8A2.2 2.2 0 0 1 17 7.7v10.8l-2.8-2-2.8 2-2.8-2-2.6 2V7.7A2.2 2.2 0 0 1 6 5.5Z" stroke="#69E7FF" stroke-width="1.5" stroke-linejoin="round"/><path d="M8.5 9.5h6M8.5 12.5h5" stroke="#69E7FF" stroke-width="1.4" stroke-linecap="round"/></svg></span><span class="mt">Archives</span></button>
     </div>
 
     <button class="poi dungeons" data-action="dungeons" data-route="/dungeons">
@@ -371,7 +407,7 @@
     <div class="story-wrap">
       <button class="story-btn" data-action="mainstory" data-route="/story/chapter-12-5">
         <div class="st1">Main Story</div>
-        <div class="st2">Chapter 12-5</div>
+        <div class="st2">Chapter 1 - 1</div>
       </button>
     </div>
 
@@ -390,7 +426,6 @@
         <div class="guide-item"><b>Store</b> — магазин офферов, валют и стартовых наборов.</div>
         <div class="guide-item"><b>Inventory</b> — материалы, осколки, расходники и найденные предметы.</div>
         <div class="guide-item"><b>Archives</b> — лор мира, записи, кодекс и найденные данные.</div>
-        <div class="guide-item"><b>PVP Arena</b> — сражения с игроками, рейтинги и сезонные награды.</div>
         <div class="guide-item"><b>Summon</b> — призыв персонажей, баннеры и редкие дропы.</div>
         <div class="guide-item"><b>Afterlife Bar</b> — временно вынесен с базы и позже откроется как отдельная локация.</div>
         <div class="guide-item"><b>Dungeons</b> — PvE-контент, фарм, испытания и продвижение по этапам.</div>
@@ -435,7 +470,6 @@
       store:['Store','Персональные офферы, валюты и стартовые паки.'],
       inventory:['Inventory','Материалы, осколки, расходники и удобные фильтры.'],
       archives:['Archives','Лор, файлы, записи, фракции и кодекс мира.'],
-      arena:['PVP Arena','Лиги, защита, реванш и награды сезона.'],
       dungeons:['Dungeons','PvE-фарм. Вставь recommended power и preview лута.'],
       summon:['Summon','Обязательно pity-counter, шансы и отдельную анимацию SSR.'],
       afterlife:['Afterlife Bar','NPC-диалоги, слухи, ежедневные баффы и сайд-квесты.'],
@@ -465,7 +499,6 @@
 
     function updateMusicUi(){
       musicToggle.classList.toggle('on', musicEnabled);
-      musicToggle.querySelector('.glyph').textContent = musicEnabled ? '♫' : '♪';
       musicToggle.title = musicEnabled ? 'Music On' : 'Music Off';
     }
 
@@ -593,5 +626,5 @@
       if(e.key==='Escape') modal.classList.remove('open');
     });
   </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a15ede3c0fa06717',t:'MTc4MzE3NTg0OA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a15efb77ae1d460e',t:'MTc4MzE3NzA0NQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
