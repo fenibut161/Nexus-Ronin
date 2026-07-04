@@ -143,8 +143,8 @@
       border-radius:14px;background:linear-gradient(180deg, rgba(6,12,22,.82), rgba(4,9,18,.42));border:1px solid rgba(103,163,255,.12);
       box-shadow:var(--shadow);backdrop-filter:blur(6px);overflow:hidden
     }
-    .menu-btn:before,.nav-btn:before,.story-btn:before,.poi:before{content:"";position:absolute;inset:0;background:linear-gradient(135deg, rgba(103,231,255,.10), rgba(255,97,227,.08));opacity:0;transition:opacity .18s ease;pointer-events:none}
-    .menu-btn:hover:before,.menu-btn:focus-visible:before,.nav-btn:hover:before,.nav-btn:focus-visible:before,.story-btn:hover:before,.story-btn:focus-visible:before,.poi:hover:before,.poi:focus-visible:before,body.debug .poi:before{opacity:1}
+    .menu-btn:before,.nav-btn:before,.story-btn:before{content:"";position:absolute;inset:0;background:linear-gradient(135deg, rgba(103,231,255,.10), rgba(255,97,227,.08));opacity:0;transition:opacity .18s ease;pointer-events:none}
+    .menu-btn:hover:before,.menu-btn:focus-visible:before,.nav-btn:hover:before,.nav-btn:focus-visible:before,.story-btn:hover:before,.story-btn:focus-visible:before{opacity:1}
     .mi{width:28px;height:28px;border-radius:8px;display:grid;place-items:center;flex:0 0 auto;background:rgba(255,255,255,.04);border:1px solid rgba(103,231,255,.14);color:var(--cyan);font-weight:900}
     .mt{font-size:12.8px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;line-height:1.04}
     .new{margin-left:auto;padding:4px 7px;border-radius:999px;background:linear-gradient(180deg,#ff609d,#ff315f);box-shadow:0 0 12px rgba(255,49,95,.36);font-size:10px;font-weight:900;letter-spacing:.08em}
@@ -170,8 +170,8 @@
     .dungeons .stack img{left:0;bottom:0;width:73.6%}
     .dungeons .plabel{left:47.6%;top:33.4%;width:52%}
     .dungeons .ptitle{font-size:clamp(28px,2.75vw,52px)}
-    .dtags{position:absolute;left:13%;right:25%;bottom:11.3%;display:flex;justify-content:space-between;gap:8px;pointer-events:none}
-    .dtags span{font-size:clamp(9px,.78vw,13px);font-weight:700;color:#f5fbff;text-shadow:0 0 10px rgba(103,231,255,.36);opacity:.9}
+    .dtags{display:none}
+    .dtags span{display:none}
 
     .summon{left:45.2%;top:14.4%;width:22.2%;height:60.6%}
     .summon .stack{display:flex;align-items:flex-end;justify-content:center}
@@ -219,9 +219,14 @@
       box-shadow:var(--shadow);font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase
     }
     .note{
-      position:absolute;left:18px;bottom:116px;z-index:18;max-width:266px;padding:11px 12px;border-radius:12px;
-      background:rgba(7,12,22,.74);border:1px solid rgba(103,231,255,.14);color:var(--muted);font-size:12px;line-height:1.36;box-shadow:var(--shadow)
+      position:absolute;left:18px;bottom:116px;z-index:18;width:310px;max-height:39%;overflow:auto;padding:12px 13px 10px;border-radius:12px;
+      background:rgba(7,12,22,.78);border:1px solid rgba(103,231,255,.14);color:var(--muted);font-size:11.5px;line-height:1.38;box-shadow:var(--shadow)
     }
+    .note::-webkit-scrollbar{width:8px}
+    .note::-webkit-scrollbar-thumb{background:rgba(103,231,255,.22);border-radius:999px}
+    .guide-title{margin:0 0 8px;color:var(--cyan);font-size:12px;font-weight:900;letter-spacing:.12em;text-transform:uppercase}
+    .guide-list{display:grid;gap:6px}
+    .guide-item b{color:#edf4ff}
 
     .modal{position:absolute;inset:0;display:none;place-items:center;background:rgba(1,3,10,.72);backdrop-filter:blur(8px);z-index:50;padding:20px}
     .modal.open{display:grid}
@@ -235,9 +240,6 @@
     .a1{background:linear-gradient(135deg, rgba(255,97,227,.96), rgba(129,95,255,.94));box-shadow:var(--glow-pink)}
     .a2{background:rgba(18,28,44,.96);border:1px solid rgba(103,231,255,.22);box-shadow:var(--glow-cyan)}
 
-    body.debug .poi{outline:1px dashed rgba(97,243,255,.75);outline-offset:-1px;background:rgba(92,224,255,.04)}
-    body.debug .profile,body.debug .chip,body.debug .icon-btn,body.debug .event-card,body.debug .menu-btn,body.debug .nav-btn,body.debug .story-btn{box-shadow:inset 0 0 0 1px rgba(255,255,255,.08),var(--shadow)}
-
     @keyframes glow{from{opacity:.80}to{opacity:1}}
     @keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
     @keyframes pulsePink{0%,100%{filter:drop-shadow(0 0 0 rgba(255,97,227,0))}50%{filter:drop-shadow(0 0 16px rgba(255,97,227,.18))}}
@@ -245,7 +247,7 @@
     .afterlife .active-img,.dungeons .active-img,.summon .active-img,.cyberware .active-img{animation:pulsePink 2.8s ease-in-out infinite}
 
     @media (max-width:900px){
-      .menu-btn{min-height:46px}.mi{width:25px;height:25px}.mt{font-size:11px}.profile{gap:10px}.avatar{width:56px;height:56px}.name{font-size:15px}.nav{right:18.4%}.story-btn{padding:14px 22px}.st2{font-size:16px}.note{display:none}
+      .menu-btn{min-height:46px}.mi{width:25px;height:25px}.mt{font-size:11px}.profile{gap:10px}.avatar{width:56px;height:56px}.name{font-size:15px}.nav{right:18.4%}.story-btn{padding:14px 22px}.st2{font-size:16px}.note{width:260px;max-height:34%;font-size:10.5px}
     }
     @media (max-width:760px){
       .tools{top:auto;bottom:114px}.btn{padding:7px 10px;font-size:10px}.profile{padding:7px 8px}.chip{padding:0 8px}.cv{font-size:11px}.plus{width:18px;height:18px}.nl{font-size:10px}.psub{font-size:11px}
@@ -303,7 +305,6 @@
         <span class="ptitle">Dungeons</span>
         <span class="psub">Explore. Fight. Ascend.</span>
       </div>
-      <div class="dtags"><span>VOID CORE</span><span>DATA SPIRE</span><span>RED GRID</span></div>
     </button>
 
     <button class="poi summon" data-action="summon" data-route="/summon">
@@ -352,11 +353,30 @@
     </div>
 
     <div class="tools">
-      <button class="btn" id="debugBtn">Debug Layout</button>
-      <button class="btn" id="noteBtn">Hide Guide</button>
+      <button class="btn" id="noteBtn">Скрыть гид</button>
     </div>
 
-    <div class="note" id="note">Это версия с более жёсткой привязкой по координатам под референс. Нажми <b>Debug Layout</b>, чтобы увидеть зоны и быстро подкрутить значения прямо в конструкторе.</div>
+    <div class="note" id="note">
+      <div class="guide-title">Гид по базе</div>
+      <div class="guide-list">
+        <div class="guide-item"><b>Профиль</b> — имя, уровень, сила аккаунта и общий прогресс.</div>
+        <div class="guide-item"><b>Энергия / Кредиты / Гемы</b> — основные ресурсы и быстрый доступ к покупке или пополнению.</div>
+        <div class="guide-item"><b>Event</b> — временный ивент с таймером, наградами и отдельной прогрессией.</div>
+        <div class="guide-item"><b>Missions</b> — ежедневные и недельные задания.</div>
+        <div class="guide-item"><b>Battle Pass</b> — сезонная шкала наград и премиум-дорожка.</div>
+        <div class="guide-item"><b>Store</b> — магазин офферов, валют и стартовых наборов.</div>
+        <div class="guide-item"><b>Inventory</b> — материалы, осколки, расходники и найденные предметы.</div>
+        <div class="guide-item"><b>Archives</b> — лор мира, записи, кодекс и найденные данные.</div>
+        <div class="guide-item"><b>PVP Arena</b> — сражения с игроками, рейтинги и сезонные награды.</div>
+        <div class="guide-item"><b>Summon</b> — призыв персонажей, баннеры и редкие дропы.</div>
+        <div class="guide-item"><b>Afterlife Bar</b> — NPC, диалоги, слухи, сайд-квесты и ежедневные бонусы.</div>
+        <div class="guide-item"><b>Dungeons</b> — PvE-контент, фарм, испытания и продвижение по этапам.</div>
+        <div class="guide-item"><b>Cyberware</b> — импланты, улучшения, слоты и усиление персонажей.</div>
+        <div class="guide-item"><b>Main Story</b> — главный сюжетный маршрут и текущая глава.</div>
+        <div class="guide-item"><b>Нижнее меню</b> — Home, Agents, Squad, Tech, Codex и Corp для быстрого перехода по разделам.</div>
+        <div class="guide-item"><b>Сеть</b> — показывает статус online/offline, тип соединения и текущий пинг.</div>
+      </div>
+    </div>
 
     <audio id="bgMusic" preload="auto" loop playsinline>
       <source src="assets/audio/music/neon_soul.mp3" type="audio/mpeg" />
@@ -411,7 +431,6 @@
     const mdesc = document.getElementById('mdesc');
     const mroute = document.getElementById('mroute');
     const note = document.getElementById('note');
-    const debugBtn = document.getElementById('debugBtn');
     const noteBtn = document.getElementById('noteBtn');
     const musicToggle = document.getElementById('musicToggle');
     const bgMusic = document.getElementById('bgMusic');
@@ -439,6 +458,20 @@
       bgMusic.pause();
     }
 
+    function getNetworkInfo(){
+      const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+      const online = navigator.onLine;
+      const type = connection?.effectiveType || connection?.type || 'unknown';
+      const downlink = typeof connection?.downlink === 'number' ? connection.downlink.toFixed(1) + ' Mbps' : '—';
+      const ping = typeof connection?.rtt === 'number' ? connection.rtt + ' ms' : '—';
+      return { online, type, downlink, ping };
+    }
+
+    function networkHtml(){
+      const net = getNetworkInfo();
+      return `Статус: <b>${net.online ? 'online' : 'offline'}</b><br>Тип сети: <b>${net.type}</b><br>Пинг: <b>${net.ping}</b><br>Downlink: <b>${net.downlink}</b>`;
+    }
+
     function haptic(){
       try{ if(window.Telegram && Telegram.WebApp && Telegram.WebApp.HapticFeedback){ Telegram.WebApp.HapticFeedback.impactOccurred('light'); } }catch(e){}
     }
@@ -447,8 +480,13 @@
       const data = meta[action] || ['Section','Подключи сюда нужный экран.'];
       route = nextRoute || '/home';
       mtitle.textContent = data[0];
-      mdesc.textContent = data[1];
-      mroute.textContent = 'route: ' + route;
+      if(action === 'network'){
+        mdesc.innerHTML = networkHtml();
+        mroute.textContent = 'system: network monitor';
+      } else {
+        mdesc.textContent = data[1];
+        mroute.textContent = 'route: ' + route;
+      }
       modal.classList.add('open');
     }
 
@@ -482,22 +520,20 @@
       startMusic();
     });
 
-    debugBtn.addEventListener('click',()=>{
-      document.body.classList.toggle('debug');
-      debugBtn.textContent = document.body.classList.contains('debug') ? 'Debug Off' : 'Debug Layout';
-    });
     noteBtn.addEventListener('click',()=>{
       const hidden = note.style.display === 'none';
       note.style.display = hidden ? 'block' : 'none';
-      noteBtn.textContent = hidden ? 'Hide Guide' : 'Show Guide';
+      noteBtn.textContent = hidden ? 'Скрыть гид' : 'Показать гид';
+    });
+    window.addEventListener('online', ()=>{
+      if(modal.classList.contains('open') && mtitle.textContent === 'Сеть') mdesc.innerHTML = networkHtml();
+    });
+    window.addEventListener('offline', ()=>{
+      if(modal.classList.contains('open') && mtitle.textContent === 'Сеть') mdesc.innerHTML = networkHtml();
     });
     document.addEventListener('keydown',e=>{
       if(e.key==='Escape') modal.classList.remove('open');
-      if(e.key.toLowerCase()==='d'){
-        document.body.classList.toggle('debug');
-        debugBtn.textContent = document.body.classList.contains('debug') ? 'Debug Off' : 'Debug Layout';
-      }
     });
   </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a15ebcfb5d992c8f',t:'MTc4MzE3NDQ4Ng=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a15ecfc89c076717',t:'MTc4MzE3NTI1Ng=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
