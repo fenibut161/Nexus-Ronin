@@ -343,37 +343,92 @@
 
     .login-overlay{
       position:absolute;inset:0;z-index:60;display:none;place-items:center;
-      background:radial-gradient(circle at 50% 30%, rgba(18,24,46,.68), rgba(2,4,10,.92));
-      backdrop-filter:blur(10px);
+      background:
+        radial-gradient(circle at 50% 22%, rgba(255,97,227,.10), transparent 20%),
+        radial-gradient(circle at 26% 72%, rgba(103,231,255,.09), transparent 18%),
+        radial-gradient(circle at 80% 38%, rgba(103,231,255,.08), transparent 18%),
+        radial-gradient(circle at 50% 30%, rgba(18,24,46,.70), rgba(2,4,10,.94));
+      backdrop-filter:blur(12px);
       padding:20px;
     }
     .login-overlay.open{display:grid}
     .login-card{
-      width:min(460px,92vw);padding:24px 24px 20px;border-radius:22px;
-      background:linear-gradient(180deg, rgba(12,18,34,.96), rgba(7,11,22,.98));
+      position:relative;overflow:hidden;
+      width:min(540px,92vw);padding:24px 24px 20px;border-radius:24px;
+      background:linear-gradient(180deg, rgba(12,18,34,.98), rgba(7,11,22,.99));
       border:1px solid rgba(103,231,255,.28);
       box-shadow:0 0 34px rgba(103,231,255,.12), 0 0 50px rgba(255,97,227,.08), 0 18px 60px rgba(0,0,0,.56)
     }
+    .login-card:before{
+      content:"";position:absolute;inset:0;pointer-events:none;
+      background:linear-gradient(120deg, rgba(255,255,255,.05), transparent 26%, transparent 76%, rgba(103,231,255,.05));
+    }
+    .login-card:after{
+      content:"";position:absolute;right:-60px;top:-70px;width:190px;height:190px;border-radius:50%;
+      background:radial-gradient(circle, rgba(255,97,227,.18), transparent 68%);pointer-events:none;
+    }
+    .login-head{display:flex;gap:16px;align-items:center;margin-bottom:16px;position:relative;z-index:1}
+    .login-portrait{
+      width:84px;height:84px;border-radius:18px;flex:0 0 auto;overflow:hidden;position:relative;
+      background:
+        radial-gradient(circle at 35% 25%, rgba(186,108,255,.28), transparent 32%),
+        url('cyber_base_sprite_assets/avatar_nightshade.png') center/cover no-repeat,
+        linear-gradient(180deg, #493b76, #1b1c35 62%, #0b0f18 100%);
+      border:1px solid rgba(198,126,255,.45);
+      box-shadow:0 0 24px rgba(198,126,255,.12), inset 0 0 0 1px rgba(255,255,255,.05)
+    }
+    .login-portrait:after{
+      content:"";position:absolute;inset:auto 0 0 0;height:2px;background:linear-gradient(90deg, rgba(103,231,255,.08), rgba(255,97,227,.65), rgba(103,231,255,.08));
+    }
+    .login-head-copy{min-width:0;flex:1}
     .login-kicker{margin:0 0 8px;color:var(--cyan);font-size:11px;font-weight:900;letter-spacing:.18em;text-transform:uppercase}
     .login-title{margin:0;font-size:clamp(28px,3vw,40px);line-height:.95;text-transform:uppercase}
-    .login-text{margin:10px 0 18px;color:#c9d8f2;font-size:14px;line-height:1.45}
+    .login-text{margin:8px 0 0;color:#c9d8f2;font-size:14px;line-height:1.45}
+    .login-badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+    .login-badge{
+      padding:6px 10px;border-radius:999px;background:rgba(13,20,36,.84);
+      border:1px solid rgba(103,231,255,.16);color:#a9c6eb;font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase
+    }
+    .login-badge.pink{border-color:rgba(255,97,227,.18);color:#ffc3ef}
+    .login-preview{
+      position:relative;z-index:1;
+      display:flex;align-items:center;gap:14px;margin:2px 0 16px;padding:14px;
+      border-radius:18px;background:linear-gradient(180deg, rgba(10,16,29,.84), rgba(8,13,23,.72));
+      border:1px solid rgba(103,231,255,.16)
+    }
+    .login-preview-avatar{
+      width:58px;height:58px;border-radius:14px;flex:0 0 auto;
+      background:
+        radial-gradient(circle at 35% 25%, rgba(186,108,255,.28), transparent 32%),
+        url('cyber_base_sprite_assets/avatar_nightshade.png') center/cover no-repeat,
+        linear-gradient(180deg, #493b76, #1b1c35 62%, #0b0f18 100%);
+      border:1px solid rgba(198,126,255,.32)
+    }
+    .login-preview-copy{min-width:0;flex:1}
+    .login-preview-kicker{font-size:10px;font-weight:900;letter-spacing:.16em;text-transform:uppercase;color:#7fdfff;margin-bottom:5px}
+    .login-preview-name{font-size:20px;font-weight:900;line-height:1;color:#f2f7ff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .login-preview-id{margin-top:6px;font-size:12px;color:#96b2d7}
+    .login-grid{display:grid;gap:12px;position:relative;z-index:1}
     .login-form{display:grid;gap:12px}
     .login-label{display:grid;gap:6px;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#9ec1e6}
     .login-input{
-      width:100%;height:48px;padding:0 14px;border-radius:14px;border:1px solid rgba(103,231,255,.18);
-      background:rgba(8,13,24,.82);color:#eef5ff;font-size:15px;font-weight:700;outline:none;
+      width:100%;height:50px;padding:0 15px;border-radius:14px;border:1px solid rgba(103,231,255,.18);
+      background:rgba(8,13,24,.86);color:#eef5ff;font-size:15px;font-weight:700;outline:none;
       box-shadow:inset 0 0 0 1px rgba(255,255,255,.03)
     }
+    .login-input::placeholder{color:#6e86aa}
     .login-input:focus{border-color:rgba(103,231,255,.42);box-shadow:0 0 0 2px rgba(103,231,255,.08)}
+    .login-help{margin-top:2px;color:#7992b7;font-size:12px;line-height:1.35}
     .login-row{display:flex;gap:10px;flex-wrap:wrap}
     .login-btn{
-      min-height:46px;padding:0 16px;border-radius:14px;border:0;cursor:pointer;
+      min-height:48px;padding:0 16px;border-radius:14px;border:0;cursor:pointer;
       font-size:12px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:#fff
     }
     .login-btn.primary{background:linear-gradient(135deg, rgba(255,97,227,.96), rgba(124,94,255,.94));box-shadow:0 0 18px rgba(255,97,227,.18)}
     .login-btn.secondary{background:rgba(18,28,44,.96);border:1px solid rgba(103,231,255,.20);box-shadow:0 0 14px rgba(103,231,255,.10)}
+    .login-btn:hover{transform:translateY(-1px)}
     .login-error{min-height:18px;color:#ff8eb0;font-size:12px;font-weight:700}
-    .login-foot{margin-top:8px;color:#90a6c9;font-size:12px;line-height:1.4}
+    .login-foot{position:relative;z-index:1;margin-top:10px;padding-top:12px;border-top:1px solid rgba(103,231,255,.10);color:#90a6c9;font-size:12px;line-height:1.45}
 
     .modal{position:absolute;inset:0;display:none;place-items:center;background:rgba(1,3,10,.72);backdrop-filter:blur(8px);z-index:50;padding:20px}
     .modal.open{display:grid}
@@ -399,10 +454,10 @@
     .afterlife .active-img,.dungeons .active-img,.summon .active-img,.cyberware .active-img{animation:pulsePink 2.8s ease-in-out infinite}
 
     @media (max-width:900px){
-      .menu-btn{min-height:46px}.mi{width:26px;height:26px}.mi svg{width:15px;height:15px}.mt{font-size:11px}.profile{gap:10px;width:27.2%}.avatar{width:56px;height:56px}.name{font-size:15px}.nav{right:18.4%}.nav-btn{gap:7px}.ni{width:30px;height:30px}.ni svg{width:16px;height:16px}.home-cta .ni{width:34px;height:34px}.home-cta .ni svg{width:18px;height:18px}.home-cta .home-tag{font-size:7px;left:12px}.nl{font-size:10px}.story-btn{padding:14px 22px}.story-kicker{font-size:9px}.st2{font-size:16px}.note{left:20%;top:22%;width:330px;max-height:28%;font-size:10.5px}.cv{font-size:11px}.ci{width:24px;height:24px}.ci svg{width:24px;height:24px}.chip{grid-template-columns:24px minmax(0,1fr) 20px;column-gap:8px}.icon-svg svg{width:20px;height:20px}.social .icon-svg svg{width:22px;height:22px}.energy,.gold,.gems{width:15.6%}.energy{left:29.2%}.gold{left:45.4%}.gems{left:61.6%}
+      .menu-btn{min-height:46px}.mi{width:26px;height:26px}.mi svg{width:15px;height:15px}.mt{font-size:11px}.profile{gap:10px;width:27.2%}.avatar{width:56px;height:56px}.name{font-size:15px}.nav{right:18.4%}.nav-btn{gap:7px}.ni{width:30px;height:30px}.ni svg{width:16px;height:16px}.home-cta .ni{width:34px;height:34px}.home-cta .ni svg{width:18px;height:18px}.home-cta .home-tag{font-size:7px;left:12px}.nl{font-size:10px}.story-btn{padding:14px 22px}.story-kicker{font-size:9px}.st2{font-size:16px}.note{left:20%;top:22%;width:330px;max-height:28%;font-size:10.5px}.cv{font-size:11px}.ci{width:24px;height:24px}.ci svg{width:24px;height:24px}.chip{grid-template-columns:24px minmax(0,1fr) 20px;column-gap:8px}.icon-svg svg{width:20px;height:20px}.social .icon-svg svg{width:22px;height:22px}.energy,.gold,.gems{width:15.6%}.energy{left:29.2%}.gold{left:45.4%}.gems{left:61.6%}.login-card{width:min(500px,94vw);padding:22px 20px 18px}.login-portrait{width:72px;height:72px}.login-preview{padding:12px}.login-preview-avatar{width:52px;height:52px}.login-preview-name{font-size:18px}
     }
     @media (max-width:760px){
-      .tools{top:auto;bottom:114px}.btn{padding:7px 10px;font-size:10px}.profile{padding:7px 8px;width:29%}.chip{padding:0 7px;grid-template-columns:20px minmax(0,1fr) 18px;column-gap:7px}.cv{font-size:9.6px}.energy .cv{font-size:10px}.gold .cv{font-size:9.1px}.gems .cv{font-size:9.6px}.ci{width:20px;height:20px}.ci svg{width:20px;height:20px}.plus{width:18px;height:18px;font-size:13px}.nav-btn{gap:6px}.ni{width:26px;height:26px}.ni svg{width:14px;height:14px}.home-cta .ni{width:29px;height:29px}.home-cta .ni svg{width:15px;height:15px}.home-cta .home-tag{font-size:6px;left:10px;top:6px}.nl{font-size:9px}.story-kicker{font-size:8px}.psub{font-size:11px}.build-tag{bottom:96px;font-size:8px;padding:5px 8px}.energy,.gold,.gems{width:16.8%}.energy{left:30.8%}.gold{left:48.2%}.gems{left:65.6%}
+      .tools{top:auto;bottom:114px}.btn{padding:7px 10px;font-size:10px}.profile{padding:7px 8px;width:29%}.chip{padding:0 7px;grid-template-columns:20px minmax(0,1fr) 18px;column-gap:7px}.cv{font-size:9.6px}.energy .cv{font-size:10px}.gold .cv{font-size:9.1px}.gems .cv{font-size:9.6px}.ci{width:20px;height:20px}.ci svg{width:20px;height:20px}.plus{width:18px;height:18px;font-size:13px}.nav-btn{gap:6px}.ni{width:26px;height:26px}.ni svg{width:14px;height:14px}.home-cta .ni{width:29px;height:29px}.home-cta .ni svg{width:15px;height:15px}.home-cta .home-tag{font-size:6px;left:10px;top:6px}.nl{font-size:9px}.story-kicker{font-size:8px}.psub{font-size:11px}.build-tag{bottom:96px;font-size:8px;padding:5px 8px}.energy,.gold,.gems{width:16.8%}.energy{left:30.8%}.gold{left:48.2%}.gems{left:65.6%}.login-card{width:min(94vw,460px);padding:18px 16px 16px}.login-head{gap:12px}.login-portrait{width:62px;height:62px;border-radius:15px}.login-badges{gap:6px}.login-badge{font-size:9px;padding:5px 8px}.login-preview{gap:10px;padding:10px}.login-preview-avatar{width:46px;height:46px}.login-preview-name{font-size:16px}.login-title{font-size:26px}.login-text,.login-foot,.login-help{font-size:12px}.login-input{height:46px;font-size:14px}
     }
   </style>
 </head>
@@ -581,23 +636,47 @@
 
     <div class="login-overlay" id="loginOverlay">
       <div class="login-card">
-        <p class="login-kicker">Prototype Access</p>
-        <h2 class="login-title" id="loginTitle">Вход в базу</h2>
-        <p class="login-text" id="loginText">Создай локальный аккаунт по Telegram ID. Профиль сохранится в этом браузере и будет загружаться автоматически.</p>
-        <form class="login-form" id="loginForm">
-          <label class="login-label">Telegram ID
-            <input class="login-input" id="tgIdInput" type="text" inputmode="numeric" maxlength="20" placeholder="Например: 123456789" autocomplete="off" />
-          </label>
-          <label class="login-label">Никнейм
-            <input class="login-input" id="nicknameInput" type="text" maxlength="20" placeholder="Например: Nightshade" autocomplete="off" />
-          </label>
-          <div class="login-error" id="loginError"></div>
-          <div class="login-row">
-            <button class="login-btn primary" type="submit">Создать аккаунт</button>
-            <button class="login-btn secondary" type="button" id="demoFillBtn">Демо-данные</button>
+        <div class="login-head">
+          <div class="login-portrait"></div>
+          <div class="login-head-copy">
+            <p class="login-kicker">Prototype Access</p>
+            <h2 class="login-title" id="loginTitle">Вход в базу</h2>
+            <p class="login-text" id="loginText">Создай локальный аккаунт по Telegram ID. Профиль сохранится в этом браузере и будет загружаться автоматически.</p>
+            <div class="login-badges">
+              <span class="login-badge">Telegram ID</span>
+              <span class="login-badge pink">Local Save</span>
+              <span class="login-badge">No Backend</span>
+            </div>
           </div>
-        </form>
-        <div class="login-foot">Этап 1: локальный аккаунт. Позже это можно заменить на настоящую авторизацию через Telegram Mini App.</div>
+        </div>
+
+        <div class="login-preview">
+          <div class="login-preview-avatar"></div>
+          <div class="login-preview-copy">
+            <div class="login-preview-kicker">Local Agent Preview</div>
+            <div class="login-preview-name" id="loginPreviewName">Nightshade</div>
+            <div class="login-preview-id" id="loginPreviewId">Telegram ID: —</div>
+          </div>
+        </div>
+
+        <div class="login-grid">
+          <form class="login-form" id="loginForm">
+            <label class="login-label">Telegram ID
+              <input class="login-input" id="tgIdInput" type="text" inputmode="numeric" maxlength="20" placeholder="Например: 123456789" autocomplete="off" />
+              <span class="login-help">Только цифры. Этот ID будет использоваться как локальный ключ профиля.</span>
+            </label>
+            <label class="login-label">Никнейм
+              <input class="login-input" id="nicknameInput" type="text" maxlength="20" placeholder="Например: Nightshade" autocomplete="off" />
+              <span class="login-help">Можно оставить пустым — тогда ник сгенерируется автоматически.</span>
+            </label>
+            <div class="login-error" id="loginError"></div>
+            <div class="login-row">
+              <button class="login-btn primary" type="submit">Создать аккаунт</button>
+              <button class="login-btn secondary" type="button" id="demoFillBtn">Демо-данные</button>
+            </div>
+          </form>
+        </div>
+        <div class="login-foot">Этап 1: локальный аккаунт. Позже это можно заменить на настоящую авторизацию через Telegram Mini App с сервером и базой данных.</div>
       </div>
     </div>
 
@@ -668,6 +747,8 @@
     const demoFillBtn = document.getElementById('demoFillBtn');
     const loginTitle = document.getElementById('loginTitle');
     const loginText = document.getElementById('loginText');
+    const loginPreviewName = document.getElementById('loginPreviewName');
+    const loginPreviewId = document.getElementById('loginPreviewId');
     const playerName = document.getElementById('playerName');
     const playerLevel = document.getElementById('playerLevel');
     const goBtn = document.getElementById('goBtn');
@@ -698,6 +779,13 @@
       document.body.dataset.tgId = account.telegramId;
     }
 
+    function syncLoginPreview(){
+      const idVal = tgIdInput.value.trim();
+      const nickVal = nicknameInput.value.trim();
+      loginPreviewName.textContent = nickVal || currentAccount?.nickname || 'Nightshade';
+      loginPreviewId.textContent = `Telegram ID: ${idVal || currentAccount?.telegramId || '—'}`;
+    }
+
     function showLogin(prefill = false){
       loginOverlay.classList.add('open');
       loginOverlay.dataset.mode = prefill ? 'switch' : 'create';
@@ -709,7 +797,11 @@
       if(prefill && currentAccount){
         tgIdInput.value = currentAccount.telegramId || '';
         nicknameInput.value = currentAccount.nickname || '';
+      } else if(!prefill) {
+        tgIdInput.value = '';
+        nicknameInput.value = '';
       }
+      syncLoginPreview();
       setTimeout(() => tgIdInput.focus(), 30);
     }
 
@@ -849,12 +941,15 @@
       tgIdInput.value = '777001337';
       nicknameInput.value = 'Nightshade';
       loginError.textContent = '';
+      syncLoginPreview();
       tgIdInput.focus();
     });
 
     tgIdInput.addEventListener('input', ()=>{
       tgIdInput.value = tgIdInput.value.replace(/\D+/g, '').slice(0, 20);
+      syncLoginPreview();
     });
+    nicknameInput.addEventListener('input', syncLoginPreview);
 
     musicToggle.addEventListener('click', async ()=>{
       musicEnabled = !musicEnabled;
@@ -902,5 +997,5 @@
       if(e.key==='Escape') modal.classList.remove('open');
     });
   </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a1605d5ffc1c4796',t:'MTc4MzE5MTU0MQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a16067b1fa3d6dd6',t:'MTc4MzE5MTk2NA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
