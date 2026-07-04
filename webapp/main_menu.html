@@ -230,16 +230,46 @@
 
     /* bottom nav + story */
     .nav{
-      position:absolute;left:0;bottom:0;right:20.5%;height:10.3%;z-index:18;display:flex;align-items:stretch
+      position:absolute;left:0;bottom:0;right:20.5%;height:10.6%;z-index:18;display:flex;align-items:stretch;
+      background:linear-gradient(180deg, rgba(3,7,15,.55), rgba(2,5,12,.88));
+      box-shadow:0 -10px 26px rgba(0,0,0,.18)
+    }
+    .nav:before{
+      content:"";position:absolute;left:0;right:0;top:0;height:1px;
+      background:linear-gradient(90deg, rgba(102,220,255,.28), rgba(255,97,227,.12), rgba(102,220,255,.18));
+      pointer-events:none
     }
     .nav-btn{
-      position:relative;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;
-      background:linear-gradient(180deg, rgba(4,9,18,.94), rgba(2,6,14,.97));border-top:1px solid rgba(110,175,255,.10);border-right:1px solid rgba(110,175,255,.05);overflow:hidden
+      position:relative;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;
+      background:linear-gradient(180deg, rgba(6,12,22,.94), rgba(3,8,17,.98));
+      border-top:1px solid rgba(110,175,255,.08);border-right:1px solid rgba(110,175,255,.04);
+      overflow:hidden;clip-path:polygon(5% 0,100% 0,95% 100%,0 100%);isolation:isolate
     }
-    .nav-btn.active{flex:1.18;align-items:flex-start;padding-left:31px;clip-path:polygon(0 0,84% 0,100% 50%,84% 100%,0 100%);background:linear-gradient(135deg, rgba(22,61,108,.96), rgba(10,27,58,.96));box-shadow:inset 0 0 0 1px rgba(106,211,255,.22),0 0 18px rgba(106,211,255,.12)}
-    .ni{width:30px;height:30px;display:grid;place-items:center;border-radius:10px;border:1px solid rgba(255,255,255,.06);background:rgba(255,255,255,.03);font-size:15px}
-    .nl{font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
-    .ndot{position:absolute;top:16px;right:calc(50% - 22px);width:9px;height:9px;border-radius:50%;background:#ff3d75;box-shadow:0 0 10px rgba(255,61,117,.72)}
+    .nav-btn:after{
+      content:"";position:absolute;left:0;right:0;top:0;height:3px;
+      background:linear-gradient(90deg, rgba(103,231,255,0), rgba(103,231,255,.26), rgba(255,97,227,.18), rgba(255,97,227,0));
+      opacity:.65;pointer-events:none
+    }
+    .nav-btn:hover{background:linear-gradient(180deg, rgba(8,16,28,.96), rgba(4,10,20,.98))}
+    .nav-btn.active{
+      flex:1.18;align-items:flex-start;padding-left:30px;clip-path:polygon(0 0,84% 0,100% 50%,84% 100%,0 100%);
+      background:linear-gradient(135deg, rgba(24,70,124,.98), rgba(12,30,62,.98));
+      box-shadow:inset 0 0 0 1px rgba(106,211,255,.24), 0 0 18px rgba(106,211,255,.12)
+    }
+    .nav-btn.active:before{
+      content:"";position:absolute;inset:0;background:linear-gradient(90deg, rgba(103,231,255,.08), transparent 50%);pointer-events:none
+    }
+    .ni{
+      width:34px;height:34px;display:grid;place-items:center;border-radius:11px;
+      border:1px solid rgba(255,255,255,.06);
+      background:linear-gradient(180deg, rgba(16,24,38,.74), rgba(8,13,24,.68));
+      box-shadow:inset 0 0 18px rgba(103,231,255,.04)
+    }
+    .ni svg{width:18px;height:18px;display:block;filter:drop-shadow(0 0 8px rgba(103,231,255,.18))}
+    .nav-btn.active .ni{background:linear-gradient(180deg, rgba(24,45,72,.84), rgba(12,23,38,.72));border-color:rgba(103,231,255,.18)}
+    .nl{font-size:11px;font-weight:800;letter-spacing:.10em;text-transform:uppercase;color:#e8f0ff}
+    .nav-btn.active .nl{color:#f3fbff}
+    .ndot{position:absolute;top:14px;right:calc(50% - 22px);width:9px;height:9px;border-radius:50%;background:#ff3d75;box-shadow:0 0 10px rgba(255,61,117,.72)}
 
     .story-wrap{position:absolute;right:.8%;bottom:1.1%;z-index:19}
     .story-btn{
@@ -287,10 +317,10 @@
     .afterlife .active-img,.dungeons .active-img,.summon .active-img,.cyberware .active-img{animation:pulsePink 2.8s ease-in-out infinite}
 
     @media (max-width:900px){
-      .menu-btn{min-height:46px}.mi{width:26px;height:26px}.mi svg{width:15px;height:15px}.mt{font-size:11px}.profile{gap:10px;width:27.2%}.avatar{width:56px;height:56px}.name{font-size:15px}.nav{right:18.4%}.story-btn{padding:14px 22px}.st2{font-size:16px}.note{left:20%;top:22%;width:330px;max-height:28%;font-size:10.5px}.cv{font-size:11px}.ci{width:24px;height:24px}.ci svg{width:24px;height:24px}.chip{grid-template-columns:24px minmax(0,1fr) 20px;column-gap:8px}.icon-svg svg{width:20px;height:20px}.social .icon-svg svg{width:22px;height:22px}.energy,.gold,.gems{width:15.6%}.energy{left:29.2%}.gold{left:45.4%}.gems{left:61.6%}
+      .menu-btn{min-height:46px}.mi{width:26px;height:26px}.mi svg{width:15px;height:15px}.mt{font-size:11px}.profile{gap:10px;width:27.2%}.avatar{width:56px;height:56px}.name{font-size:15px}.nav{right:18.4%}.nav-btn{gap:7px}.ni{width:30px;height:30px}.ni svg{width:16px;height:16px}.nl{font-size:10px}.story-btn{padding:14px 22px}.st2{font-size:16px}.note{left:20%;top:22%;width:330px;max-height:28%;font-size:10.5px}.cv{font-size:11px}.ci{width:24px;height:24px}.ci svg{width:24px;height:24px}.chip{grid-template-columns:24px minmax(0,1fr) 20px;column-gap:8px}.icon-svg svg{width:20px;height:20px}.social .icon-svg svg{width:22px;height:22px}.energy,.gold,.gems{width:15.6%}.energy{left:29.2%}.gold{left:45.4%}.gems{left:61.6%}
     }
     @media (max-width:760px){
-      .tools{top:auto;bottom:114px}.btn{padding:7px 10px;font-size:10px}.profile{padding:7px 8px;width:29%}.chip{padding:0 7px;grid-template-columns:20px minmax(0,1fr) 18px;column-gap:7px}.cv{font-size:9.6px}.energy .cv{font-size:10px}.gold .cv{font-size:9.1px}.gems .cv{font-size:9.6px}.ci{width:20px;height:20px}.ci svg{width:20px;height:20px}.plus{width:18px;height:18px;font-size:13px}.nl{font-size:10px}.psub{font-size:11px}.energy,.gold,.gems{width:16.8%}.energy{left:30.8%}.gold{left:48.2%}.gems{left:65.6%}
+      .tools{top:auto;bottom:114px}.btn{padding:7px 10px;font-size:10px}.profile{padding:7px 8px;width:29%}.chip{padding:0 7px;grid-template-columns:20px minmax(0,1fr) 18px;column-gap:7px}.cv{font-size:9.6px}.energy .cv{font-size:10px}.gold .cv{font-size:9.1px}.gems .cv{font-size:9.6px}.ci{width:20px;height:20px}.ci svg{width:20px;height:20px}.plus{width:18px;height:18px;font-size:13px}.nav-btn{gap:6px}.ni{width:26px;height:26px}.ni svg{width:14px;height:14px}.nl{font-size:9px}.psub{font-size:11px}.energy,.gold,.gems{width:16.8%}.energy{left:30.8%}.gold{left:48.2%}.gems{left:65.6%}
     }
   </style>
 </head>
@@ -402,12 +432,31 @@
     </button>
 
     <div class="nav">
-      <button class="nav-btn active" data-action="home" data-route="/home"><span class="ni">⌂</span><span class="nl">Home</span></button>
-      <button class="nav-btn" data-action="agents" data-route="/agents"><span class="ni">◉</span><span class="nl">Agents</span></button>
-      <button class="nav-btn" data-action="squad" data-route="/squad"><span class="ndot"></span><span class="ni">👥</span><span class="nl">Squad</span></button>
-      <button class="nav-btn" data-action="tech" data-route="/tech"><span class="ni">⌗</span><span class="nl">Tech</span></button>
-      <button class="nav-btn" data-action="codex" data-route="/codex"><span class="ni">✦</span><span class="nl">Codex</span></button>
-      <button class="nav-btn" data-action="corp" data-route="/corp"><span class="ni">⬒</span><span class="nl">Corp</span></button>
+      <button class="nav-btn active" data-action="home" data-route="/home">
+        <span class="ni" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4.5 10.2 12 4l7.5 6.2V20H4.5v-9.8Z" stroke="#E8F6FF" stroke-width="1.3" stroke-linejoin="round"/><path d="M9.3 20v-5h5.4v5" stroke="#67E7FF" stroke-width="1.3" stroke-linejoin="round"/></svg></span>
+        <span class="nl">Home</span>
+      </button>
+      <button class="nav-btn" data-action="agents" data-route="/agents">
+        <span class="ni" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8.4" r="3.2" fill="#67E7FF"/><path d="M6 18.5c.8-3.1 3-4.7 6-4.7s5.2 1.6 6 4.7" stroke="#E8F6FF" stroke-width="1.3" stroke-linecap="round"/></svg></span>
+        <span class="nl">Agents</span>
+      </button>
+      <button class="nav-btn" data-action="squad" data-route="/squad">
+        <span class="ndot"></span>
+        <span class="ni" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><circle cx="8.2" cy="9" r="2.5" fill="#67E7FF"/><circle cx="15.8" cy="9" r="2.5" fill="#FF78E6"/><path d="M4.7 18.3c.6-2.3 2.4-3.6 4.8-3.6 2 0 3.7.9 4.5 2.8" stroke="#E8F6FF" stroke-width="1.2" stroke-linecap="round"/><path d="M12.2 17.8c.5-1.8 1.9-3.1 4.2-3.1 1.4 0 2.6.5 3.5 1.6" stroke="#E8D7FF" stroke-width="1.1" stroke-linecap="round"/></svg></span>
+        <span class="nl">Squad</span>
+      </button>
+      <button class="nav-btn" data-action="tech" data-route="/tech">
+        <span class="ni" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M7 5.5h10v13H7z" stroke="#E8F6FF" stroke-width="1.2"/><path d="M12 3v4M12 17v4M3 12h4M17 12h4" stroke="#67E7FF" stroke-width="1.2" stroke-linecap="round"/></svg></span>
+        <span class="nl">Tech</span>
+      </button>
+      <button class="nav-btn" data-action="codex" data-route="/codex">
+        <span class="ni" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M12 4.2 14 9l5.1.5-3.8 3.2 1.2 5-4.5-2.6-4.5 2.6 1.2-5L4.9 9.5 10 9l2-4.8Z" fill="#67E7FF" stroke="#E8F6FF" stroke-width=".8"/></svg></span>
+        <span class="nl">Codex</span>
+      </button>
+      <button class="nav-btn" data-action="corp" data-route="/corp">
+        <span class="ni" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M6 19V7l6-3 6 3v12H6Z" stroke="#E8F6FF" stroke-width="1.2" stroke-linejoin="round"/><path d="M9 11h1.6M13.4 11H15M9 14.3h1.6M13.4 14.3H15" stroke="#67E7FF" stroke-width="1.2" stroke-linecap="round"/></svg></span>
+        <span class="nl">Corp</span>
+      </button>
     </div>
 
     <div class="story-wrap">
@@ -632,5 +681,5 @@
       if(e.key==='Escape') modal.classList.remove('open');
     });
   </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a15f2870ba856784',t:'MTc4MzE3ODg4Nw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a15f2d070bab6784',t:'MTc4MzE3OTA3NQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
