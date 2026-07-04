@@ -105,18 +105,24 @@
     .power b{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#f3d98d;opacity:.84}
 
     .chip{
-      position:absolute;top:1.65%;height:4.7%;z-index:20;padding:0 7px 0 8px;display:grid;grid-template-columns:auto 1fr auto;align-items:center;column-gap:7px;
+      position:absolute;top:1.65%;height:4.7%;z-index:20;padding:0 8px 0 10px;display:grid;grid-template-columns:24px minmax(0,1fr) 22px;align-items:center;column-gap:10px;
       background:linear-gradient(180deg, rgba(9,13,24,.90), rgba(7,11,20,.58));border:1px solid rgba(255,255,255,.12);
       border-radius:999px;box-shadow:var(--shadow);backdrop-filter:blur(6px);text-align:left;overflow:hidden;white-space:nowrap;
     }
     .chip:before{content:"";position:absolute;inset:1px;background:linear-gradient(90deg, rgba(255,255,255,.05), transparent 40%, transparent 78%, rgba(103,231,255,.05));border-radius:inherit;pointer-events:none}
-    .energy{left:28.2%;width:11.2%}
-    .gold{left:40.1%;width:14.7%}
-    .gems{left:55.7%;width:11.0%}
-    .ci{width:26px;height:26px;display:grid;place-items:center;flex:0 0 auto;position:relative;z-index:1}
-    .ci svg{width:26px;height:26px;display:block;filter:drop-shadow(0 0 10px rgba(255,255,255,.12))}
-    .cv{font-size:14px;font-weight:900;letter-spacing:.01em;line-height:1;white-space:nowrap;position:relative;z-index:1;overflow:hidden}
-    .plus{margin-left:auto;width:22px;height:22px;flex:0 0 22px;border-radius:999px;display:grid;place-items:center;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);font-weight:900;font-size:15px;line-height:1;padding:0;text-align:center;position:relative;z-index:1}
+    .energy,.gold,.gems{width:14.8%}
+    .energy{left:27.8%}
+    .gold{left:43.3%}
+    .gems{left:58.8%}
+    .ci{width:24px;height:24px;display:grid;place-items:center;position:relative;z-index:1}
+    .ci svg{width:24px;height:24px;display:block;filter:drop-shadow(0 0 10px rgba(255,255,255,.12))}
+    .cv{font-size:12px;font-weight:900;letter-spacing:.01em;line-height:1;white-space:nowrap;position:relative;z-index:1;overflow:hidden;text-align:left;min-width:0}
+    .energy .cv{font-size:12.5px}
+    .gold .ci{transform:translateX(-8px)}
+    .gold .cv{font-size:11.5px}
+    .gems .ci{transform:translateX(-8px)}
+    .gems .cv{font-size:12px}
+    .plus{width:22px;height:22px;border-radius:999px;display:grid;place-items:center;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);font-weight:900;font-size:15px;line-height:1;padding:0;text-align:center;position:relative;z-index:1}
 
     .icon-btn{
       position:absolute;top:1.3%;height:5.4%;z-index:20;width:3.8%;display:grid;place-items:center;
@@ -281,10 +287,10 @@
     .afterlife .active-img,.dungeons .active-img,.summon .active-img,.cyberware .active-img{animation:pulsePink 2.8s ease-in-out infinite}
 
     @media (max-width:900px){
-      .menu-btn{min-height:46px}.mi{width:26px;height:26px}.mi svg{width:15px;height:15px}.mt{font-size:11px}.profile{gap:10px;width:27.2%}.avatar{width:56px;height:56px}.name{font-size:15px}.nav{right:18.4%}.story-btn{padding:14px 22px}.st2{font-size:16px}.note{left:20%;top:22%;width:330px;max-height:28%;font-size:10.5px}.cv{font-size:13px}.ci{width:22px;height:22px}.ci svg{width:22px;height:22px}.icon-svg svg{width:20px;height:20px}.social .icon-svg svg{width:22px;height:22px}.energy{left:30.5%;width:13.4%}.gold{left:44.8%;width:17.0%}.gems{left:62.8%;width:13.0%}
+      .menu-btn{min-height:46px}.mi{width:26px;height:26px}.mi svg{width:15px;height:15px}.mt{font-size:11px}.profile{gap:10px;width:27.2%}.avatar{width:56px;height:56px}.name{font-size:15px}.nav{right:18.4%}.story-btn{padding:14px 22px}.st2{font-size:16px}.note{left:20%;top:22%;width:330px;max-height:28%;font-size:10.5px}.cv{font-size:11px}.ci{width:24px;height:24px}.ci svg{width:24px;height:24px}.chip{grid-template-columns:24px minmax(0,1fr) 20px;column-gap:8px}.icon-svg svg{width:20px;height:20px}.social .icon-svg svg{width:22px;height:22px}.energy,.gold,.gems{width:15.6%}.energy{left:29.2%}.gold{left:45.4%}.gems{left:61.6%}
     }
     @media (max-width:760px){
-      .tools{top:auto;bottom:114px}.btn{padding:7px 10px;font-size:10px}.profile{padding:7px 8px;width:29%}.chip{padding:0 7px}.cv{font-size:11px}.plus{width:18px;height:18px;flex-basis:18px;font-size:13px}.nl{font-size:10px}.psub{font-size:11px}.energy{left:31.2%;width:15.0%}.gold{left:47.0%;width:18.2%}.gems{left:66.0%;width:14.2%}
+      .tools{top:auto;bottom:114px}.btn{padding:7px 10px;font-size:10px}.profile{padding:7px 8px;width:29%}.chip{padding:0 7px;grid-template-columns:20px minmax(0,1fr) 18px;column-gap:7px}.cv{font-size:9.6px}.energy .cv{font-size:10px}.gold .cv{font-size:9.1px}.gems .cv{font-size:9.6px}.ci{width:20px;height:20px}.ci svg{width:20px;height:20px}.plus{width:18px;height:18px;font-size:13px}.nl{font-size:10px}.psub{font-size:11px}.energy,.gold,.gems{width:16.8%}.energy{left:30.8%}.gold{left:48.2%}.gems{left:65.6%}
     }
   </style>
 </head>
@@ -626,5 +632,5 @@
       if(e.key==='Escape') modal.classList.remove('open');
     });
   </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a15f1558cedf460e',t:'MTc4MzE3ODEwNQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a15f2870ba856784',t:'MTc4MzE3ODg4Nw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
