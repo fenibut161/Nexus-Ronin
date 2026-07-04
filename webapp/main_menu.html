@@ -120,10 +120,34 @@
       position:absolute;top:1.3%;height:5.4%;z-index:20;width:3.8%;display:grid;place-items:center;
       background:rgba(10,16,30,.76);border:1px solid rgba(255,255,255,.10);border-radius:11px;box-shadow:var(--shadow);backdrop-filter:blur(6px)
     }
-    .mail{left:79.5%}.social{left:84.7%;width:4.6%}.settings{left:90.7%}.net{left:95.1%;width:3.2%}.music-toggle{top:8.2%;right:1.1%;width:4.1%;height:5.2%;z-index:26}
+    .mail{right:18.2%;width:3.8%}
+    .social{right:13.0%;width:4.6%}
+    .settings{right:8.3%;width:3.8%}
+    .music-toggle{top:1.3%;right:4.4%;width:3.2%;height:5.4%;z-index:20}
+    .net{right:.7%;width:3.2%;padding:2px}
     .music-toggle.on{border-color:rgba(103,231,255,.34);box-shadow:var(--shadow),0 0 16px rgba(103,231,255,.14)}
     .glyph{font-size:17px;opacity:.96}
     .dot{position:absolute;top:4px;right:4px;width:9px;height:9px;border-radius:50%;background:radial-gradient(circle at 35% 35%, #ffe3f0, #ff2e66);box-shadow:0 0 10px rgba(255,46,102,.70)}
+    .net-ui{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;line-height:1;width:100%}
+    .net-bars{display:flex;align-items:flex-end;gap:2px;height:10px}
+    .net-bars i{display:block;width:3px;border-radius:2px 2px 0 0;background:rgba(255,255,255,.22)}
+    .net-bars i:nth-child(1){height:3px}
+    .net-bars i:nth-child(2){height:5px}
+    .net-bars i:nth-child(3){height:7px}
+    .net-bars i:nth-child(4){height:9px}
+    .net-status-text{font-size:7px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:#dfe9ff}
+    .net-ping-text{font-size:7px;font-weight:800;color:#9dcfff}
+    .net.quality-excellent .net-bars i{background:var(--cyan)}
+    .net.quality-excellent .net-status-text{color:var(--cyan)}
+    .net.quality-good .net-bars i:nth-child(-n+3){background:#7ee6ff}
+    .net.quality-good .net-bars i:nth-child(4){background:rgba(255,255,255,.22)}
+    .net.quality-good .net-status-text{color:#7ee6ff}
+    .net.quality-weak .net-bars i:nth-child(-n+2){background:#ffd36f}
+    .net.quality-weak .net-bars i:nth-child(n+3){background:rgba(255,255,255,.18)}
+    .net.quality-weak .net-status-text{color:#ffd36f}
+    .net.quality-offline .net-bars i:nth-child(1){background:#ff5f8b}
+    .net.quality-offline .net-bars i:nth-child(n+2){background:rgba(255,255,255,.12)}
+    .net.quality-offline .net-status-text{color:#ff5f8b}
 
     /* left rail */
     .event-card{
@@ -176,7 +200,7 @@
     .summon{left:45.2%;top:14.4%;width:22.2%;height:60.6%}
     .summon .stack{display:flex;align-items:flex-end;justify-content:center}
     .summon .stack img{left:0;right:0;bottom:0;margin:auto;width:97.5%}
-    .summon .plabel{left:54.7%;top:4.3%;width:42%}
+    .summon .plabel{left:47.8%;top:14.5%;width:39%}
     .summon .ptitle{font-size:clamp(28px,2.75vw,50px)}
 
     .afterlife{right:2.9%;top:11.4%;width:29.2%;height:42.9%;overflow:hidden;border-radius:14px}
@@ -219,8 +243,8 @@
       box-shadow:var(--shadow);font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase
     }
     .note{
-      position:absolute;left:18px;bottom:116px;z-index:18;width:310px;max-height:39%;overflow:auto;padding:12px 13px 10px;border-radius:12px;
-      background:rgba(7,12,22,.78);border:1px solid rgba(103,231,255,.14);color:var(--muted);font-size:11.5px;line-height:1.38;box-shadow:var(--shadow)
+      position:absolute;left:18.6%;top:43.5%;z-index:18;width:390px;max-height:40%;overflow:auto;padding:14px 15px 12px;border-radius:14px;
+      background:rgba(7,12,22,.80);border:1px solid rgba(103,231,255,.14);color:var(--muted);font-size:12px;line-height:1.42;box-shadow:var(--shadow)
     }
     .note::-webkit-scrollbar{width:8px}
     .note::-webkit-scrollbar-thumb{background:rgba(103,231,255,.22);border-radius:999px}
@@ -247,7 +271,7 @@
     .afterlife .active-img,.dungeons .active-img,.summon .active-img,.cyberware .active-img{animation:pulsePink 2.8s ease-in-out infinite}
 
     @media (max-width:900px){
-      .menu-btn{min-height:46px}.mi{width:25px;height:25px}.mt{font-size:11px}.profile{gap:10px}.avatar{width:56px;height:56px}.name{font-size:15px}.nav{right:18.4%}.story-btn{padding:14px 22px}.st2{font-size:16px}.note{width:260px;max-height:34%;font-size:10.5px}
+      .menu-btn{min-height:46px}.mi{width:25px;height:25px}.mt{font-size:11px}.profile{gap:10px}.avatar{width:56px;height:56px}.name{font-size:15px}.nav{right:18.4%}.story-btn{padding:14px 22px}.st2{font-size:16px}.note{left:17%;top:42%;width:320px;max-height:34%;font-size:10.5px}
     }
     @media (max-width:760px){
       .tools{top:auto;bottom:114px}.btn{padding:7px 10px;font-size:10px}.profile{padding:7px 8px}.chip{padding:0 8px}.cv{font-size:11px}.plus{width:18px;height:18px}.nl{font-size:10px}.psub{font-size:11px}
@@ -278,8 +302,14 @@
     <button class="icon-btn mail" data-action="mail" data-route="/mail" aria-label="Mail"><span class="glyph">✉</span></button>
     <button class="icon-btn social" data-action="social" data-route="/social" aria-label="Social"><span class="glyph">👥</span><span class="dot"></span></button>
     <button class="icon-btn settings" data-action="settings" data-route="/settings" aria-label="Settings"><span class="glyph">⚙</span></button>
-    <button class="icon-btn net" data-action="network" data-route="/network" aria-label="Network"><span class="glyph">⌁</span></button>
     <button class="icon-btn music-toggle on" id="musicToggle" aria-label="Music toggle"><span class="glyph">♫</span></button>
+    <button class="icon-btn net quality-good" data-action="network" data-route="/network" aria-label="Network">
+      <span class="net-ui">
+        <span class="net-bars"><i></i><i></i><i></i><i></i></span>
+        <span class="net-status-text" id="netQualityText">GOOD</span>
+        <span class="net-ping-text" id="netPingText">--</span>
+      </span>
+    </button>
 
     <button class="event-card" data-action="event" data-route="/event/neon-uprising">
       <div class="ek">Event</div>
@@ -315,13 +345,6 @@
       <div class="plabel pink">
         <span class="ptitle">Summon</span>
         <span class="psub">Clone. Summon. Awaken.</span>
-      </div>
-    </button>
-
-    <button class="poi afterlife" data-action="afterlife" data-route="/afterlife-bar">
-      <div class="stack">
-        <img class="idle-img" src="cyber_base_sprite_assets/afterlife_bar_noframe_inactive_raw.png" alt="afterlife" />
-        <img class="active-img" src="cyber_base_sprite_assets/afterlife_bar_ACTIVE_noframe_final.png" alt="afterlife active" />
       </div>
     </button>
 
@@ -369,7 +392,7 @@
         <div class="guide-item"><b>Archives</b> — лор мира, записи, кодекс и найденные данные.</div>
         <div class="guide-item"><b>PVP Arena</b> — сражения с игроками, рейтинги и сезонные награды.</div>
         <div class="guide-item"><b>Summon</b> — призыв персонажей, баннеры и редкие дропы.</div>
-        <div class="guide-item"><b>Afterlife Bar</b> — NPC, диалоги, слухи, сайд-квесты и ежедневные бонусы.</div>
+        <div class="guide-item"><b>Afterlife Bar</b> — временно вынесен с базы и позже откроется как отдельная локация.</div>
         <div class="guide-item"><b>Dungeons</b> — PvE-контент, фарм, испытания и продвижение по этапам.</div>
         <div class="guide-item"><b>Cyberware</b> — импланты, улучшения, слоты и усиление персонажей.</div>
         <div class="guide-item"><b>Main Story</b> — главный сюжетный маршрут и текущая глава.</div>
@@ -434,6 +457,9 @@
     const noteBtn = document.getElementById('noteBtn');
     const musicToggle = document.getElementById('musicToggle');
     const bgMusic = document.getElementById('bgMusic');
+    const netButton = document.querySelector('.net');
+    const netQualityText = document.getElementById('netQualityText');
+    const netPingText = document.getElementById('netPingText');
     let route = '/home';
     let musicEnabled = true;
 
@@ -462,14 +488,41 @@
       const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
       const online = navigator.onLine;
       const type = connection?.effectiveType || connection?.type || 'unknown';
-      const downlink = typeof connection?.downlink === 'number' ? connection.downlink.toFixed(1) + ' Mbps' : '—';
-      const ping = typeof connection?.rtt === 'number' ? connection.rtt + ' ms' : '—';
-      return { online, type, downlink, ping };
+      const downlinkValue = typeof connection?.downlink === 'number' ? connection.downlink : null;
+      const rttValue = typeof connection?.rtt === 'number' ? connection.rtt : null;
+      const downlink = downlinkValue !== null ? downlinkValue.toFixed(1) + ' Mbps' : '—';
+      const ping = rttValue !== null ? rttValue + ' ms' : '—';
+      return { online, type, downlink, ping, downlinkValue, rttValue };
+    }
+
+    function getNetworkQuality(net){
+      if(!net.online) return { code:'OFF', className:'quality-offline', label:'offline' };
+      if(net.rttValue === null && !net.type) return { code:'—', className:'quality-good', label:'unknown' };
+      if((net.rttValue !== null && net.rttValue <= 60) || net.type === '4g' || (net.downlinkValue !== null && net.downlinkValue >= 10)) {
+        return { code:'EXC', className:'quality-excellent', label:'excellent' };
+      }
+      if((net.rttValue !== null && net.rttValue <= 140) || net.type === '3g' || (net.downlinkValue !== null && net.downlinkValue >= 3)) {
+        return { code:'GOOD', className:'quality-good', label:'good' };
+      }
+      return { code:'WEAK', className:'quality-weak', label:'weak' };
+    }
+
+    function updateNetworkBadge(){
+      if(!netButton) return;
+      const net = getNetworkInfo();
+      const quality = getNetworkQuality(net);
+      netButton.classList.remove('quality-excellent','quality-good','quality-weak','quality-offline');
+      netButton.classList.add(quality.className);
+      if(netQualityText) netQualityText.textContent = quality.code;
+      if(netPingText) netPingText.textContent = net.rttValue !== null ? `${net.rttValue}ms` : '--';
+      return { net, quality };
     }
 
     function networkHtml(){
-      const net = getNetworkInfo();
-      return `Статус: <b>${net.online ? 'online' : 'offline'}</b><br>Тип сети: <b>${net.type}</b><br>Пинг: <b>${net.ping}</b><br>Downlink: <b>${net.downlink}</b>`;
+      const state = updateNetworkBadge();
+      const net = state.net;
+      const quality = state.quality;
+      return `Статус: <b>${net.online ? 'online' : 'offline'}</b><br>Качество сети: <b>${quality.label}</b><br>Тип сети: <b>${net.type}</b><br>Пинг: <b>${net.ping}</b><br>Downlink: <b>${net.downlink}</b>`;
     }
 
     function haptic(){
@@ -517,6 +570,7 @@
 
     window.addEventListener('load', ()=>{
       updateMusicUi();
+      updateNetworkBadge();
       startMusic();
     });
 
@@ -525,15 +579,19 @@
       note.style.display = hidden ? 'block' : 'none';
       noteBtn.textContent = hidden ? 'Скрыть гид' : 'Показать гид';
     });
-    window.addEventListener('online', ()=>{
+    function refreshNetworkView(){
+      updateNetworkBadge();
       if(modal.classList.contains('open') && mtitle.textContent === 'Сеть') mdesc.innerHTML = networkHtml();
-    });
-    window.addEventListener('offline', ()=>{
-      if(modal.classList.contains('open') && mtitle.textContent === 'Сеть') mdesc.innerHTML = networkHtml();
-    });
+    }
+    window.addEventListener('online', refreshNetworkView);
+    window.addEventListener('offline', refreshNetworkView);
+    if(navigator.connection){
+      navigator.connection.addEventListener?.('change', refreshNetworkView);
+    }
+    setInterval(refreshNetworkView, 5000);
     document.addEventListener('keydown',e=>{
       if(e.key==='Escape') modal.classList.remove('open');
     });
   </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a15ecfc89c076717',t:'MTc4MzE3NTI1Ng=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a15ede3c0fa06717',t:'MTc4MzE3NTg0OA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
