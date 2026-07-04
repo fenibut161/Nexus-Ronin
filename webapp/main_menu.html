@@ -270,17 +270,53 @@
     .nl{font-size:11px;font-weight:800;letter-spacing:.10em;text-transform:uppercase;color:#e8f0ff}
     .nav-btn.active .nl{color:#f3fbff}
     .ndot{position:absolute;top:14px;right:calc(50% - 22px);width:9px;height:9px;border-radius:50%;background:#ff3d75;box-shadow:0 0 10px rgba(255,61,117,.72)}
+    .home-cta{
+      position:relative;
+      animation:homePulse 3.8s ease-in-out infinite;
+      box-shadow:inset 0 0 0 1px rgba(125,220,255,.24), 0 0 22px rgba(67,185,255,.15), 0 0 36px rgba(67,185,255,.06)
+    }
+    .home-cta .home-sheen{
+      position:absolute;inset:-20% auto -20% -32%;width:42%;
+      background:linear-gradient(90deg, transparent, rgba(255,255,255,.18), transparent);
+      transform:skewX(-24deg);opacity:.45;pointer-events:none;
+      animation:homeSweep 4.2s linear infinite
+    }
+    .home-cta .home-tag{
+      position:absolute;left:14px;top:7px;z-index:2;
+      font-size:8px;font-weight:900;letter-spacing:.18em;text-transform:uppercase;
+      color:#8ddfff;text-shadow:0 0 10px rgba(103,231,255,.32)
+    }
+    .home-cta .ni{
+      width:38px;height:38px;border-radius:13px;
+      background:linear-gradient(180deg, rgba(34,77,125,.92), rgba(14,30,52,.86));
+      border-color:rgba(103,231,255,.24);
+      box-shadow:0 0 16px rgba(103,231,255,.14), inset 0 0 20px rgba(103,231,255,.08)
+    }
+    .home-cta .ni svg{width:20px;height:20px;filter:drop-shadow(0 0 10px rgba(103,231,255,.26))}
+    .home-cta .nl{font-size:12px;letter-spacing:.12em;text-shadow:0 0 12px rgba(103,231,255,.18)}
 
     .story-wrap{position:absolute;right:.8%;bottom:1.1%;z-index:19}
     .story-btn{
-      position:relative;min-width:24.6vw;min-height:8.7vh;padding:18px 26px 18px 28px;text-align:left;color:#fff;
+      position:relative;min-width:24.6vw;min-height:8.7vh;padding:16px 28px 18px 30px;text-align:left;color:#fff;
       border-radius:18px 18px 2px 18px;clip-path:polygon(12% 0,100% 0,100% 74%,96% 100%,0 100%,4% 30%);
-      background:linear-gradient(135deg, rgba(122,31,122,.84), rgba(255,78,205,.94) 54%, rgba(88,38,122,.86));
-      box-shadow:0 0 28px rgba(255,97,227,.28),var(--shadow);overflow:hidden
+      background:linear-gradient(135deg, rgba(118,24,115,.90), rgba(255,82,203,.96) 52%, rgba(114,53,175,.90));
+      box-shadow:0 0 30px rgba(255,97,227,.30), 0 0 46px rgba(255,97,227,.10), var(--shadow);overflow:hidden;
+      animation:storyPulse 3.6s ease-in-out infinite
     }
-    .story-btn:after{content:"›";position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:34px;line-height:1;opacity:.92}
-    .st1{position:relative;z-index:1;font-size:clamp(28px,2.55vw,44px);font-weight:900;line-height:.95;text-transform:uppercase}
-    .st2{position:relative;z-index:1;margin-top:6px;font-size:20px;opacity:.97}
+    .story-sheen{
+      position:absolute;inset:-20% auto -20% -26%;width:32%;
+      background:linear-gradient(90deg, transparent, rgba(255,255,255,.22), transparent);
+      transform:skewX(-24deg);opacity:.55;pointer-events:none;
+      animation:storySweep 3.8s linear infinite
+    }
+    .story-kicker{
+      position:relative;z-index:1;margin-bottom:6px;
+      font-size:10px;font-weight:900;letter-spacing:.20em;text-transform:uppercase;
+      color:#ffe0fb;text-shadow:0 0 12px rgba(255,255,255,.18)
+    }
+    .story-btn:after{content:"›";position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:36px;line-height:1;opacity:.94;animation:arrowBob 1.8s ease-in-out infinite}
+    .st1{position:relative;z-index:1;font-size:clamp(28px,2.55vw,44px);font-weight:900;line-height:.95;text-transform:uppercase;text-shadow:0 0 18px rgba(255,255,255,.16)}
+    .st2{position:relative;z-index:1;margin-top:5px;font-size:20px;opacity:.98}
 
     /* debug + note */
     .tools{position:absolute;right:14px;top:8.2%;z-index:26;display:flex;gap:8px}
@@ -297,6 +333,47 @@
     .guide-title{margin:0 0 8px;color:var(--cyan);font-size:12px;font-weight:900;letter-spacing:.12em;text-transform:uppercase}
     .guide-list{display:grid;gap:6px}
     .guide-item b{color:#edf4ff}
+    .build-tag{
+      position:absolute;left:14px;bottom:106px;z-index:18;
+      padding:6px 10px;border-radius:999px;
+      background:rgba(7,12,22,.72);border:1px solid rgba(103,231,255,.14);
+      color:#9eb0d1;font-size:10px;font-weight:800;letter-spacing:.10em;text-transform:uppercase;
+      box-shadow:var(--shadow)
+    }
+
+    .login-overlay{
+      position:absolute;inset:0;z-index:60;display:none;place-items:center;
+      background:radial-gradient(circle at 50% 30%, rgba(18,24,46,.68), rgba(2,4,10,.92));
+      backdrop-filter:blur(10px);
+      padding:20px;
+    }
+    .login-overlay.open{display:grid}
+    .login-card{
+      width:min(460px,92vw);padding:24px 24px 20px;border-radius:22px;
+      background:linear-gradient(180deg, rgba(12,18,34,.96), rgba(7,11,22,.98));
+      border:1px solid rgba(103,231,255,.28);
+      box-shadow:0 0 34px rgba(103,231,255,.12), 0 0 50px rgba(255,97,227,.08), 0 18px 60px rgba(0,0,0,.56)
+    }
+    .login-kicker{margin:0 0 8px;color:var(--cyan);font-size:11px;font-weight:900;letter-spacing:.18em;text-transform:uppercase}
+    .login-title{margin:0;font-size:clamp(28px,3vw,40px);line-height:.95;text-transform:uppercase}
+    .login-text{margin:10px 0 18px;color:#c9d8f2;font-size:14px;line-height:1.45}
+    .login-form{display:grid;gap:12px}
+    .login-label{display:grid;gap:6px;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#9ec1e6}
+    .login-input{
+      width:100%;height:48px;padding:0 14px;border-radius:14px;border:1px solid rgba(103,231,255,.18);
+      background:rgba(8,13,24,.82);color:#eef5ff;font-size:15px;font-weight:700;outline:none;
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.03)
+    }
+    .login-input:focus{border-color:rgba(103,231,255,.42);box-shadow:0 0 0 2px rgba(103,231,255,.08)}
+    .login-row{display:flex;gap:10px;flex-wrap:wrap}
+    .login-btn{
+      min-height:46px;padding:0 16px;border-radius:14px;border:0;cursor:pointer;
+      font-size:12px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:#fff
+    }
+    .login-btn.primary{background:linear-gradient(135deg, rgba(255,97,227,.96), rgba(124,94,255,.94));box-shadow:0 0 18px rgba(255,97,227,.18)}
+    .login-btn.secondary{background:rgba(18,28,44,.96);border:1px solid rgba(103,231,255,.20);box-shadow:0 0 14px rgba(103,231,255,.10)}
+    .login-error{min-height:18px;color:#ff8eb0;font-size:12px;font-weight:700}
+    .login-foot{margin-top:8px;color:#90a6c9;font-size:12px;line-height:1.4}
 
     .modal{position:absolute;inset:0;display:none;place-items:center;background:rgba(1,3,10,.72);backdrop-filter:blur(8px);z-index:50;padding:20px}
     .modal.open{display:grid}
@@ -313,14 +390,19 @@
     @keyframes glow{from{opacity:.80}to{opacity:1}}
     @keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
     @keyframes pulsePink{0%,100%{filter:drop-shadow(0 0 0 rgba(255,97,227,0))}50%{filter:drop-shadow(0 0 16px rgba(255,97,227,.18))}}
+    @keyframes homeSweep{0%{transform:translateX(-10%) skewX(-24deg)}100%{transform:translateX(360%) skewX(-24deg)}}
+    @keyframes homePulse{0%,100%{box-shadow:inset 0 0 0 1px rgba(125,220,255,.24), 0 0 22px rgba(67,185,255,.15), 0 0 36px rgba(67,185,255,.06)}50%{box-shadow:inset 0 0 0 1px rgba(145,236,255,.34), 0 0 28px rgba(67,185,255,.22), 0 0 52px rgba(67,185,255,.10)}}
+    @keyframes storySweep{0%{transform:translateX(-10%) skewX(-24deg)}100%{transform:translateX(390%) skewX(-24deg)}}
+    @keyframes storyPulse{0%,100%{box-shadow:0 0 30px rgba(255,97,227,.30), 0 0 46px rgba(255,97,227,.10), var(--shadow)}50%{box-shadow:0 0 38px rgba(255,97,227,.40), 0 0 60px rgba(255,97,227,.16), var(--shadow)}}
+    @keyframes arrowBob{0%,100%{transform:translateY(-50%) translateX(0)}50%{transform:translateY(-50%) translateX(4px)}}
     .dungeons .stack,.summon .stack,.cyberware .stack{animation:floatY 4.9s ease-in-out infinite}
     .afterlife .active-img,.dungeons .active-img,.summon .active-img,.cyberware .active-img{animation:pulsePink 2.8s ease-in-out infinite}
 
     @media (max-width:900px){
-      .menu-btn{min-height:46px}.mi{width:26px;height:26px}.mi svg{width:15px;height:15px}.mt{font-size:11px}.profile{gap:10px;width:27.2%}.avatar{width:56px;height:56px}.name{font-size:15px}.nav{right:18.4%}.nav-btn{gap:7px}.ni{width:30px;height:30px}.ni svg{width:16px;height:16px}.nl{font-size:10px}.story-btn{padding:14px 22px}.st2{font-size:16px}.note{left:20%;top:22%;width:330px;max-height:28%;font-size:10.5px}.cv{font-size:11px}.ci{width:24px;height:24px}.ci svg{width:24px;height:24px}.chip{grid-template-columns:24px minmax(0,1fr) 20px;column-gap:8px}.icon-svg svg{width:20px;height:20px}.social .icon-svg svg{width:22px;height:22px}.energy,.gold,.gems{width:15.6%}.energy{left:29.2%}.gold{left:45.4%}.gems{left:61.6%}
+      .menu-btn{min-height:46px}.mi{width:26px;height:26px}.mi svg{width:15px;height:15px}.mt{font-size:11px}.profile{gap:10px;width:27.2%}.avatar{width:56px;height:56px}.name{font-size:15px}.nav{right:18.4%}.nav-btn{gap:7px}.ni{width:30px;height:30px}.ni svg{width:16px;height:16px}.home-cta .ni{width:34px;height:34px}.home-cta .ni svg{width:18px;height:18px}.home-cta .home-tag{font-size:7px;left:12px}.nl{font-size:10px}.story-btn{padding:14px 22px}.story-kicker{font-size:9px}.st2{font-size:16px}.note{left:20%;top:22%;width:330px;max-height:28%;font-size:10.5px}.cv{font-size:11px}.ci{width:24px;height:24px}.ci svg{width:24px;height:24px}.chip{grid-template-columns:24px minmax(0,1fr) 20px;column-gap:8px}.icon-svg svg{width:20px;height:20px}.social .icon-svg svg{width:22px;height:22px}.energy,.gold,.gems{width:15.6%}.energy{left:29.2%}.gold{left:45.4%}.gems{left:61.6%}
     }
     @media (max-width:760px){
-      .tools{top:auto;bottom:114px}.btn{padding:7px 10px;font-size:10px}.profile{padding:7px 8px;width:29%}.chip{padding:0 7px;grid-template-columns:20px minmax(0,1fr) 18px;column-gap:7px}.cv{font-size:9.6px}.energy .cv{font-size:10px}.gold .cv{font-size:9.1px}.gems .cv{font-size:9.6px}.ci{width:20px;height:20px}.ci svg{width:20px;height:20px}.plus{width:18px;height:18px;font-size:13px}.nav-btn{gap:6px}.ni{width:26px;height:26px}.ni svg{width:14px;height:14px}.nl{font-size:9px}.psub{font-size:11px}.energy,.gold,.gems{width:16.8%}.energy{left:30.8%}.gold{left:48.2%}.gems{left:65.6%}
+      .tools{top:auto;bottom:114px}.btn{padding:7px 10px;font-size:10px}.profile{padding:7px 8px;width:29%}.chip{padding:0 7px;grid-template-columns:20px minmax(0,1fr) 18px;column-gap:7px}.cv{font-size:9.6px}.energy .cv{font-size:10px}.gold .cv{font-size:9.1px}.gems .cv{font-size:9.6px}.ci{width:20px;height:20px}.ci svg{width:20px;height:20px}.plus{width:18px;height:18px;font-size:13px}.nav-btn{gap:6px}.ni{width:26px;height:26px}.ni svg{width:14px;height:14px}.home-cta .ni{width:29px;height:29px}.home-cta .ni svg{width:15px;height:15px}.home-cta .home-tag{font-size:6px;left:10px;top:6px}.nl{font-size:9px}.story-kicker{font-size:8px}.psub{font-size:11px}.build-tag{bottom:96px;font-size:8px;padding:5px 8px}.energy,.gold,.gems{width:16.8%}.energy{left:30.8%}.gold{left:48.2%}.gems{left:65.6%}
     }
   </style>
 </head>
@@ -334,7 +416,7 @@
     <button class="profile" data-action="profile" data-route="/profile">
       <div class="avatar"></div>
       <div class="meta">
-        <div class="row"><div class="name">Nightshade</div><div class="lvl">Lv. 68</div></div>
+        <div class="row"><div class="name" id="playerName">Nightshade</div><div class="lvl" id="playerLevel">Lv. 68</div></div>
         <div class="xp"><span></span></div>
         <div class="xp-txt">26,230 / 36,000</div>
         <div class="power"><b>Power</b> 256,800</div>
@@ -432,7 +514,9 @@
     </button>
 
     <div class="nav">
-      <button class="nav-btn active" data-action="home" data-route="/home">
+      <button class="nav-btn active home-cta" data-action="home" data-route="/home">
+        <span class="home-sheen" aria-hidden="true"></span>
+        <span class="home-tag">Base</span>
         <span class="ni" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4.5 10.2 12 4l7.5 6.2V20H4.5v-9.8Z" stroke="#E8F6FF" stroke-width="1.3" stroke-linejoin="round"/><path d="M9.3 20v-5h5.4v5" stroke="#67E7FF" stroke-width="1.3" stroke-linejoin="round"/></svg></span>
         <span class="nl">Home</span>
       </button>
@@ -461,6 +545,8 @@
 
     <div class="story-wrap">
       <button class="story-btn" data-action="mainstory" data-route="/story/chapter-12-5">
+        <span class="story-sheen" aria-hidden="true"></span>
+        <div class="story-kicker">Campaign</div>
         <div class="st1">Main Story</div>
         <div class="st2">Chapter 1 - 1</div>
       </button>
@@ -469,6 +555,8 @@
     <div class="tools">
       <button class="btn" id="noteBtn">Скрыть гид</button>
     </div>
+
+    <div class="build-tag">Prototype Build v0.1</div>
 
     <div class="note" id="note">
       <div class="guide-title">Гид по базе</div>
@@ -488,6 +576,28 @@
         <div class="guide-item"><b>Main Story</b> — главный сюжетный маршрут и текущая глава.</div>
         <div class="guide-item"><b>Нижнее меню</b> — Home, Agents, Squad, Tech, Codex и Corp для быстрого перехода по разделам.</div>
         <div class="guide-item"><b>Сеть</b> — показывает статус online/offline, тип соединения и текущий пинг.</div>
+      </div>
+    </div>
+
+    <div class="login-overlay" id="loginOverlay">
+      <div class="login-card">
+        <p class="login-kicker">Prototype Access</p>
+        <h2 class="login-title" id="loginTitle">Вход в базу</h2>
+        <p class="login-text" id="loginText">Создай локальный аккаунт по Telegram ID. Профиль сохранится в этом браузере и будет загружаться автоматически.</p>
+        <form class="login-form" id="loginForm">
+          <label class="login-label">Telegram ID
+            <input class="login-input" id="tgIdInput" type="text" inputmode="numeric" maxlength="20" placeholder="Например: 123456789" autocomplete="off" />
+          </label>
+          <label class="login-label">Никнейм
+            <input class="login-input" id="nicknameInput" type="text" maxlength="20" placeholder="Например: Nightshade" autocomplete="off" />
+          </label>
+          <div class="login-error" id="loginError"></div>
+          <div class="login-row">
+            <button class="login-btn primary" type="submit">Создать аккаунт</button>
+            <button class="login-btn secondary" type="button" id="demoFillBtn">Демо-данные</button>
+          </div>
+        </form>
+        <div class="login-foot">Этап 1: локальный аккаунт. Позже это можно заменить на настоящую авторизацию через Telegram Mini App.</div>
       </div>
     </div>
 
@@ -538,6 +648,7 @@
       mainstory:['Main Story','Под этой кнопкой хорошо смотрятся recommended power и % главы.']
     };
 
+    const STORAGE_KEY = 'nexus_ronin_local_account_v01';
     const modal = document.getElementById('modal');
     const mtitle = document.getElementById('mtitle');
     const mdesc = document.getElementById('mdesc');
@@ -549,8 +660,64 @@
     const netButton = document.querySelector('.net');
     const netQualityText = document.getElementById('netQualityText');
     const netPingText = document.getElementById('netPingText');
+    const loginOverlay = document.getElementById('loginOverlay');
+    const loginForm = document.getElementById('loginForm');
+    const tgIdInput = document.getElementById('tgIdInput');
+    const nicknameInput = document.getElementById('nicknameInput');
+    const loginError = document.getElementById('loginError');
+    const demoFillBtn = document.getElementById('demoFillBtn');
+    const loginTitle = document.getElementById('loginTitle');
+    const loginText = document.getElementById('loginText');
+    const playerName = document.getElementById('playerName');
+    const playerLevel = document.getElementById('playerLevel');
+    const goBtn = document.getElementById('goBtn');
     let route = '/home';
     let musicEnabled = true;
+    let activeAction = 'home';
+    let currentAccount = null;
+
+    function loadAccount(){
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        return raw ? JSON.parse(raw) : null;
+      } catch (e) {
+        console.debug('Account load failed');
+        return null;
+      }
+    }
+
+    function saveAccount(account){
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(account));
+      currentAccount = account;
+    }
+
+    function applyAccount(account){
+      if(!account) return;
+      playerName.textContent = account.nickname;
+      playerLevel.textContent = account.level || 'Lv. 1';
+      document.body.dataset.tgId = account.telegramId;
+    }
+
+    function showLogin(prefill = false){
+      loginOverlay.classList.add('open');
+      loginOverlay.dataset.mode = prefill ? 'switch' : 'create';
+      loginTitle.textContent = currentAccount && prefill ? 'Смена аккаунта' : 'Вход в базу';
+      loginText.textContent = currentAccount && prefill
+        ? 'Введи новый Telegram ID и никнейм. Новый локальный аккаунт заменит текущий профиль в этом браузере.'
+        : 'Создай локальный аккаунт по Telegram ID. Профиль сохранится в этом браузере и будет загружаться автоматически.';
+      demoFillBtn.textContent = prefill ? 'Отмена' : 'Демо-данные';
+      if(prefill && currentAccount){
+        tgIdInput.value = currentAccount.telegramId || '';
+        nicknameInput.value = currentAccount.nickname || '';
+      }
+      setTimeout(() => tgIdInput.focus(), 30);
+    }
+
+    function hideLogin(){
+      loginOverlay.classList.remove('open');
+      loginOverlay.dataset.mode = '';
+      loginError.textContent = '';
+    }
 
     function updateMusicUi(){
       musicToggle.classList.toggle('on', musicEnabled);
@@ -618,12 +785,17 @@
     }
     function touchFx(el){ el.classList.add('touching'); setTimeout(()=>el.classList.remove('touching'),180); }
     function openAction(action, nextRoute){
+      activeAction = action;
       const data = meta[action] || ['Section','Подключи сюда нужный экран.'];
       route = nextRoute || '/home';
       mtitle.textContent = data[0];
+      goBtn.textContent = action === 'profile' ? 'Сменить аккаунт' : 'Открыть маршрут';
       if(action === 'network'){
         mdesc.innerHTML = networkHtml();
         mroute.textContent = 'system: network monitor';
+      } else if(action === 'profile' && currentAccount){
+        mdesc.innerHTML = `Ник: <b>${currentAccount.nickname}</b><br>Telegram ID: <b>${currentAccount.telegramId}</b><br>Тип профиля: <b>local prototype account</b>`;
+        mroute.textContent = 'system: local account storage';
       } else {
         mdesc.textContent = data[1];
         mroute.textContent = 'route: ' + route;
@@ -636,10 +808,52 @@
     });
     document.getElementById('closeBtn').addEventListener('click',()=>modal.classList.remove('open'));
     modal.addEventListener('click',e=>{ if(e.target===modal) modal.classList.remove('open'); });
-    document.getElementById('goBtn').addEventListener('click',()=>{
+    goBtn.addEventListener('click',()=>{
       haptic();
+      if(activeAction === 'profile'){
+        modal.classList.remove('open');
+        showLogin(true);
+        return;
+      }
       console.log('Open route:', route);
       mdesc.textContent = 'Сейчас это демо. Следующий шаг — подцепить твой router / window.location / sendData / обработчик конструктора.';
+    });
+
+    loginForm.addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      const telegramId = tgIdInput.value.trim();
+      const nickname = nicknameInput.value.trim();
+      if(!/^\d{5,20}$/.test(telegramId)){
+        loginError.textContent = 'Telegram ID должен содержать только цифры, минимум 5 символов.';
+        tgIdInput.focus();
+        return;
+      }
+      const account = {
+        telegramId,
+        nickname: nickname || `Agent ${telegramId.slice(-4)}`,
+        level: 'Lv. 1',
+        createdAt: new Date().toISOString()
+      };
+      saveAccount(account);
+      applyAccount(account);
+      hideLogin();
+      haptic();
+      await startMusic();
+    });
+
+    demoFillBtn.addEventListener('click', ()=>{
+      if(loginOverlay.dataset.mode === 'switch'){
+        hideLogin();
+        return;
+      }
+      tgIdInput.value = '777001337';
+      nicknameInput.value = 'Nightshade';
+      loginError.textContent = '';
+      tgIdInput.focus();
+    });
+
+    tgIdInput.addEventListener('input', ()=>{
+      tgIdInput.value = tgIdInput.value.replace(/\D+/g, '').slice(0, 20);
     });
 
     musicToggle.addEventListener('click', async ()=>{
@@ -659,7 +873,14 @@
     window.addEventListener('load', ()=>{
       updateMusicUi();
       updateNetworkBadge();
-      startMusic();
+      currentAccount = loadAccount();
+      if(currentAccount){
+        applyAccount(currentAccount);
+        hideLogin();
+        startMusic();
+      } else {
+        showLogin(false);
+      }
     });
 
     noteBtn.addEventListener('click',()=>{
@@ -681,5 +902,5 @@
       if(e.key==='Escape') modal.classList.remove('open');
     });
   </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a15f2d070bab6784',t:'MTc4MzE3OTA3NQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a1605d5ffc1c4796',t:'MTc4MzE5MTU0MQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
