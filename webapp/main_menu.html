@@ -77,16 +77,16 @@
 
     /* top ui */
     .profile{
-      position:absolute;left:1.2%;top:1.5%;width:28.5%;height:10.5%;z-index:20;
-      display:flex;align-items:center;gap:12px;padding:8px 12px 8px 10px;
+      position:absolute;left:1.2%;top:1.5%;width:24.9%;height:9.6%;z-index:20;
+      display:flex;align-items:center;gap:10px;padding:7px 10px 7px 9px;
       background:linear-gradient(180deg, rgba(10,14,26,.84), rgba(7,11,20,.46));
       border:1px solid rgba(198,126,255,.18);border-radius:14px;box-shadow:var(--shadow);
       backdrop-filter:blur(6px);text-align:left;overflow:hidden;
     }
     .profile:before{content:"";position:absolute;inset:0;background:linear-gradient(90deg, rgba(255,255,255,.04), transparent 34%, transparent 72%, rgba(103,231,255,.05));pointer-events:none}
-    .profile:after{content:"";position:absolute;left:76px;right:14px;bottom:0;height:1px;background:linear-gradient(90deg, rgba(255,97,227,.35), rgba(103,231,255,.16), transparent)}
+    .profile:after{content:"";position:absolute;left:69px;right:12px;bottom:0;height:1px;background:linear-gradient(90deg, rgba(255,97,227,.35), rgba(103,231,255,.16), transparent)}
     .avatar{
-      width:63px;height:63px;border-radius:12px;flex:0 0 auto;position:relative;overflow:hidden;
+      width:56px;height:56px;border-radius:12px;flex:0 0 auto;position:relative;overflow:hidden;
       background:
         radial-gradient(circle at 35% 25%, rgba(186,108,255,.28), transparent 32%),
         url('cyber_base_sprite_assets/avatar_nightshade.png') center/cover no-repeat,
@@ -95,45 +95,45 @@
     }
     .avatar:before{content:"";position:absolute;inset:0;box-shadow:inset 0 0 0 1px rgba(255,255,255,.03)}
     .meta{min-width:0;flex:1}
-    .row{display:flex;justify-content:space-between;align-items:center;gap:10px}
-    .name{font-size:17px;font-weight:800;white-space:nowrap}
-    .lvl{font-size:14px;font-weight:800;color:#e9d5ff;white-space:nowrap}
-    .xp{height:7px;margin:6px 0 5px;border-radius:999px;background:rgba(255,255,255,.10);overflow:hidden}
+    .row{display:flex;justify-content:flex-start;align-items:center;gap:8px;padding-right:12px}
+    .name{font-size:16px;font-weight:800;white-space:nowrap}
+    .lvl{font-size:13px;font-weight:800;color:#e9d5ff;white-space:nowrap;margin-left:auto;margin-right:8px}
+    .xp{width:82%;height:6px;margin:5px 0 4px;border-radius:999px;background:rgba(255,255,255,.10);overflow:hidden}
     .xp>span{display:block;width:72.8%;height:100%;background:linear-gradient(90deg,#ff2ecf,#cf69ff 62%,#8572ff);box-shadow:0 0 18px rgba(255,97,227,.45)}
-    .xp-txt{font-size:11px;color:#d9e2ff;text-align:right}
-    .power{margin-top:2px;color:var(--gold);font-size:12px;font-weight:900;display:flex;align-items:center;gap:6px}
-    .power b{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#f3d98d;opacity:.84}
+    .xp-txt{width:82%;font-size:10px;color:#d9e2ff;text-align:right}
+    .power{margin-top:1px;color:var(--gold);font-size:11px;font-weight:900;display:flex;align-items:center;gap:6px}
+    .power b{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#f3d98d;opacity:.84}
 
     .chip{
-      position:absolute;top:1.55%;height:5.25%;z-index:20;padding:0 8px 0 9px;display:flex;align-items:center;gap:8px;
-      background:linear-gradient(180deg, rgba(9,13,24,.88), rgba(7,11,20,.54));border:1px solid rgba(255,255,255,.12);
-      border-radius:999px;box-shadow:var(--shadow);backdrop-filter:blur(6px);text-align:left;overflow:hidden;white-space:nowrap;flex-wrap:nowrap;
+      position:absolute;top:1.65%;height:4.7%;z-index:20;padding:0 7px 0 8px;display:grid;grid-template-columns:auto 1fr auto;align-items:center;column-gap:7px;
+      background:linear-gradient(180deg, rgba(9,13,24,.90), rgba(7,11,20,.58));border:1px solid rgba(255,255,255,.12);
+      border-radius:999px;box-shadow:var(--shadow);backdrop-filter:blur(6px);text-align:left;overflow:hidden;white-space:nowrap;
     }
     .chip:before{content:"";position:absolute;inset:1px;background:linear-gradient(90deg, rgba(255,255,255,.05), transparent 40%, transparent 78%, rgba(103,231,255,.05));border-radius:inherit;pointer-events:none}
-    .energy{left:33.6%;width:12.9%}
-    .gold{left:46.9%;width:15.9%}
-    .gems{left:63.3%;width:12.3%}
-    .ci{width:23px;height:23px;display:grid;place-items:center;flex:0 0 auto;position:relative;z-index:1}
-    .ci svg{width:23px;height:23px;display:block;filter:drop-shadow(0 0 10px rgba(255,255,255,.12))}
-    .cv{font-size:15px;font-weight:900;letter-spacing:.01em;line-height:1;white-space:nowrap;position:relative;z-index:1}
-    .plus{margin-left:auto;width:24px;height:24px;flex:0 0 24px;border-radius:999px;display:grid;place-items:center;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);font-weight:900;font-size:16px;line-height:1;padding:0;text-align:center;position:relative;z-index:1}
+    .energy{left:28.2%;width:11.2%}
+    .gold{left:40.1%;width:14.7%}
+    .gems{left:55.7%;width:11.0%}
+    .ci{width:26px;height:26px;display:grid;place-items:center;flex:0 0 auto;position:relative;z-index:1}
+    .ci svg{width:26px;height:26px;display:block;filter:drop-shadow(0 0 10px rgba(255,255,255,.12))}
+    .cv{font-size:14px;font-weight:900;letter-spacing:.01em;line-height:1;white-space:nowrap;position:relative;z-index:1;overflow:hidden}
+    .plus{margin-left:auto;width:22px;height:22px;flex:0 0 22px;border-radius:999px;display:grid;place-items:center;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);font-weight:900;font-size:15px;line-height:1;padding:0;text-align:center;position:relative;z-index:1}
 
     .icon-btn{
       position:absolute;top:1.3%;height:5.4%;z-index:20;width:3.8%;display:grid;place-items:center;
       background:rgba(10,16,30,.76);border:1px solid rgba(255,255,255,.10);border-radius:11px;box-shadow:var(--shadow);backdrop-filter:blur(6px)
     }
-    .mail{right:18.6%;width:3.9%}
-    .social{right:13.5%;width:4.8%}
-    .settings{right:8.8%;width:3.8%}
-    .music-toggle{top:1.3%;right:4.8%;width:3.5%;height:5.4%;z-index:20}
-    .net{right:.8%;width:3.4%;padding:2px}
+    .mail{right:18.6%;width:4.2%}
+    .social{right:13.2%;width:5.1%}
+    .settings{right:8.5%;width:4.0%}
+    .music-toggle{top:1.3%;right:4.4%;width:3.8%;height:5.4%;z-index:20}
+    .net{right:.6%;width:3.6%;padding:2px}
     .music-toggle.on{border-color:rgba(103,231,255,.34);box-shadow:var(--shadow),0 0 16px rgba(103,231,255,.14)}
     .music-toggle:not(.on) .icon-svg svg{opacity:.48;filter:none}
-    .glyph{font-size:17px;opacity:.96}
+    .glyph{font-size:19px;opacity:.96}
     .icon-svg{display:grid;place-items:center;width:100%;height:100%}
-    .icon-svg svg{width:21px;height:21px;display:block;filter:drop-shadow(0 0 10px rgba(103,231,255,.15))}
-    .social .icon-svg svg{width:24px;height:24px}
-    .music-toggle .icon-svg svg{width:22px;height:22px}
+    .icon-svg svg{width:25px;height:25px;display:block;filter:drop-shadow(0 0 10px rgba(103,231,255,.15))}
+    .social .icon-svg svg{width:27px;height:27px}
+    .music-toggle .icon-svg svg{width:25px;height:25px}
     .dot{position:absolute;top:4px;right:4px;width:9px;height:9px;border-radius:50%;background:radial-gradient(circle at 35% 35%, #ffe3f0, #ff2e66);box-shadow:0 0 10px rgba(255,46,102,.70)}
     .net-ui{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;line-height:1;width:100%}
     .net-bars{display:flex;align-items:flex-end;gap:2px;height:10px}
@@ -253,7 +253,7 @@
       box-shadow:var(--shadow);font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase
     }
     .note{
-      position:absolute;left:18.2%;top:23.2%;z-index:18;width:410px;max-height:33%;overflow:auto;padding:14px 15px 12px;border-radius:14px;
+      position:absolute;left:23.0%;top:23.2%;z-index:18;width:410px;max-height:33%;overflow:auto;padding:14px 15px 12px;border-radius:14px;
       background:rgba(7,12,22,.80);border:1px solid rgba(103,231,255,.14);color:var(--muted);font-size:12px;line-height:1.42;box-shadow:var(--shadow)
     }
     .note::-webkit-scrollbar{width:8px}
@@ -281,10 +281,10 @@
     .afterlife .active-img,.dungeons .active-img,.summon .active-img,.cyberware .active-img{animation:pulsePink 2.8s ease-in-out infinite}
 
     @media (max-width:900px){
-      .menu-btn{min-height:46px}.mi{width:26px;height:26px}.mi svg{width:15px;height:15px}.mt{font-size:11px}.profile{gap:10px}.avatar{width:56px;height:56px}.name{font-size:15px}.nav{right:18.4%}.story-btn{padding:14px 22px}.st2{font-size:16px}.note{left:16%;top:22%;width:330px;max-height:28%;font-size:10.5px}.cv{font-size:13px}.ci{width:20px;height:20px}.ci svg{width:20px;height:20px}.icon-svg svg{width:18px;height:18px}.social .icon-svg svg{width:20px;height:20px}.energy{width:13.8%}.gold{width:16.8%}.gems{width:13.2%}
+      .menu-btn{min-height:46px}.mi{width:26px;height:26px}.mi svg{width:15px;height:15px}.mt{font-size:11px}.profile{gap:10px;width:27.2%}.avatar{width:56px;height:56px}.name{font-size:15px}.nav{right:18.4%}.story-btn{padding:14px 22px}.st2{font-size:16px}.note{left:20%;top:22%;width:330px;max-height:28%;font-size:10.5px}.cv{font-size:13px}.ci{width:22px;height:22px}.ci svg{width:22px;height:22px}.icon-svg svg{width:20px;height:20px}.social .icon-svg svg{width:22px;height:22px}.energy{left:30.5%;width:13.4%}.gold{left:44.8%;width:17.0%}.gems{left:62.8%;width:13.0%}
     }
     @media (max-width:760px){
-      .tools{top:auto;bottom:114px}.btn{padding:7px 10px;font-size:10px}.profile{padding:7px 8px}.chip{padding:0 8px}.cv{font-size:11px}.plus{width:18px;height:18px;flex-basis:18px;font-size:13px}.nl{font-size:10px}.psub{font-size:11px}.energy{width:15.5%}.gold{width:18.5%}.gems{width:14.8%}
+      .tools{top:auto;bottom:114px}.btn{padding:7px 10px;font-size:10px}.profile{padding:7px 8px;width:29%}.chip{padding:0 7px}.cv{font-size:11px}.plus{width:18px;height:18px;flex-basis:18px;font-size:13px}.nl{font-size:10px}.psub{font-size:11px}.energy{left:31.2%;width:15.0%}.gold{left:47.0%;width:18.2%}.gems{left:66.0%;width:14.2%}
     }
   </style>
 </head>
@@ -309,7 +309,7 @@
       <span class="ci energy" aria-hidden="true">
         <svg viewBox="0 0 24 24" fill="none"><path d="M13.5 2 6 13h5l-1 9 8-11h-5.5L13.5 2Z" fill="#62E6FF" stroke="#D8FBFF" stroke-width="0.8"/></svg>
       </span>
-      <span class="cv">120 / 120</span><span class="plus">+</span>
+      <span class="cv">130 / 130</span><span class="plus">+</span>
     </button>
     <button class="chip gold" data-action="gold" data-route="/resources/gold">
       <span class="ci gold" aria-hidden="true">
@@ -626,5 +626,5 @@
       if(e.key==='Escape') modal.classList.remove('open');
     });
   </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a15efb77ae1d460e',t:'MTc4MzE3NzA0NQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a15f1558cedf460e',t:'MTc4MzE3ODEwNQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
